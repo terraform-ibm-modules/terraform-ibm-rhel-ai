@@ -72,49 +72,40 @@ resource "ibm_is_image" "custom_image" {
 
 
 ##############################################################################
-# Create Workload VPC
+# Create VPC
 ##############################################################################
 
-module "workload_vpc" {
-  source              = "terraform-ibm-modules/landing-zone-vpc/ibm"
-  name                = "workload"
-  resource_group_id   = module.resource_group.resource_group_id
-  region              = var.region  
-  prefix              = var.prefix
-  tags                = var.resource_tags
-  network_acls        = [local.network-acl]
-  use_public_gateways = {
-    zone-1            = true
-    zone-2            = false
-    zone-3            = false
-  }
-  subnets             = {
-    zone-1 = [
-      {
-        "acl_name" = "${var.prefix}-acl",
-        "cidr" = "10.40.10.0/24",
-        "name" = "gpu-vsi-subnet-1"        
-      }
-    ]
-  }
+resource "ibm_is_vpc" "rhelai_vpc" {
+  name                    = "${var.prefix}-rhelai-vpc"
+  resource_group          = module.resource_group.resource_group_id
 }
+
+resource "ibm_is_subnet" "rhelai_subnet" {
+  name                                      = "${var.prefix}-rhelai-subnet"
+  resource_group                            = module.resource_group.resource_group_id
+  vpc                                       = ibm_is_vpc.rhelai_vpc.id
+  zone                                      = var.zone
+  total_ipv4_address_count                  = 16
+}
+
 
 ##############################################################################
 # Create GPU Based VSI Instance using RHEL.ai Custom Image Image
 ##############################################################################
 
 
-module "gpu_vsi" {
-  source                           = "terraform-ibm-modules/landing-zone-vsi/ibm"
-  resource_group_id                = module.resource_group.resource_group_id
-  prefix                           = var.prefix
-  vpc_id                           = module.workload_vpc.vpc_id
-  subnets                          = module.workload_vpc.subnet_zone_list
-  image_id                         = ibm_is_image.custom_image.id
-  machine_type                     = local.gpu_machine_type
-  manage_reserved_ips              = false
-  ssh_key_ids                      = [ ibm_is_ssh_key.rhelai_ssh_key.id ]
-  vsi_per_subnet                   = 1
-  create_security_group            = false
-  user_data                        = null
+resource "ibm_is_instance" "gpu_vsi" {
+  name                                    = "${var.prefix}-rhelai-instance"
+  resource_group                          = module.resource_group.resource_group_id
+  image                                   = ibm_is_image.custom_image.id
+  profile                                 = local.gpu_machine_type    
+  keys                                    = [ibm_is_ssh_key.rhelai_ssh_key.id]
+  vpc                                     = ibm_is_vpc.rhelai_vpc.id
+  zone                                    = var.zone
+  primary_network_interface {
+    subnet                                = ibm_is_subnet.rhelai_subnet.id
+  }
+  boot_volume {
+    size                                  = 250
+  }
 }

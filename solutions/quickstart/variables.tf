@@ -40,8 +40,12 @@ variable "resource_tags" {
 
 variable "region" {
   description = "The region where observability resources are created."
-  type             = string
-  default          = "eu-es"
+  type             = string  
+}
+
+variable "zone" {
+  description = "The zone where the RHEL.ai instance needs to be deployed"
+  type        = string
 }
 
 variable "ssh_key" {
