@@ -115,6 +115,15 @@ resource "ibm_is_instance" "gpu_vsi" {
   }
 }
 
+resource "ibm_is_subnet" "rhelai_subnet" {
+  name                                      = "${var.prefix}-rhelai-subnet"
+  resource_group                            = module.resource_group.resource_group_id
+  vpc                                       = ibm_is_vpc.rhelai_vpc.id
+  zone                                      = var.zone
+  total_ipv4_address_count                  = 16
+}
+
+
 ##############################################################################
 # Create load balancer
 ##############################################################################
