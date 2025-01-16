@@ -82,6 +82,7 @@ resource "ibm_is_vpc" "rhelai_vpc" {
 
 resource "ibm_is_public_gateway" "rhelai_publicgateway" {
   name                                      = "${var.prefix}-rhelai-gateway"
+  resource_group                            = module.resource_group.resource_group_id
   vpc                                       = ibm_is_vpc.rhelai_vpc.id
   zone                                      = var.zone
 }
@@ -96,11 +97,40 @@ resource "ibm_is_subnet" "rhelai_subnet" {
 }
 
 ##############################################################################
-# Create instance template
+# Create Security Group
+##############################################################################
+
+
+resource "ibm_is_security_group" "gpu_vsi_sg" {
+  name                                      = "${var.prefix}-sg"
+  resource_group                            = module.resource_group.resource_group_id
+  vpc                                       = ibm_is_vpc.rhelai_vpc.id
+}
+
+resource "ibm_is_security_group_rule" "rule1" {
+  group                                     = ibm_is_security_group.gpu_vsi_sg.id  
+  direction                                 = "inbound"
+  icmp {
+  }  
+  depends_on = [ibm_is_security_group.gpu_vsi_sg]
+}
+
+resource "ibm_is_security_group_rule" "rule2" {
+  group                                     = ibm_is_security_group.gpu_vsi_sg.id
+  direction                                 = "inbound"
+  tcp {
+    port_min                                = 22
+    port_max                                = 22
+  }
+  depends_on = [ibm_is_security_group_rule.rule1]
+}
+
+##############################################################################
+# Create GPU instance
 ##############################################################################
 
 resource "ibm_is_instance" "gpu_vsi" {
-  name                                    = "${var.prefix}-instance"
+  name                                    = "${var.prefix}-gpu-vsi"
   resource_group                          = module.resource_group.resource_group_id
   image                                   = ibm_is_image.custom_image.id
   profile                                 = local.gpu_machine_type    
@@ -109,20 +139,108 @@ resource "ibm_is_instance" "gpu_vsi" {
   keys                                    = [ibm_is_ssh_key.rhelai_ssh_key.id]
   primary_network_interface {
     subnet                                = ibm_is_subnet.rhelai_subnet.id
+    security_groups                       = [ibm_is_security_group.gpu_vsi_sg.id]
   }
   boot_volume {        
     size                                  = 250
   }
-}
+  user_data                               = <<-EOT
+    #!/bin/bash
 
-resource "ibm_is_subnet" "rhelai_subnet" {
-  name                                      = "${var.prefix}-rhelai-subnet"
-  resource_group                            = module.resource_group.resource_group_id
-  vpc                                       = ibm_is_vpc.rhelai_vpc.id
-  zone                                      = var.zone
-  total_ipv4_address_count                  = 16
-}
+    # Check if the script is run as root
+    if [ "$EUID" -ne 0 ]; then
+      echo "Please run as root."
+      exit 1
+    fi
 
+    # Navigate to /etc directory
+    if cd /etc; then
+      echo "Changed directory to /etc."
+    else
+      echo "Failed to change directory to /etc. Exiting."
+      exit 1
+    fi
+
+    # Create the 'ilab' directory if it doesn't already exist
+    if [ ! -d "ilab" ]; then
+      if mkdir ilab; then
+        echo "Directory 'ilab' created."
+      else
+        echo "Failed to create directory 'ilab'. Exiting."
+        exit 1
+      fi
+    else
+      echo "Directory 'ilab' already exists."
+    fi
+
+    # Navigate to 'ilab' directory
+    if cd ilab; then
+      echo "Changed directory to 'ilab'."
+    else
+      echo "Failed to change directory to 'ilab'. Exiting."
+      exit 1
+    fi
+
+    # Create or truncate the 'insights-opt-out' file
+    if echo > insights-opt-out; then
+      echo "File 'insights-opt-out' created or truncated."
+    else
+      echo "Failed to create or truncate 'insights-opt-out'. Exiting."
+      exit 1
+    fi
+
+    # Verify the contents of /etc/ilab directory
+    if ls -l /etc/ilab; then
+      echo "Contents of /etc/ilab listed successfully."
+    else
+      echo "Failed to list contents of /etc/ilab. Exiting."
+      exit 1
+    fi
+
+    # Navigate to 'root' directory
+    if cd /root; then
+      echo "Changed directory to /root."
+    else
+      echo "Failed to change directory to /root. Exiting."
+      exit 1
+    fi
+
+    # Check if 'ilab' command exists and runs
+    if command -v ilab &> /dev/null; then
+      echo "'ilab' command exists. Running 'ilab'."
+      if ilab; then
+        echo "'ilab' command ran successfully."
+      else
+        echo "'ilab' command failed to run."
+        exit 1
+      fi
+    else
+      echo "'ilab' command not found. Please ensure it is installed and in your PATH."
+      exit 1
+    fi
+
+
+    # Run 'ilab config init' and select the default option (0)
+    echo "0" | ilab config init
+
+    if [ $? -eq 0 ]; then
+      echo "'ilab config init' completed successfully with default CPU-only profile."
+    else
+      echo "Failed to initialize 'ilab' configuration. Exiting."
+      exit 1
+    fi
+
+
+
+    exit 0
+
+  EOT
+  
+  timeouts {
+    create = "120m"
+    update = "120m"
+  }
+}
 
 ##############################################################################
 # Create load balancer
@@ -151,6 +269,6 @@ resource "ibm_is_lb_pool_member" "lb_pool_member" {
   lb        = ibm_is_lb.lb_app.id
   pool      = ibm_is_lb_pool.lb_pool.pool_id
   port      = 8000
-  target_id = ibm_is_instance.gpu_vsi_template.id
+  target_id = ibm_is_instance.gpu_vsi.id
   weight    = 100
 }
