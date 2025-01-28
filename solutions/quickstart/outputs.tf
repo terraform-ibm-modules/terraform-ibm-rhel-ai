@@ -2,7 +2,6 @@
 # Outputs
 ##############################################################################
 
-
 output "resource_group_name" {
   description = "The name of the resource group used"
   value       = module.rhelai.resource_group_name
