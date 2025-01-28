@@ -2,14 +2,9 @@
 # Outputs
 ##############################################################################
 
-output resource_group_id {
-    description = "The ID of the resource group created or used"
-    value       = module.resource_group.resource_group_id
-}
-
 output "resource_group_name" {
   description = "The name of the resource group used"
-  value       = module.resource_group.resource_group_name
+  value       = module.rhelai.resource_group_name
 }
 
 output "region" {
@@ -24,5 +19,10 @@ output "prefix" {
 
 output "image_id" {
   description = "The rhel.ai custom image created on ibm cloud from the rehel.ai downloaded url"
-  value       = ibm_is_image.custom_image.id
+  value       = module.rhelai.image_id
+}
+
+output "url" {
+  description = "The url to get Open API definitions for chatting with model"
+  value       = module.ilab.model_url
 }

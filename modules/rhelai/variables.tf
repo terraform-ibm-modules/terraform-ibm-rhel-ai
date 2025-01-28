@@ -52,17 +52,3 @@ variable "image_url" {
   description = "A RHEL AI image url location downloaded and stored from REDHAT"
 }
 
-variable "sm_instance_id" {
-  type        = string
-  description = ""
-}
-
-variable  "sm_ssh_private_key_id" {
-  type        = string
-  description = ""
-}
-
-variable   "sm_cert_id" {
-  type        = string
-  description = ""
-}
