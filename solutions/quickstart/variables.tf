@@ -54,15 +54,15 @@ variable "image_url" {
 
 variable "sm_instance_id" {
   type        = string
-  description = ""
+  description = "Secrets Manager Instance ID"
 }
 
 variable  "sm_ssh_private_key_id" {
   type        = string
-  description = ""
+  description = "Secret ID of SSH Private Key stored in secret manager"
 }
 
 variable   "sm_cert_id" {
   type        = string
-  description = ""
+  description = "Secret ID of SSL certificate stored in secret manager"
 }
