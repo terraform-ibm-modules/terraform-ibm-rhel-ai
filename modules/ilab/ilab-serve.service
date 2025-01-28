@@ -1,0 +1,9 @@
+[Unit]
+Description=ilab model serve service
+
+[Install]
+WantedBy=multi-user.target default.target
+
+[Service]
+ExecStart= ilab -v model serve --model-path /root/.cache/instructlab/models/instructlab/granite-7b-lab  --backend vllm --gpus 2 -- --served-model-name granite_service
+Restart=always
