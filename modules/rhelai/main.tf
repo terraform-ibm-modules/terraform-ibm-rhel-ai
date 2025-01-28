@@ -118,17 +118,6 @@ resource "ibm_is_security_group_rule" "rule1" {
   depends_on = [ibm_is_security_group.gpu_vsi_sg]
 }
 
-resource "ibm_is_security_group_rule" "rule2_0" {
-  group                                     = ibm_is_security_group.gpu_vsi_sg.id
-  direction                                 = "inbound"
-  remote                                    = "70.113.32.66"
-  tcp {
-    port_min                                = 22
-    port_max                                = 22
-  }
-  depends_on = [ibm_is_security_group_rule.rule1]
-}
-
 resource "ibm_is_security_group_rule" "rule2_1" {
   group                                     = ibm_is_security_group.gpu_vsi_sg.id
   direction                                 = "inbound"
