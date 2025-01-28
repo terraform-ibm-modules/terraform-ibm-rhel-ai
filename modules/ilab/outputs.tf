@@ -1,8 +1,8 @@
 ##############################################################################
-# Provider config
+# Outputs
 ##############################################################################
 
-provider "ibm" {
-  ibmcloud_api_key = var.ibmcloud_api_key
-  region           = var.region
+output "model_url" {
+    description = "URL to Open API docs to chat with model"
+    value       = "https://${var.public_ip_address}:8443/docs"
 }
