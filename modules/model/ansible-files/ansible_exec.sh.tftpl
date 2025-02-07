@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Install ibm.cloudcollection package
+ansible-galaxy collection install ibm.cloudcollection
+
+# Set environment variables for model repo
+export MODEL_REPO=${model_repository}
+export ${model_repo_token_key}=${model_repo_token_value}
+
+# Models in COS buckets
+export BUCKET_NAME=${bucket_name}
+export REGION=${region}
+
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+python get-pip.py
+python -m pip install ibm-cos-sdk 
+
+rhelai_inventory_file=${rhelai_inventory_file}
+ilab_playbook_file=${ilab_playbook_file}
+ilab_service_file=${ilab_service_file}
+
+#Execute ansible playbook
+ansible-playbook -i $${rhelai_inventory_file} $${ilab_playbook_file}
+if [ $? -ne 0 ]; then
+    echo "Failed to run ansible playbook successfully"
+    exit 1
+fi
+
+echo \"Playbook to download model and serve with ilab is successful\"

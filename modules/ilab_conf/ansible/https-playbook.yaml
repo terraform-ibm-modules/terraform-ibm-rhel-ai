@@ -1,0 +1,7 @@
+---
+- name: RHEL.ai ilab Ansible playbook
+  hosts: all
+  remote_user: root
+  vars:
+  roles:
+    - proxy

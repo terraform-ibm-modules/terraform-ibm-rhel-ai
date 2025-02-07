@@ -1,6 +1,9 @@
 # Tasks are created based on reference from Redhat
 # Ref url: https://docs.redhat.com/en/documentation/red_hat_enterprise_linux_ai/1.1/html/building_your_rhel_ai_environment/serving_and_chatting#creating_systemd_serving
 ---
+- name: Change the directory to root
+  command: cd /root/
+
 - name: Ensure /etc/ilab directory exists
   file:
     path: /etc/ilab
@@ -26,11 +29,19 @@
   debug:
     var: ilab_config_output.stdout
 
-- name: Download the granite model
-  command: ilab model download --repository instructlab/granite-7b-lab
+- name: Download the model from registry
+  command: ilab model download --repository {{ model_repo }}  
   register: model_download_output
   timeout: 1800
+  when: model_repo is regex('^[a-zA-Z0-9\-]+\/[a-zA-Z0-9\-\.]+$')
 
+- name: Download the model from COS
+  command: python get_model_files.py
+  timeout: 7200
+  when:
+    - cos_bucket_name is defined and cos_bucket_name | length > 0    
+    - region is defined and region | length > 0
+      
 - name: Debug output from model download
   debug:
     var: model_download_output.stdout
@@ -42,7 +53,7 @@
     mode: '0755'
   become: yes
 
-- name: Copy a ilab-serve.service file into systemd user directory
+- name: Copy ilab_serve.service file systemd user directory
   ansible.builtin.copy:
     src: ./ilab-serve.service
     dest: /root/.config/systemd/user

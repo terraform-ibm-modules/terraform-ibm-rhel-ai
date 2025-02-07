@@ -1,0 +1,79 @@
+- name: Copy the ilab config files
+  ansible.builtin.copy:
+    src: ./config.yaml
+    dest: /root/.config/instructlab/config.yaml
+
+- name: Re-Start the ilab-serve.service service
+  command: systemctl --user restart ilab-serve.service
+
+- name: Wait for the ilab model service to be available
+  wait_for:
+    host: 0.0.0.0
+    port: 8000
+    state: started
+    timeout: 900
+
+- name: Create a directory for ssl
+  file:
+    path: /root/nginx/ssl 
+    state: directory
+    mode: '0755'
+  become: yes
+  when: enable_https
+
+- name: Copy a ssl certificat file into /root/nginx/conf.d
+  ansible.builtin.copy:
+    src: ./certificate.crt
+    dest: /root/nginx/ssl/certificate.crt
+  when: enable_https
+
+- name: Copy a ssl private key file into /root/nginx/ssl
+  ansible.builtin.copy:
+    src: ./private.key
+    dest: /root/nginx/ssl/private.key
+  when: enable_https
+
+- name: Create a directory for conf.d
+  file:
+    path: /root/nginx/conf.d
+    state: directory    
+  become: yes
+  when: enable_https
+
+- name: Copy a https-proxy.conf file into conf.d directory
+  ansible.builtin.copy:
+    src: ./https-proxy.conf
+    dest: /root/nginx/conf.d/
+  when: enable_https
+
+- name: Copy a https-proxy.service file into systemd user directory
+  ansible.builtin.copy:
+    src: ./https-proxy.service
+    dest: /root/.config/systemd/user
+  when: enable_https
+
+- name: Reload the systemd manager configuration
+  command: systemctl --user daemon-reload
+  when: enable_https
+
+- name: Start the https-proxy model serve systemd service
+  command: systemctl --user start https-proxy.service
+  when: enable_https
+
+- name: Check that the service is running 
+  command: systemctl --user status https-proxy.service
+  register: https_proxy_service_status
+  when: enable_https
+
+- name: Debug print the status of the https-proxy service
+  debug:
+    var: https_proxy_service_status.stdout
+  when: enable_https
+
+- name: Wait for the nginx service to be available
+  wait_for:
+    host: 0.0.0.0
+    port: 8443
+    state: started
+    timeout: 60
+  when: enable_https
