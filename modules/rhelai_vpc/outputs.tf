@@ -21,3 +21,8 @@ output  "subnet_id" {
   description = "Subnet id"
   value       = ibm_is_subnet.rhelai_subnet.id
 }
+
+output  "public_gateway_id" {
+  description = "Public gateway id attached to VPC"
+  value       = ibm_is_public_gateway.rhelai_publicgateway.id
+}
