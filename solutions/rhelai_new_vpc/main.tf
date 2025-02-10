@@ -106,6 +106,6 @@ resource "terraform_data" "private_only" {
   count = var.enable_private_only ? 1 : 0
 
   provisioner "local-exec" {
-    command = "terraform destroy -target=ibm_is_floating_ip.ip_address -auto-approve"
+    command = "terraform destroy -target=ibm_is_floating_ip.ip_address -auto-approve -lock=false"
   }
 }
