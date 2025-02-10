@@ -6,7 +6,6 @@
     model_repo: "{{ lookup('ansible.builtin.env', 'MODEL_REPO') }}"
     model_name: "{{ lookup('ansible.builtin.env', 'MODEL_NAME') }}"
     region: "{{ lookup('ansible.builtin.env', 'REGION') }}"
-    cos_bucket_name: "{{ lookup('ansible.builtin.env', 'BUCKET_NAME') }}"    
+    cos_bucket_name: "{{ lookup('ansible.builtin.env', 'BUCKET_NAME') }}"
   roles:
-    - ilab    
-  
+    - ilab

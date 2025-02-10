@@ -3,5 +3,6 @@
   hosts: all
   remote_user: root
   vars:
+    enable_https: "{{ enable_https }}"
   roles:
     - proxy

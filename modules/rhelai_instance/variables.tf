@@ -11,7 +11,7 @@
 
 variable "prefix" {
   type        = string
-  description = "Prefix to append to all resources created by this example"  
+  description = "Prefix to append to all resources created by this example"
 }
 
 variable "resource_group_id" {
@@ -35,7 +35,7 @@ variable "subnet_id" {
   description = "The Subnet ID where the RHEL.ai VSI instance will be created"
 }
 
-variable  "security_group_id" {
+variable "security_group_id" {
   type        = string
   description = "The Security Group Id to attach to the RHEL.ai VSI instance"
 }
@@ -45,12 +45,12 @@ variable "image_url" {
   description = "A RHEL AI image url location downloaded and stored from REDHAT"
 }
 
-variable  "image_id" {
+variable "image_id" {
   type        = string
   description = "The RHEL.ai image id to use while creating a GPU VSI instance"
 }
 
-variable  "machine_type" {
+variable "machine_type" {
   type        = string
   description = "The machine type to be created. Please provide GPU based machine type to run the solution"
 }

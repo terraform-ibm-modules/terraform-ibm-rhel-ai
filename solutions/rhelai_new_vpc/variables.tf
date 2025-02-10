@@ -21,11 +21,12 @@ variable "resource_group" {
 variable "existing_resource_group" {
   type        = string
   description = "The name of a existing resource group to provision resources in. Do not set if you fill resource_group"
+  default     = null
 }
 
 variable "region" {
   description = "The region where observability resources are created."
-  type             = string
+  type        = string
 }
 
 variable "zone" {
@@ -43,12 +44,12 @@ variable "image_url" {
   description = "A RHEL AI image url location downloaded and stored from REDHAT"
 }
 
-variable  "image_id" {
+variable "image_id" {
   type        = string
   description = "The RHEL.ai image id to use while creating a GPU VSI instance"
 }
 
-variable  "machine_type" {
+variable "machine_type" {
   type        = string
   description = "The machine type to be created. Please provide GPU based machine type to run the solution"
 }
@@ -69,7 +70,7 @@ variable "enable_private_only" {
 
 variable "ssh_private_key" {
   description = "SSH Private Key to login"
-  type        = string  
+  type        = string
   sensitive   = true
 }
 
@@ -81,7 +82,7 @@ variable "model_repo" {
 variable "model_repo_token_key" {
   description = "The name / key of the variable to pass the authorization token of the model repository in hugging face"
   type        = string
-  default     = "HF_TOKEN"  
+  default     = "HF_TOKEN"
 }
 
 variable "model_repo_token_value" {
@@ -91,18 +92,18 @@ variable "model_repo_token_value" {
 }
 
 variable "bucket_name" {
-  description  = "Provide the COS bucket name where you model files reside. If you are using model registry then this field should be empty"
-  type         = string
+  description = "Provide the COS bucket name where you model files reside. If you are using model registry then this field should be empty"
+  type        = string
 }
 
 variable "cos_region" {
-  description  = "Provide COS region where the model bucket reside. If you are using model registry then this field should be empty"
-  type         = string
+  description = "Provide COS region where the model bucket reside. If you are using model registry then this field should be empty"
+  type        = string
 }
 
 variable "crn_service_id" {
-  description  = "Provide Bucket instance CRN. If you are using model registry then this field should be empty"
-  type         = string
+  description = "Provide Bucket instance CRN. If you are using model registry then this field should be empty"
+  type        = string
 }
 
 ########################################################################################################################
@@ -110,25 +111,24 @@ variable "crn_service_id" {
 ########################################################################################################################
 
 variable "enable_https" {
-    description = "Enable https to model service?"
-    type        = bool
+  description = "Enable https to model service?"
+  type        = bool
 }
 
 variable "https_certificate" {
-    description = "SSL certificate required for https setup"
-    type        = string
-    sensitive   = true
+  description = "SSL certificate required for https setup"
+  type        = string
+  sensitive   = true
 }
 
 variable "https_privatekey" {
-    description = "SSL privatekey (optional) for https setup"
-    type        = string
-    sensitive   = true
+  description = "SSL privatekey (optional) for https setup"
+  type        = string
+  sensitive   = true
 }
 
 variable "model_apikey" {
-    description = "Model API Key setup to authorize while inferencing the model"
-    type        = string
-    sensitive   = true
+  description = "Model API Key setup to authorize while inferencing the model"
+  type        = string
+  sensitive   = true
 }
-

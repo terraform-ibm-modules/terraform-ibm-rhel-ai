@@ -3,7 +3,7 @@
 #   - Host RHEL.ai on new VPC
 #
 locals {
-  always_run        = timestamp()
+  always_run = timestamp()
 }
 
 
@@ -13,7 +13,7 @@ locals {
 module "resource_group" {
   source                       = "terraform-ibm-modules/resource-group/ibm"
   version                      = "1.1.6"
-  resource_group_name          = var.resource_group  
+  resource_group_name          = var.resource_group
   existing_resource_group_name = var.existing_resource_group
 }
 
@@ -23,11 +23,10 @@ module "resource_group" {
 ##############################################################################
 
 module "rhelai_vpc" {
-    source                  = "../../modules/rhelai_vpc"
-    prefix                  = var.prefix
-    resource_group_id       = module.resource_group.resource_group_id
-    region                  = var.region
-    zone                    = var.zone
+  source            = "../../modules/rhelai_vpc"
+  prefix            = var.prefix
+  resource_group_id = module.resource_group.resource_group_id
+  zone              = var.zone
 }
 
 ##############################################################################
@@ -35,18 +34,18 @@ module "rhelai_vpc" {
 ##############################################################################
 
 module "rhelai_instance" {
-    source                  = "../../modules/rhelai_instance"
-    prefix                  = var.prefix
-    resource_group_id       = module.resource_group.resource_group_id
-    zone                    = var.zone
-    vpc_id                  = module.rhelai_vpc.vpc_id
-    subnet_id               = module.rhelai_vpc.subnet_id
-    security_group_id       = module.rhelai_vpc.security_group_id
-    image_url               = var.image_url
-    image_id                = var.image_id
-    machine_type            = var.machine_type
-    ssh_key                 = var.ssh_key
-    depends_on              = [module.rhelai_vpc]
+  source            = "../../modules/rhelai_instance"
+  prefix            = var.prefix
+  resource_group_id = module.resource_group.resource_group_id
+  zone              = var.zone
+  vpc_id            = module.rhelai_vpc.vpc_id
+  subnet_id         = module.rhelai_vpc.subnet_id
+  security_group_id = module.rhelai_vpc.security_group_id
+  image_url         = var.image_url
+  image_id          = var.image_id
+  machine_type      = var.machine_type
+  ssh_key           = var.ssh_key
+  depends_on        = [module.rhelai_vpc]
 }
 
 ##############################################################################
@@ -54,10 +53,10 @@ module "rhelai_instance" {
 ##############################################################################
 
 resource "ibm_is_floating_ip" "ip_address" {
-  name                                      = "${var.prefix}-floating-ip"
-  resource_group                            = module.resource_group.resource_group_id
-  target                                    = module.rhelai_instance.primary_network_interface_id
-  depends_on                                = [module.rhelai_instance]
+  name           = "${var.prefix}-floating-ip"
+  resource_group = module.resource_group.resource_group_id
+  target         = module.rhelai_instance.primary_network_interface_id
+  depends_on     = [module.rhelai_instance]
 }
 
 ##############################################################################
@@ -65,17 +64,17 @@ resource "ibm_is_floating_ip" "ip_address" {
 ##############################################################################
 
 module "model" {
-    source                   = "../../modules/model"
-    ssh_private_key          = var.ssh_private_key
-    rhelai_ip                = ibm_is_floating_ip.ip_address.address
-    model_repo               = var.model_repo
-    model_repo_token_key     = var.model_repo_token_key
-    model_repo_token_value   = var.model_repo_token_value
-    bucket_name              = var.bucket_name
-    cos_region               = var.cos_region
-    ibmcloud_api_key         = var.ibmcloud_api_key
-    crn_service_id           = var.crn_service_id
-    depends_on               = [ibm_is_floating_ip.ip_address]
+  source                 = "../../modules/model"
+  ssh_private_key        = var.ssh_private_key
+  rhelai_ip              = ibm_is_floating_ip.ip_address.address
+  model_repo             = var.model_repo
+  model_repo_token_key   = var.model_repo_token_key
+  model_repo_token_value = var.model_repo_token_value
+  bucket_name            = var.bucket_name
+  cos_region             = var.cos_region
+  ibmcloud_api_key       = var.ibmcloud_api_key
+  crn_service_id         = var.crn_service_id
+  depends_on             = [ibm_is_floating_ip.ip_address]
 }
 
 ##############################################################################
@@ -83,14 +82,14 @@ module "model" {
 ##############################################################################
 
 module "ilab_conf" {
-    depends_on               = [module.model]
-    source                   = "../../modules/ilab_conf"
-    ssh_private_key          = var.ssh_private_key
-    rhelai_ip                = ibm_is_floating_ip.ip_address.address
-    enable_https             = var.enable_https
-    https_certificate        = var.https_certificate
-    https_privatekey         = var.https_privatekey
-    model_apikey             = var.model_apikey
+  depends_on        = [module.model]
+  source            = "../../modules/ilab_conf"
+  ssh_private_key   = var.ssh_private_key
+  rhelai_ip         = ibm_is_floating_ip.ip_address.address
+  enable_https      = var.enable_https
+  https_certificate = var.https_certificate
+  https_privatekey  = var.https_privatekey
+  model_apikey      = var.model_apikey
 }
 
 ##############################################################################
@@ -98,15 +97,15 @@ module "ilab_conf" {
 ##############################################################################
 
 resource "terraform_data" "private_only" {
-  depends_on       = [module.ilab_conf]
+  depends_on = [module.ilab_conf]
   triggers_replace = [
     local.always_run
   ]
 
   # Check if the service needs to be private only
-  count                       = var.enable_private_only ? 1 : 0
+  count = var.enable_private_only ? 1 : 0
 
   provisioner "local-exec" {
-    command                   = "terraform destroy -target=ibm_is_floating_ip.ip_address -auto-approve"
+    command = "terraform destroy -target=ibm_is_floating_ip.ip_address -auto-approve"
   }
 }

@@ -8,9 +8,9 @@
 ##############################################################################
 
 resource "ibm_is_ssh_key" "rhelai_ssh_key" {
-  name              = "${var.prefix}-ssh-key"
-  public_key        = var.ssh_key
-  resource_group    = var.resource_group_id
+  name           = "${var.prefix}-ssh-key"
+  public_key     = var.ssh_key
+  resource_group = var.resource_group_id
 }
 
 ##############################################################################
@@ -18,13 +18,13 @@ resource "ibm_is_ssh_key" "rhelai_ssh_key" {
 ##############################################################################
 
 resource "ibm_is_image" "custom_image" {
-  for_each          = var.image_url != null && var.image_url != "" ? toset(["create"]) : toset([])
-  name              = "${var.prefix}-custom-image"
-  href              = var.image_url
-  resource_group    = var.resource_group_id
-  operating_system  = "red-ai-9-amd64-nvidia-byol"
+  for_each         = var.image_url != null && var.image_url != "" ? toset(["create"]) : toset([])
+  name             = "${var.prefix}-custom-image"
+  href             = var.image_url
+  resource_group   = var.resource_group_id
+  operating_system = "red-ai-9-amd64-nvidia-byol"
 
-  //increase timeouts as per volume size
+  # increase timeouts as per volume size
   timeouts {
     create = "40m"
   }
@@ -35,21 +35,21 @@ resource "ibm_is_image" "custom_image" {
 ##############################################################################
 
 resource "ibm_is_instance" "gpu_vsi_1" {
-  name                                    = "${var.prefix}-vsi"
-  resource_group                          = var.resource_group_id
-  image                                   = var.image_id != null && var.image_id != "" ? var.image_id : ibm_is_image.custom_image["create"].id
-  profile                                 = var.machine_type    
-  vpc                                     = var.vpc_id
-  zone                                    = var.zone
-  keys                                    = [ibm_is_ssh_key.rhelai_ssh_key.id]
+  name           = "${var.prefix}-vsi"
+  resource_group = var.resource_group_id
+  image          = var.image_id != null && var.image_id != "" ? var.image_id : ibm_is_image.custom_image["create"].id
+  profile        = var.machine_type
+  vpc            = var.vpc_id
+  zone           = var.zone
+  keys           = [ibm_is_ssh_key.rhelai_ssh_key.id]
   primary_network_interface {
-    subnet                                = var.subnet_id
-    security_groups                       = [var.security_group_id]
+    subnet          = var.subnet_id
+    security_groups = [var.security_group_id]
   }
-  boot_volume {        
-    size                                  = 250
+  boot_volume {
+    size = 250
   }
-  user_data                               = <<-EOT
+  user_data = <<-EOT
     #!/bin/bash
 
     # Check if the script is run as root
@@ -69,7 +69,7 @@ resource "ibm_is_instance" "gpu_vsi_1" {
     # Create the 'ilab' directory if it doesn't already exist
     if [ ! -d "ilab" ]; then
       if mkdir ilab; then
-        echo "Directory 'ilab' created."        
+        echo "Directory 'ilab' created."
       else
         echo "Failed to create directory 'ilab'. Exiting."
         exit 1

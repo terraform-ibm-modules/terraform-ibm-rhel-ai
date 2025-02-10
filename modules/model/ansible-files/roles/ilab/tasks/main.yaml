@@ -21,7 +21,7 @@
     command: ilab config init
     responses:
       "Enter the number of your choice.*\\[0\\].*" : 0
-      ".*\\[y/N\\]:": "N"      
+      ".*\\[y/N\\]:": "N"
   register: ilab_config_output
   timeout: 300
 
@@ -30,7 +30,7 @@
     var: ilab_config_output.stdout
 
 - name: Download the model from registry
-  command: ilab model download --repository {{ model_repo }}  
+  command: ilab model download --repository {{ model_repo }}
   register: model_download_output
   timeout: 1800
   when: model_repo is regex('^[a-zA-Z0-9\-]+\/[a-zA-Z0-9\-\.]+$')
@@ -39,9 +39,9 @@
   command: python get_model_files.py
   timeout: 7200
   when:
-    - cos_bucket_name is defined and cos_bucket_name | length > 0    
+    - cos_bucket_name is defined and cos_bucket_name | length > 0
     - region is defined and region | length > 0
-      
+
 - name: Debug output from model download
   debug:
     var: model_download_output.stdout
@@ -64,7 +64,7 @@
 - name: Start the ilab model serve systemd service
   command: systemctl --user start ilab-serve.service
 
-- name: Check that the service is running 
+- name: Check that the service is running
   command: systemctl --user status ilab-serve.service
   register: ilab_service_status
 

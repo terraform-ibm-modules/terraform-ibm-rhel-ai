@@ -11,17 +11,12 @@
 
 variable "prefix" {
   type        = string
-  description = "Prefix to append to all resources created by this example"  
+  description = "Prefix to append to all resources created by this example"
 }
 
 variable "resource_group_id" {
   type        = string
   description = "The if of a the resource group to provision resources in."
-}
-
-variable "region" {
-  description = "The region where resources are created."
-  type             = string    
 }
 
 variable "zone" {

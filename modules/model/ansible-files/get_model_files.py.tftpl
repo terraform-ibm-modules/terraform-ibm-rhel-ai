@@ -28,7 +28,7 @@ objects = cos_client.list_objects_v2(Bucket=BUCKET_NAME).get("Contents", [])
 def download_file(file_name):
     """Function to download a single file from IBM COS."""
     local_file_path = os.path.join(LOCAL_DOWNLOAD_PATH, file_name)
-    
+
     print(f"⬇️ Downloading {file_name}...")
 
     try:
