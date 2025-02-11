@@ -23,3 +23,8 @@ variable "zone" {
   description = "The zone where the RHEL.ai instance needs to be deployed"
   type        = string
 }
+
+variable "vpc_id" {
+  description = "If there is existing VPC. Then provide the VPC id"
+  type        = string
+}

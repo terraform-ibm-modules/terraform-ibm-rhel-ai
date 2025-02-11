@@ -9,7 +9,7 @@ output "public_gateway" {
 
 output "vpc_id" {
   description = "The VPC ID created"
-  value       = ibm_is_vpc.rhelai_vpc.id
+  value       = try(ibm_is_vpc.rhelai_vpc[0].id, var.vpc_id)
 }
 
 output "security_group_id" {

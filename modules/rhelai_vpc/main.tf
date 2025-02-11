@@ -3,11 +3,16 @@
 #   - Below code should be replaced with the code for the root level module
 #
 
+locals {
+  l_vpc_id = try(length(var.vpc_id), 0) > 0 ? var.vpc_id : null
+}
+
 ##############################################################################
 # Create VPC and Subet
 ##############################################################################
 
 resource "ibm_is_vpc" "rhelai_vpc" {
+  count          = local.l_vpc_id == null ? 1 : 0
   name           = "${var.prefix}-rhelai-vpc"
   resource_group = var.resource_group_id
 }
@@ -15,14 +20,14 @@ resource "ibm_is_vpc" "rhelai_vpc" {
 resource "ibm_is_public_gateway" "rhelai_publicgateway" {
   name           = "${var.prefix}-rhelai-gateway"
   resource_group = var.resource_group_id
-  vpc            = ibm_is_vpc.rhelai_vpc.id
+  vpc            = try(ibm_is_vpc.rhelai_vpc[0].id, var.vpc_id)
   zone           = var.zone
 }
 
 resource "ibm_is_subnet" "rhelai_subnet" {
   name                     = "${var.prefix}-rhelai-subnet"
   resource_group           = var.resource_group_id
-  vpc                      = ibm_is_vpc.rhelai_vpc.id
+  vpc                      = try(ibm_is_vpc.rhelai_vpc[0].id, var.vpc_id)
   zone                     = var.zone
   public_gateway           = ibm_is_public_gateway.rhelai_publicgateway.id
   total_ipv4_address_count = 16
@@ -36,7 +41,7 @@ resource "ibm_is_subnet" "rhelai_subnet" {
 resource "ibm_is_security_group" "gpu_vsi_sg" {
   name           = "${var.prefix}-sg"
   resource_group = var.resource_group_id
-  vpc            = ibm_is_vpc.rhelai_vpc.id
+  vpc            = try(ibm_is_vpc.rhelai_vpc[0].id, var.vpc_id)
 }
 
 resource "ibm_is_security_group_rule" "rule1" {

@@ -34,6 +34,11 @@ variable "zone" {
   type        = string
 }
 
+variable "vpc_id" {
+  description = "A existing VPC ID where the RHEL.ai instance will be deployed"
+  type        = string
+}
+
 ########################################################################################################################
 # RHEL.ai VSI instance input variables
 ########################################################################################################################

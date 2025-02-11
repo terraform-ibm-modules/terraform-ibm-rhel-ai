@@ -27,6 +27,7 @@ module "rhelai_vpc" {
   prefix            = var.prefix
   resource_group_id = module.resource_group.resource_group_id
   zone              = var.zone
+  vpc_id            = var.vpc_id
 }
 
 ##############################################################################
