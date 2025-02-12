@@ -46,7 +46,7 @@ variable "vpc_id" {
 
 variable "image_url" {
   type        = string
-  description = "A RHEL AI image url location downloaded and stored from REDHAT"
+  description = "A COS url location where RHEL.ai image is downloaded and stored from REDHAT"
 }
 
 variable "image_id" {

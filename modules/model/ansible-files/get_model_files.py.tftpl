@@ -5,7 +5,7 @@ from ibm_botocore.client import Config
 
 # IBM Cloud COS Credentials
 IBM_CLOUD_API_KEY = "${ibmcloud_api_key}"
-ENDPOINT_URL = "https://s3.${region}.cloud-object-storage.appdomain.cloud"  # Change based on region
+ENDPOINT_URL = "https://s3.direct.${region}.cloud-object-storage.appdomain.cloud"  # Change based on region
 BUCKET_NAME = "${bucket_name}"
 LOCAL_DOWNLOAD_PATH = "${dest_dir}"  # Local directory to save files
 RESOURCE_INSTANCE_ID = "${crn_instance_id}"
