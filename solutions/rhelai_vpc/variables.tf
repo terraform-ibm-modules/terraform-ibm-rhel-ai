@@ -37,6 +37,7 @@ variable "zone" {
 variable "vpc_id" {
   description = "A existing VPC ID where the RHEL.ai instance will be deployed"
   type        = string
+  default     = null
 }
 
 ########################################################################################################################
@@ -47,11 +48,13 @@ variable "vpc_id" {
 variable "image_url" {
   type        = string
   description = "A COS url location where RHEL.ai image is downloaded and stored from REDHAT"
+  default     = ""
 }
 
 variable "image_id" {
   type        = string
   description = "The RHEL.ai image id to use while creating a GPU VSI instance"
+  default     = ""
 }
 
 variable "machine_type" {
@@ -67,6 +70,8 @@ variable "ssh_key" {
 variable "enable_private_only" {
   type        = bool
   description = "A flag to determine to have private IP only and no public network accessibility"
+  default     = false
+  nullable    = false
 }
 
 ########################################################################################################################
@@ -82,6 +87,7 @@ variable "ssh_private_key" {
 variable "model_repo" {
   type        = string
   description = "Provide the model path from hugging face registry only. If you have model in COS use the COS configuration variables"
+  default     = ""
 }
 
 variable "model_repo_token_key" {
@@ -94,21 +100,25 @@ variable "model_repo_token_value" {
   description = "The value of authorization token to access the model repository"
   type        = string
   sensitive   = true
+  default     = ""
 }
 
 variable "bucket_name" {
   description = "Provide the COS bucket name where you model files reside. If you are using model registry then this field should be empty"
   type        = string
+  default     = ""
 }
 
 variable "cos_region" {
   description = "Provide COS region where the model bucket reside. If you are using model registry then this field should be empty"
   type        = string
+  default     = ""
 }
 
 variable "crn_service_id" {
   description = "Provide Bucket instance CRN. If you are using model registry then this field should be empty"
   type        = string
+  default     = ""
 }
 
 ########################################################################################################################
@@ -118,22 +128,27 @@ variable "crn_service_id" {
 variable "enable_https" {
   description = "Enable https to model service?"
   type        = bool
+  default     = false
+  nullable    = false
 }
 
 variable "https_certificate" {
   description = "SSL certificate required for https setup"
   type        = string
   sensitive   = true
+  default     = ""
 }
 
 variable "https_privatekey" {
   description = "SSL privatekey (optional) for https setup"
   type        = string
   sensitive   = true
+  default     = ""
 }
 
 variable "model_apikey" {
   description = "Model API Key setup to authorize while inferencing the model"
   type        = string
   sensitive   = true
+  default     = ""
 }
