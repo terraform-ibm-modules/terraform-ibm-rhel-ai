@@ -81,7 +81,6 @@ variable "enable_private_only" {
 variable "ssh_private_key" {
   description = "SSH Private Key to login"
   type        = string
-  sensitive   = true
 }
 
 variable "model_repo" {
@@ -135,14 +134,12 @@ variable "enable_https" {
 variable "https_certificate" {
   description = "SSL certificate required for https setup"
   type        = string
-  sensitive   = true
   default     = ""
 }
 
 variable "https_privatekey" {
   description = "SSL privatekey (optional) for https setup"
   type        = string
-  sensitive   = true
   default     = ""
 }
 
