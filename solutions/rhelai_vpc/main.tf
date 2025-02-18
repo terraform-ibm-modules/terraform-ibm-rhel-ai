@@ -71,10 +71,10 @@ module "model" {
   model_repo             = var.model_repo
   model_repo_token_key   = var.model_repo_token_key
   model_repo_token_value = var.model_repo_token_value
-  bucket_name            = var.bucket_name
-  cos_region             = var.cos_region
+  model_bucket_name      = var.model_bucket_name
+  model_cos_region       = var.model_cos_region
   ibmcloud_api_key       = var.ibmcloud_api_key
-  crn_service_id         = var.crn_service_id
+  model_bucket_crn       = var.model_bucket_crn
   depends_on             = [ibm_is_floating_ip.ip_address]
 }
 

@@ -25,7 +25,7 @@ variable "existing_resource_group" {
 }
 
 variable "region" {
-  description = "The region where observability resources are created."
+  description = "The region where resources are created."
   type        = string
 }
 
@@ -35,7 +35,7 @@ variable "zone" {
 }
 
 variable "vpc_id" {
-  description = "A existing VPC ID where the RHEL.ai instance will be deployed"
+  description = "An existing VPC ID where the RHEL.ai instance will be deployed. This is optional if you want to create RHEL.ai instance in new VPC"
   type        = string
   default     = null
 }
@@ -47,13 +47,13 @@ variable "vpc_id" {
 
 variable "image_url" {
   type        = string
-  description = "A COS url location where RHEL.ai image is downloaded and stored from REDHAT"
+  description = "A COS url location where RHEL.ai image is downloaded and stored from Red Hat. This will create custom image"
   default     = ""
 }
 
 variable "image_id" {
   type        = string
-  description = "The RHEL.ai image id to use while creating a GPU VSI instance"
+  description = "The RHEL.ai image id to use while creating a GPU VSI instance. This is optional if you are creating custom image using the image_url"
   default     = ""
 }
 
@@ -79,13 +79,13 @@ variable "enable_private_only" {
 ########################################################################################################################
 
 variable "ssh_private_key" {
-  description = "SSH Private Key to login"
+  description = "SSH Private Key to login and execute model service operations. Use the private key of SSH public key provided to the VSI instance"
   type        = string
 }
 
 variable "model_repo" {
   type        = string
-  description = "Provide the model path from hugging face registry only. If you have model in COS use the COS configuration variables"
+  description = "Provide the model path from hugging face registry only. If you have model is in COS use the COS configuration variables"
   default     = ""
 }
 
@@ -96,25 +96,25 @@ variable "model_repo_token_key" {
 }
 
 variable "model_repo_token_value" {
-  description = "The value of authorization token to access the model repository"
+  description = "The value of authorization token to access the model repository from huggingface registry"
   type        = string
   sensitive   = true
   default     = ""
 }
 
-variable "bucket_name" {
+variable "model_bucket_name" {
   description = "Provide the COS bucket name where you model files reside. If you are using model registry then this field should be empty"
   type        = string
   default     = ""
 }
 
-variable "cos_region" {
+variable "model_cos_region" {
   description = "Provide COS region where the model bucket reside. If you are using model registry then this field should be empty"
   type        = string
   default     = ""
 }
 
-variable "crn_service_id" {
+variable "model_bucket_crn" {
   description = "Provide Bucket instance CRN. If you are using model registry then this field should be empty"
   type        = string
   default     = ""
@@ -132,13 +132,13 @@ variable "enable_https" {
 }
 
 variable "https_certificate" {
-  description = "SSL certificate required for https setup"
+  description = "SSL certificate required for https setup. Required if enable_https is true"
   type        = string
   default     = ""
 }
 
 variable "https_privatekey" {
-  description = "SSL privatekey (optional) for https setup"
+  description = "SSL privatekey (optional) for https setup. Required if enable_https is true"
   type        = string
   default     = ""
 }

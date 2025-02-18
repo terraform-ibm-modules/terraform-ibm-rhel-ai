@@ -12,13 +12,13 @@ locals {
   ansible_roles_ilab_file    = "${local.src_ansible_templates_dir}/roles/ilab/tasks/main.yaml"
   ansible_ilab_service_file  = "${local.src_ansible_templates_dir}/ilab-serve.service.tftpl"
   py_model_download_cos_file = "${local.src_ansible_templates_dir}/get_model_files.py.tftpl"
-  model_dest_dir             = var.bucket_name != null ? "/root/.cache/instructlab/models/${var.bucket_name}" : "${local.dst_files_dir}/"
+  model_dest_dir             = var.model_bucket_name != null ? "/root/.cache/instructlab/models/${var.model_bucket_name}" : "${local.dst_files_dir}/"
 
   l_model_repo             = var.model_repo != null ? var.model_repo : ""
   l_model_repo_token_value = var.model_repo_token_value != null ? var.model_repo_token_value : ""
-  l_bucket_name            = var.bucket_name != null ? var.bucket_name : ""
-  l_cos_region             = var.cos_region != null ? var.cos_region : ""
-  l_crn_service_id         = var.crn_service_id != null ? var.crn_service_id : ""
+  l_bucket_name            = var.model_bucket_name != null ? var.model_bucket_name : ""
+  l_cos_region             = var.model_cos_region != null ? var.model_cos_region : ""
+  l_crn_service_id         = var.model_bucket_crn != null ? var.model_bucket_crn : ""
 }
 
 ##############################################################
@@ -32,8 +32,8 @@ resource "terraform_data" "setup_ansible_host" {
     var.model_repo,
     var.model_repo_token_key,
     var.model_repo_token_value,
-    var.bucket_name,
-    var.cos_region,
+    var.model_bucket_name,
+    var.model_cos_region,
     var.ibmcloud_api_key
   ]
 
@@ -76,7 +76,7 @@ resource "terraform_data" "setup_ansible_host" {
   # Copy ilab-service file
   provisioner "file" {
     content = templatefile(local.ansible_ilab_service_file, {
-      model_name = try(length(var.bucket_name), 0) > 0 ? var.bucket_name : var.model_repo
+      model_name = try(length(var.model_bucket_name), 0) > 0 ? var.model_bucket_name : var.model_repo
     })
     destination = local.dst_ilab_service_file
   }
@@ -127,8 +127,8 @@ resource "terraform_data" "execute_playbooks" {
     var.model_repo,
     var.model_repo_token_key,
     var.model_repo_token_value,
-    var.bucket_name,
-    var.cos_region,
+    var.model_bucket_name,
+    var.model_cos_region,
     var.ibmcloud_api_key
   ]
 
@@ -158,10 +158,10 @@ resource "terraform_data" "clear_ansible_files" {
     var.model_repo,
     var.model_repo_token_key,
     var.model_repo_token_value,
-    var.bucket_name,
-    var.cos_region,
+    var.model_bucket_name,
+    var.model_cos_region,
     var.ibmcloud_api_key,
-    var.crn_service_id
+    var.model_bucket_crn
   ]
 
   depends_on = [terraform_data.execute_playbooks]

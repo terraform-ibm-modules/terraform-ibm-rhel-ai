@@ -74,6 +74,193 @@ resource "ibm_is_security_group_rule" "rule2_2" {
   depends_on = [ibm_is_security_group_rule.rule2_1]
 }
 
+resource "ibm_is_security_group_rule" "rule2_3" {
+  group     = ibm_is_security_group.gpu_vsi_sg.id
+  direction = "inbound"
+  remote    = "149.81.123.64/27"
+  tcp {
+    port_min = 22
+    port_max = 22
+  }
+  depends_on = [ibm_is_security_group_rule.rule2_2]
+}
+
+resource "ibm_is_security_group_rule" "rule2_4" {
+  group     = ibm_is_security_group.gpu_vsi_sg.id
+  direction = "inbound"
+  remote    = "149.81.135.64/28"
+  tcp {
+    port_min = 22
+    port_max = 22
+  }
+  depends_on = [ibm_is_security_group_rule.rule2_3]
+}
+
+resource "ibm_is_security_group_rule" "rule2_5" {
+  group     = ibm_is_security_group.gpu_vsi_sg.id
+  direction = "inbound"
+  remote    = "158.177.210.176/28"
+  tcp {
+    port_min = 22
+    port_max = 22
+  }
+  depends_on = [ibm_is_security_group_rule.rule2_4]
+}
+
+resource "ibm_is_security_group_rule" "rule2_6" {
+  group     = ibm_is_security_group.gpu_vsi_sg.id
+  direction = "inbound"
+  remote    = "158.177.216.144/28"
+  tcp {
+    port_min = 22
+    port_max = 22
+  }
+  depends_on = [ibm_is_security_group_rule.rule2_5]
+}
+
+resource "ibm_is_security_group_rule" "rule2_7" {
+  group     = ibm_is_security_group.gpu_vsi_sg.id
+  direction = "inbound"
+  remote    = "161.156.138.80/28"
+  tcp {
+    port_min = 22
+    port_max = 22
+  }
+  depends_on = [ibm_is_security_group_rule.rule2_6]
+}
+
+resource "ibm_is_security_group_rule" "rule2_8" {
+  group     = ibm_is_security_group.gpu_vsi_sg.id
+  direction = "inbound"
+  remote    = "159.122.111.224/27"
+  tcp {
+    port_min = 22
+    port_max = 22
+  }
+  depends_on = [ibm_is_security_group_rule.rule2_7]
+}
+
+resource "ibm_is_security_group_rule" "rule2_9" {
+  group     = ibm_is_security_group.gpu_vsi_sg.id
+  direction = "inbound"
+  remote    = "161.156.37.160/27"
+  tcp {
+    port_min = 22
+    port_max = 22
+  }
+  depends_on = [ibm_is_security_group_rule.rule2_8]
+}
+
+resource "ibm_is_security_group_rule" "rule2_10" {
+  group     = ibm_is_security_group.gpu_vsi_sg.id
+  direction = "inbound"
+  remote    = "158.175.106.64/27"
+  tcp {
+    port_min = 22
+    port_max = 22
+  }
+  depends_on = [ibm_is_security_group_rule.rule2_9]
+}
+
+resource "ibm_is_security_group_rule" "rule2_11" {
+  group     = ibm_is_security_group.gpu_vsi_sg.id
+  direction = "inbound"
+  remote    = "158.175.138.176/28"
+  tcp {
+    port_min = 22
+    port_max = 22
+  }
+  depends_on = [ibm_is_security_group_rule.rule2_10]
+}
+
+resource "ibm_is_security_group_rule" "rule2_12" {
+  group     = ibm_is_security_group.gpu_vsi_sg.id
+  direction = "inbound"
+  remote    = "141.125.79.160/28"
+  tcp {
+    port_min = 22
+    port_max = 22
+  }
+  depends_on = [ibm_is_security_group_rule.rule2_11]
+}
+
+resource "ibm_is_security_group_rule" "rule2_13" {
+  group     = ibm_is_security_group.gpu_vsi_sg.id
+  direction = "inbound"
+  remote    = "141.125.142.96/27"
+  tcp {
+    port_min = 22
+    port_max = 22
+  }
+  depends_on = [ibm_is_security_group_rule.rule2_12]
+}
+
+resource "ibm_is_security_group_rule" "rule2_14" {
+  group     = ibm_is_security_group.gpu_vsi_sg.id
+  direction = "inbound"
+  remote    = "158.176.111.64/27"
+  tcp {
+    port_min = 22
+    port_max = 22
+  }
+  depends_on = [ibm_is_security_group_rule.rule2_13]
+}
+
+resource "ibm_is_security_group_rule" "rule2_15" {
+  group     = ibm_is_security_group.gpu_vsi_sg.id
+  direction = "inbound"
+  remote    = "158.176.134.80/28"
+  tcp {
+    port_min = 22
+    port_max = 22
+  }
+  depends_on = [ibm_is_security_group_rule.rule2_14]
+}
+
+resource "ibm_is_security_group_rule" "rule2_16" {
+  group     = ibm_is_security_group.gpu_vsi_sg.id
+  direction = "inbound"
+  remote    = "169.45.0.0/16"
+  tcp {
+    port_min = 22
+    port_max = 22
+  }
+  depends_on = [ibm_is_security_group_rule.rule2_15]
+}
+
+resource "ibm_is_security_group_rule" "rule2_17" {
+  group     = ibm_is_security_group.gpu_vsi_sg.id
+  direction = "inbound"
+  remote    = "169.46.0.0/15"
+  tcp {
+    port_min = 22
+    port_max = 22
+  }
+  depends_on = [ibm_is_security_group_rule.rule2_16]
+}
+
+resource "ibm_is_security_group_rule" "rule2_18" {
+  group     = ibm_is_security_group.gpu_vsi_sg.id
+  direction = "inbound"
+  remote    = "169.48.0.0/12"
+  tcp {
+    port_min = 22
+    port_max = 22
+  }
+  depends_on = [ibm_is_security_group_rule.rule2_17]
+}
+
+resource "ibm_is_security_group_rule" "rule2_19" {
+  group     = ibm_is_security_group.gpu_vsi_sg.id
+  direction = "inbound"
+  remote    = "150.238.230.128/27"
+  tcp {
+    port_min = 22
+    port_max = 22
+  }
+  depends_on = [ibm_is_security_group_rule.rule2_18]
+}
+
 resource "ibm_is_security_group_rule" "rule3" {
   group     = ibm_is_security_group.gpu_vsi_sg.id
   direction = "inbound"

@@ -38,12 +38,12 @@ variable "model_repo_token_value" {
 ########################################################################################################################
 
 
-variable "bucket_name" {
+variable "model_bucket_name" {
   description = "Provide the COS bucket name where you model files reside. If you are using model registry then this field should be empty"
   type        = string
 }
 
-variable "cos_region" {
+variable "model_cos_region" {
   description = "Provide COS region where the model bucket reside. If you are using model registry then this field should be empty"
   type        = string
 }
@@ -54,7 +54,7 @@ variable "ibmcloud_api_key" {
   sensitive   = true
 }
 
-variable "crn_service_id" {
+variable "model_bucket_crn" {
   description = "Provide Bucket instance CRN. If you are using model registry then this field should be empty"
   type        = string
 }
