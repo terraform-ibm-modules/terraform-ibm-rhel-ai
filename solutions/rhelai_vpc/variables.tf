@@ -81,6 +81,7 @@ variable "enable_private_only" {
 variable "ssh_private_key" {
   description = "SSH Private Key to login and execute model service operations. Use the private key of SSH public key provided to the VSI instance"
   type        = string
+  sensitive   = true
 }
 
 variable "model_repo" {
@@ -134,12 +135,14 @@ variable "enable_https" {
 variable "https_certificate" {
   description = "SSL certificate required for https setup. Required if enable_https is true"
   type        = string
+  sensitive   = true
   default     = ""
 }
 
 variable "https_privatekey" {
   description = "SSL privatekey (optional) for https setup. Required if enable_https is true"
   type        = string
+  sensitive   = true
   default     = ""
 }
 
