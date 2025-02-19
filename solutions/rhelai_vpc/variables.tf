@@ -16,6 +16,12 @@ variable "prefix" {
 variable "resource_group" {
   type        = string
   description = "The name of a new resource group to provision resources in."
+  default     = null
+
+  validation {
+    condition     = var.resource_group != null || var.existing_resource_group != null
+    error_message = "You must supply either a new resource group name (resource_group) or an existing resource group name (existing_resource_group)."
+  }
 }
 
 variable "existing_resource_group" {
@@ -49,6 +55,12 @@ variable "image_url" {
   type        = string
   description = "A COS url location where RHEL.ai image is downloaded and stored from Red Hat. This will create custom image"
   default     = ""
+  nullable    = false
+
+  validation {
+    condition     = var.image_url == null ? true : length(var.image_url) == 0 ? true : startswith(var.image_url, "cos://")
+    error_message = "The image URL must be a COS URL with format `cos://<region>/<bucket>/<filename>`"
+  }
 }
 
 variable "image_id" {
