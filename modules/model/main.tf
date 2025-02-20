@@ -84,6 +84,7 @@ resource "terraform_data" "setup_ansible_host" {
   # Copy ansible executable shell script file
   provisioner "file" {
     content = templatefile(local.ansible_executable_file, {
+      terraform_files_dir    = local.dst_files_dir
       rhelai_inventory_file  = local.dst_rhelai_inventory_file
       ilab_playbook_file     = local.dst_ilab_playbook_file
       ilab_service_file      = local.dst_ilab_service_file
@@ -98,11 +99,12 @@ resource "terraform_data" "setup_ansible_host" {
 
   provisioner "file" {
     content = templatefile(local.py_model_download_cos_file, {
-      ibmcloud_api_key = var.ibmcloud_api_key
-      bucket_name      = local.l_bucket_name
-      region           = local.l_cos_region
-      dest_dir         = local.model_dest_dir
-      crn_instance_id  = local.l_crn_service_id
+      terraform_files_dir = local.dst_files_dir
+      ibmcloud_api_key    = var.ibmcloud_api_key
+      bucket_name         = local.l_bucket_name
+      region              = local.l_cos_region
+      dest_dir            = local.model_dest_dir
+      crn_instance_id     = local.l_crn_service_id
     })
     destination = local.dst_py_model_download_file
   }

@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Install ibm.cloudcollection package
-ansible-galaxy collection install ibm.cloudcollection
-
 # Set environment variables for model repo
 export MODEL_REPO=${model_repository}
 export ${model_repo_token_key}=${model_repo_token_value}
@@ -11,9 +8,10 @@ export ${model_repo_token_key}=${model_repo_token_value}
 export BUCKET_NAME=${bucket_name}
 export REGION=${region}
 
-curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-python get-pip.py
-python -m pip install ibm-cos-sdk
+git clone https://github.com/boto/jmespath.git ${terraform_files_dir}/jmespath
+git clone https://github.com/ibm/ibm-cos-sdk-python-s3transfer ${terraform_files_dir}/ibm_s3transfer
+git clone https://github.com/ibm/ibm-cos-sdk-python-core.git ${terraform_files_dir}/ibm_botocore
+git clone https://github.com/IBM/ibm-cos-sdk-python.git ${terraform_files_dir}/ibm-cos-sdk-python
 
 rhelai_inventory_file=${rhelai_inventory_file}
 ilab_playbook_file=${ilab_playbook_file}
