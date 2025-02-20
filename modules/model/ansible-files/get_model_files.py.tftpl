@@ -1,4 +1,9 @@
 import os
+import sys
+sys.path.append("${terraform_files_dir}/jmespath")
+sys.path.append("${terraform_files_dir}/ibm_s3transfer")
+sys.path.append("${terraform_files_dir}/ibm_botocore")
+sys.path.append("${terraform_files_dir}/ibm-cos-sdk-python")
 import ibm_boto3
 import concurrent.futures
 from ibm_botocore.client import Config
