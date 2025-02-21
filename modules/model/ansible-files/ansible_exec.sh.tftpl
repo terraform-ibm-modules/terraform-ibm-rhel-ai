@@ -8,10 +8,10 @@ export ${model_repo_token_key}=${model_repo_token_value}
 export BUCKET_NAME=${bucket_name}
 export REGION=${region}
 
-git clone https://github.com/boto/jmespath.git ${terraform_files_dir}/jmespath
-git clone https://github.com/ibm/ibm-cos-sdk-python-s3transfer ${terraform_files_dir}/ibm_s3transfer
-git clone https://github.com/ibm/ibm-cos-sdk-python-core.git ${terraform_files_dir}/ibm_botocore
-git clone https://github.com/IBM/ibm-cos-sdk-python.git ${terraform_files_dir}/ibm-cos-sdk-python
+git clone --branch 1.0.1 --depth 1 https://github.com/boto/jmespath.git ${terraform_files_dir}/jmespath
+git clone --branch 2.14.0 --depth 1 https://github.com/IBM/ibm-cos-sdk-python-s3transfer.git ${terraform_files_dir}/ibm_s3transfer
+git clone --branch 2.14.0 --depth 1 https://github.com/ibm/ibm-cos-sdk-python-core.git ${terraform_files_dir}/ibm_botocore
+git clone --branch 2.14.0 --depth 1 https://github.com/IBM/ibm-cos-sdk-python.git ${terraform_files_dir}/ibm-cos-sdk-python
 
 rhelai_inventory_file=${rhelai_inventory_file}
 ilab_playbook_file=${ilab_playbook_file}
