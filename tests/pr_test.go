@@ -34,7 +34,7 @@ const vpcSolutionDir = "solutions/rhelai_vpc"
 
 // additional constants for test
 const rhelaiImageName = "rhel-ai-nvidia-1.4-1739107849-x86_64-kvm.qcow2"
-const vsiMachineType = "gx3-24x120x1l40s"
+const vsiMachineType = "gx3-48x240x2l40s" // smaller that wasn't working = gx3-24x120x1l40s
 
 var sharedInfoSvc *cloudinfo.CloudInfoService
 var permanentResources map[string]interface{}
@@ -98,7 +98,6 @@ func TestMain(m *testing.M) {
 // Consistency test for the rhelai_vpc solution, with public option enabled.
 func TestRunVpcSolutionPublicSchematic(t *testing.T) {
 	t.Parallel()
-	//t.Skip("Skipping all schematic tests until we figure out how not to trigger WAF upload issues")
 
 	tarIncludePatterns := append(tarAdditionalIncludePatterns, "solutions/rhelai_vpc/*")
 
@@ -115,7 +114,7 @@ func TestRunVpcSolutionPublicSchematic(t *testing.T) {
 		Prefix:                 "rai-vpcpubs",
 		Region:                 "eu-es",
 		DeleteWorkspaceOnFail:  true,
-		WaitJobCompleteMinutes: 120,
+		WaitJobCompleteMinutes: 90,
 		CloudInfoService:       sharedInfoSvc,
 	})
 
@@ -168,7 +167,7 @@ func TestRunVpcSolutionPublicUpgradeSchematic(t *testing.T) {
 		Prefix:                 "rai-vpc-upg",
 		Region:                 "eu-es",
 		DeleteWorkspaceOnFail:  true,
-		WaitJobCompleteMinutes: 120,
+		WaitJobCompleteMinutes: 90,
 		CloudInfoService:       sharedInfoSvc,
 	})
 
