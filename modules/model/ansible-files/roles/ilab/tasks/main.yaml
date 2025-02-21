@@ -80,4 +80,4 @@
     host: localhost
     port: 8000
     state: started
-    timeout: 900
+    timeout: 1800
