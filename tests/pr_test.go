@@ -114,7 +114,7 @@ func TestRunVpcSolutionPublicSchematic(t *testing.T) {
 		TemplateFolder:         vpcSolutionDir,
 		Prefix:                 "rai-vpcpubs",
 		Region:                 "eu-es",
-		DeleteWorkspaceOnFail:  false,
+		DeleteWorkspaceOnFail:  true,
 		WaitJobCompleteMinutes: 120,
 		CloudInfoService:       sharedInfoSvc,
 	})
