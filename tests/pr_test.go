@@ -5,16 +5,17 @@ import (
 	"bytes"
 	"crypto/ecdsa"
 	"crypto/elliptic"
-	"crypto/rand"
+	crypto_rand "crypto/rand"
 	"crypto/x509"
 	"crypto/x509/pkix"
 	"encoding/pem"
 	"log"
 	"math/big"
 	"os"
-	"strings"
 	"testing"
 	"time"
+
+	"math/rand"
 
 	"github.com/google/uuid"
 	"github.com/gruntwork-io/terratest/modules/ssh"
@@ -33,7 +34,7 @@ const vpcSolutionDir = "solutions/rhelai_vpc"
 
 // additional constants for test
 const rhelaiImageName = "rhel-ai-nvidia-1.4-1739107849-x86_64-kvm.qcow2"
-const vsiMachineType = "gx3-48x240x2l40s"
+const vsiMachineType = "gx3-24x120x1l40s"
 
 var sharedInfoSvc *cloudinfo.CloudInfoService
 var permanentResources map[string]interface{}
@@ -41,13 +42,16 @@ var permanentResources map[string]interface{}
 // for included modules for each solution
 var tarAdditionalIncludePatterns []string
 var rhelaiImageCosUrl string
-var rhelaiModelCosCrn string
+var rhelaiModelCosBucketCrn string
 var rhelaiModelCosBucketName string
 var rhelaiModelCosRegion string
 
 // TLS certs for tests needing https
 var tlsTestCert string
 var tlsTestCertPriv string
+
+// for picking random zone, set in TestMain
+var zoneList []string
 
 // TestMain will be run before any parallel tests, used to set up a shared InfoService object to track region usage
 // for multiple tests
@@ -62,9 +66,10 @@ func TestMain(m *testing.M) {
 
 	// set up some values used for every test
 	rhelaiImageCosUrl = permanentResources["rhelai_image_cos_bucket_url"].(string) + "/" + rhelaiImageName
-	rhelaiModelCosCrn = permanentResources["general_test_storage_cos_instance_crn"].(string)
+	rhelaiModelCosBucketCrn = permanentResources["rhelai_model_cos_bucket_crn"].(string)
 	rhelaiModelCosBucketName = permanentResources["rhelai_model_cos_bucket_name"].(string)
 	rhelaiModelCosRegion = permanentResources["general_test_storage_cos_instance_region"].(string)
+	zoneList = []string{"1", "2", "3"}
 
 	// generate throwaway TLS certs for the test
 	var certErr error
@@ -88,9 +93,12 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
-// Consistency test for the basic example
+// DEV NOTE: the full rhelai_vpc solution allows ansible to connect to VSI from IBM Cloud internal and
+// Schematics only. Therefore the tests for that solution will need to remain schematics tests.
+// Consistency test for the rhelai_vpc solution, with public option enabled.
 func TestRunVpcSolutionPublicSchematic(t *testing.T) {
 	t.Parallel()
+	//t.Skip("Skipping all schematic tests until we figure out how not to trigger WAF upload issues")
 
 	tarIncludePatterns := append(tarAdditionalIncludePatterns, "solutions/rhelai_vpc/*")
 
@@ -104,41 +112,44 @@ func TestRunVpcSolutionPublicSchematic(t *testing.T) {
 		Testing:                t,
 		TarIncludePatterns:     tarIncludePatterns,
 		TemplateFolder:         vpcSolutionDir,
-		Prefix:                 "rai_vpcpub",
+		Prefix:                 "rai-vpcpubs",
 		Region:                 "eu-es",
-		DeleteWorkspaceOnFail:  true,
-		WaitJobCompleteMinutes: 90,
+		DeleteWorkspaceOnFail:  false,
+		WaitJobCompleteMinutes: 120,
 		CloudInfoService:       sharedInfoSvc,
 	})
+
+	randomZone := zoneList[rand.Intn(len(zoneList))]
 
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
 		{Name: "region", Value: options.Region, DataType: "string"},
-		{Name: "zone", Value: options.Region + "-1", DataType: "string"},
+		{Name: "zone", Value: options.Region + "-" + randomZone, DataType: "string"},
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
-		{Name: "resource_group", Value: resourceGroup, DataType: "string"},
+		{Name: "existing_resource_group", Value: resourceGroup, DataType: "string"},
 		{Name: "image_url", Value: rhelaiImageCosUrl, DataType: "string"},
 		{Name: "machine_type", Value: vsiMachineType, DataType: "string"},
 		{Name: "enable_private_only", Value: false, DataType: "bool"},
-		{Name: "enable_https", Value: true, DataType: "bool"},
 		{Name: "ssh_key", Value: publicKey, DataType: "string"},
 		{Name: "ssh_private_key", Value: privateKey, DataType: "string", Secure: true},
+		{Name: "model_apikey", Value: modelKey, DataType: "string", Secure: true},
+		{Name: "model_bucket_name", Value: rhelaiModelCosBucketName, DataType: "string"},
+		{Name: "model_cos_region", Value: rhelaiModelCosRegion, DataType: "string"},
+		{Name: "model_bucket_crn", Value: rhelaiModelCosBucketCrn, DataType: "string"},
+		{Name: "enable_https", Value: true, DataType: "bool"},
 		{Name: "https_certificate", Value: tlsTestCert, DataType: "string"},
 		{Name: "https_privatekey", Value: tlsTestCertPriv, DataType: "string"},
-		{Name: "model_apikey", Value: modelKey, DataType: "string", Secure: true},
-		{Name: "bucket_name", Value: rhelaiModelCosBucketName, DataType: "string"},
-		{Name: "cos_region", Value: rhelaiModelCosRegion, DataType: "string"},
-		{Name: "crn_service_id", Value: rhelaiModelCosCrn, DataType: "string"},
 	}
 
 	err := options.RunSchematicTest()
 	assert.Nil(t, err, "This should not have errored")
 }
 
-// Upgrade test (using advanced example)
+// DEV NOTE: the full rhelai_vpc solution allows ansible to connect to VSI from IBM Cloud internal and
+// Schematics only. Therefore the tests for that solution will need to remain schematics tests.
+// UPGRADE test for the rhelai_vpc solution, with public option enabled.
 func TestRunVpcSolutionPublicUpgradeSchematic(t *testing.T) {
 	t.Parallel()
-	t.Skip("Skipping on first version, remove immediatly after 1.0 release")
 
 	tarIncludePatterns := append(tarAdditionalIncludePatterns, "solutions/rhelai_vpc/*")
 
@@ -147,36 +158,38 @@ func TestRunVpcSolutionPublicUpgradeSchematic(t *testing.T) {
 	// this is a throwaway random key needed for the test
 	modelKey := uuid.NewString()
 
+	randomZone := zoneList[rand.Intn(len(zoneList))]
+
 	// set up a schematics test
 	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
 		Testing:                t,
 		TarIncludePatterns:     tarIncludePatterns,
 		TemplateFolder:         vpcSolutionDir,
-		Prefix:                 "rai_vpc_upg",
+		Prefix:                 "rai-vpc-upg",
 		Region:                 "eu-es",
 		DeleteWorkspaceOnFail:  true,
-		WaitJobCompleteMinutes: 90,
+		WaitJobCompleteMinutes: 120,
 		CloudInfoService:       sharedInfoSvc,
 	})
 
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
 		{Name: "region", Value: options.Region, DataType: "string"},
-		{Name: "zone", Value: options.Region + "-1", DataType: "string"},
+		{Name: "zone", Value: options.Region + "-" + randomZone, DataType: "string"},
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
-		{Name: "resource_group", Value: resourceGroup, DataType: "string"},
+		{Name: "existing_resource_group", Value: resourceGroup, DataType: "string"},
 		{Name: "image_url", Value: rhelaiImageCosUrl, DataType: "string"},
 		{Name: "machine_type", Value: vsiMachineType, DataType: "string"},
 		{Name: "enable_private_only", Value: false, DataType: "bool"},
-		{Name: "enable_https", Value: true, DataType: "bool"},
 		{Name: "ssh_key", Value: publicKey, DataType: "string"},
 		{Name: "ssh_private_key", Value: privateKey, DataType: "string", Secure: true},
+		{Name: "model_apikey", Value: modelKey, DataType: "string", Secure: true},
+		{Name: "model_bucket_name", Value: rhelaiModelCosBucketName, DataType: "string"},
+		{Name: "model_cos_region", Value: rhelaiModelCosRegion, DataType: "string"},
+		{Name: "model_bucket_crn", Value: rhelaiModelCosBucketCrn, DataType: "string"},
+		{Name: "enable_https", Value: true, DataType: "bool"},
 		{Name: "https_certificate", Value: tlsTestCert, DataType: "string"},
 		{Name: "https_privatekey", Value: tlsTestCertPriv, DataType: "string"},
-		{Name: "model_apikey", Value: modelKey, DataType: "string", Secure: true},
-		{Name: "bucket_name", Value: rhelaiModelCosBucketName, DataType: "string"},
-		{Name: "cos_region", Value: rhelaiModelCosRegion, DataType: "string"},
-		{Name: "crn_service_id", Value: rhelaiModelCosCrn, DataType: "string"},
 	}
 
 	err := options.RunSchematicUpgradeTest()
@@ -188,8 +201,8 @@ func TestRunVpcSolutionPublicUpgradeSchematic(t *testing.T) {
 // helper function to generate an SSH key pair for testing
 func genNewSshKeypair(t *testing.T) (string, string) {
 	rsaKeyPair, _ := ssh.GenerateRSAKeyPairE(t, 4096)
-	sshPublicKey := strings.TrimSuffix(rsaKeyPair.PublicKey, "\n") // removing trailing new lines
-	sshPrivateKey := "<<EOF\n" + rsaKeyPair.PrivateKey + "EOF"
+	sshPublicKey := rsaKeyPair.PublicKey
+	sshPrivateKey := rsaKeyPair.PrivateKey
 
 	return sshPublicKey, sshPrivateKey
 }
@@ -212,23 +225,26 @@ func genNewTlsCert() (string, string, error) {
 		IsCA:        true,
 	}
 
-	certPrivKey, certPrivErr := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	certPrivKey, certPrivErr := ecdsa.GenerateKey(elliptic.P256(), crypto_rand.Reader)
 	if certPrivErr != nil {
 		return "", "", certPrivErr
 	}
 
 	// SELF SIGN THE CERT
-	certBytes, certBytesErr := x509.CreateCertificate(rand.Reader, cert, cert, &certPrivKey.PublicKey, certPrivKey)
+	certBytes, certBytesErr := x509.CreateCertificate(crypto_rand.Reader, cert, cert, &certPrivKey.PublicKey, certPrivKey)
 	if certBytesErr != nil {
 		return "", "", certBytesErr
 	}
 
 	// PEM ENCODE
 	certPEM := new(bytes.Buffer)
-	pem.Encode(certPEM, &pem.Block{
+	pubPemEncodeErr := pem.Encode(certPEM, &pem.Block{
 		Type:  "CERTIFICATE",
 		Bytes: certBytes,
 	})
+	if pubPemEncodeErr != nil {
+		return "", "", pubPemEncodeErr
+	}
 
 	certPrivBytes, certPrivBytesErr := x509.MarshalPKCS8PrivateKey(certPrivKey)
 	if certPrivBytesErr != nil {
@@ -236,10 +252,13 @@ func genNewTlsCert() (string, string, error) {
 	}
 
 	certPrivKeyPEM := new(bytes.Buffer)
-	pem.Encode(certPrivKeyPEM, &pem.Block{
+	privPemEncodeErr := pem.Encode(certPrivKeyPEM, &pem.Block{
 		Type:  "PRIVATE KEY",
 		Bytes: certPrivBytes,
 	})
+	if privPemEncodeErr != nil {
+		return "", "", privPemEncodeErr
+	}
 
 	return certPEM.String(), certPrivKeyPEM.String(), nil
 }
