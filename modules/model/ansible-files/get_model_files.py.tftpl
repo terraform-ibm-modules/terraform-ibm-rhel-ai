@@ -1,0 +1,53 @@
+import os
+import sys
+sys.path.append("${terraform_files_dir}/jmespath")
+sys.path.append("${terraform_files_dir}/ibm_s3transfer")
+sys.path.append("${terraform_files_dir}/ibm_botocore")
+sys.path.append("${terraform_files_dir}/ibm-cos-sdk-python")
+import ibm_boto3
+import concurrent.futures
+from ibm_botocore.client import Config
+
+# IBM Cloud COS Credentials
+IBM_CLOUD_API_KEY = "${ibmcloud_api_key}"
+ENDPOINT_URL = "https://s3.direct.${region}.cloud-object-storage.appdomain.cloud"  # Change based on region
+BUCKET_NAME = "${bucket_name}"
+LOCAL_DOWNLOAD_PATH = "${dest_dir}"  # Local directory to save files
+RESOURCE_INSTANCE_ID = "${crn_instance_id}"
+
+# Create IBM COS Client
+cos_client = ibm_boto3.client(
+    "s3",
+    ibm_api_key_id=IBM_CLOUD_API_KEY,
+    ibm_service_instance_id=RESOURCE_INSTANCE_ID,
+    config=Config(signature_version="oauth"),
+    endpoint_url=ENDPOINT_URL
+)
+
+# Ensure local download directory exists
+os.makedirs(LOCAL_DOWNLOAD_PATH, exist_ok=True)
+
+# List all objects in the bucket
+objects = cos_client.list_objects_v2(Bucket=BUCKET_NAME).get("Contents", [])
+
+def download_file(file_name):
+    """Function to download a single file from IBM COS."""
+    local_file_path = os.path.join(LOCAL_DOWNLOAD_PATH, file_name)
+
+    print(f"⬇️ Downloading {file_name}...")
+
+    try:
+        with open(local_file_path, "wb") as file:
+            cos_client.download_fileobj(BUCKET_NAME, file_name, file)
+        print(f"✅ {file_name} downloaded successfully!")
+    except Exception as e:
+        print(f"❌ Failed to download {file_name}: {e}")
+
+# Use multi-threading for parallel downloads
+if objects:
+    print(f"📥 Downloading {len(objects)} files using multi-threading...\n")
+    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+        executor.map(lambda obj: download_file(obj["Key"]), objects)
+    print("\n✅ All files downloaded successfully!")
+else:
+    print(f"❌ No files found in bucket: {BUCKET_NAME}")
