@@ -127,7 +127,8 @@ resource "terraform_data" "copy_with_apikey" {
   # Copy ilab_config file
   provisioner "file" {
     content = templatefile(local.config_with_apikey, {
-      api_key = var.model_apikey
+      model_name = var.model_name
+      api_key    = var.model_apikey
     })
     destination = local.dst_ilab_config_file
   }
@@ -158,7 +159,9 @@ resource "terraform_data" "copy_without_apikey" {
 
   # Copy ilab_config file
   provisioner "file" {
-    source      = local.config_without_apikey
+    content = templatefile(local.config_without_apikey, {
+      model_name = var.model_name
+    })
     destination = local.dst_ilab_config_file
   }
 

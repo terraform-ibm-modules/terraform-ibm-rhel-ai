@@ -4,6 +4,8 @@
 #
 locals {
   always_run = timestamp()
+
+  model_repo_token_key = "HF_TOKEN"
 }
 
 
@@ -68,13 +70,13 @@ module "model" {
   source                 = "../../modules/model"
   ssh_private_key        = var.ssh_private_key
   rhelai_ip              = ibm_is_floating_ip.ip_address.address
-  model_repo             = var.model_repo
-  model_repo_token_key   = var.model_repo_token_key
+  model_repo             = var.model_repo_hugging_face
+  model_repo_token_key   = local.model_repo_token_key
   model_repo_token_value = var.model_repo_token_value
-  model_bucket_name      = var.model_bucket_name
+  model_bucket_name      = var.model_cos_bucket_name
   model_cos_region       = var.model_cos_region
   ibmcloud_api_key       = var.ibmcloud_api_key
-  model_bucket_crn       = var.model_bucket_crn
+  model_bucket_crn       = var.model_cos_bucket_crn
   depends_on             = [ibm_is_floating_ip.ip_address]
 }
 
@@ -90,6 +92,7 @@ module "ilab_conf" {
   enable_https      = var.enable_https
   https_certificate = var.https_certificate
   https_privatekey  = var.https_privatekey
+  model_name        = module.model.model_name
   model_apikey      = var.model_apikey
 }
 

@@ -30,6 +30,12 @@ variable "https_privatekey" {
   sensitive   = true
 }
 
+variable "model_name" {
+  description = "Model name"
+  type        = string
+  default     = ""
+}
+
 variable "model_apikey" {
   description = "API Key to authorize while inferencing the model"
   type        = string

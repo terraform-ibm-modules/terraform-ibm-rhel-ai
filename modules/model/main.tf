@@ -19,6 +19,8 @@ locals {
   l_bucket_name            = var.model_bucket_name != null ? var.model_bucket_name : ""
   l_cos_region             = var.model_cos_region != null ? var.model_cos_region : ""
   l_crn_service_id         = var.model_bucket_crn != null ? var.model_bucket_crn : ""
+
+  l_model_name = try(length(var.model_bucket_name), 0) > 0 ? var.model_bucket_name : var.model_repo
 }
 
 ##############################################################
@@ -76,7 +78,7 @@ resource "terraform_data" "setup_ansible_host" {
   # Copy ilab-service file
   provisioner "file" {
     content = templatefile(local.ansible_ilab_service_file, {
-      model_name = try(length(var.model_bucket_name), 0) > 0 ? var.model_bucket_name : var.model_repo
+      model_name = local.l_model_name
     })
     destination = local.dst_ilab_service_file
   }
