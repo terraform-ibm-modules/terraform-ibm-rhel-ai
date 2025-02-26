@@ -21,3 +21,6 @@ CRA_TARGETS:
       TF_VAR_machine_type: "gx3-24x120x1l40s"
       TF_VAR_ssh_key: "ssh-rsa AAAABBBBCCCC==" # pragma: allowlist secret
       TF_VAR_ssh_private_key: "CCCCBBBBAAAA" # pragma: allowlist secret
+      TF_VAR_model_cos_bucket_name: "model-bucket-name"
+      TF_VAR_model_cos_region: "eu-es"
+      TF_VAR_model_cos_bucket_crn: "crn:v1:bluemix:public:cloud-object-storage:global:a/aaaaaa:bbbbbbb:bucket:model-bucket-name"
