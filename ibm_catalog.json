@@ -111,6 +111,10 @@
                 {
                   "displayname": "gx3-48x240x2l40s",
                   "value": "gx3-48x240x2l40s"
+                },
+                {
+                  "displayname": "gx3-24x120x1l40s",
+                  "value": "gx3-24x120x1l40s"
                 }
               ]
             },
