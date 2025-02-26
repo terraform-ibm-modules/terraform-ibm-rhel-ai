@@ -1,0 +1,83 @@
+# Tasks are created based on reference from Redhat
+# Ref url: https://docs.redhat.com/en/documentation/red_hat_enterprise_linux_ai/1.1/html/building_your_rhel_ai_environment/serving_and_chatting#creating_systemd_serving
+---
+- name: Change the directory to root
+  command: cd /root/
+
+- name: Ensure /etc/ilab directory exists
+  file:
+    path: /etc/ilab
+    state: directory
+    mode: '0755'
+
+- name: Ensure /etc/ilab/insights-opt-out file exists
+  file:
+    path: /etc/ilab/insights-opt-out
+    state: touch
+    mode: '0644'
+
+- name: Run ilab config init with input
+  expect:
+    command: ilab config init
+    responses:
+      "Enter the number of your choice.*\\[0\\].*" : 0
+      ".*\\[y/N\\]:": "N"
+  register: ilab_config_output
+  timeout: 300
+
+- name: Debug output from ilab config init
+  debug:
+    var: ilab_config_output.stdout
+
+- name: Download the model from registry
+  command: ilab model download --repository {{ model_repo }}
+  register: model_download_output
+  timeout: 1800
+  when: model_repo is regex('^[a-zA-Z0-9\-]+\/[a-zA-Z0-9\-\.]+$')
+
+- name: Download the model from COS
+  command: python get_model_files.py
+  timeout: 7200
+  when:
+    - cos_bucket_name is defined and cos_bucket_name | length > 0
+    - region is defined and region | length > 0
+
+- name: Debug output from model download
+  debug:
+    var: model_download_output.stdout
+
+- name: Create a directory for your systemd user service
+  file:
+    path: /root/.config/systemd/user
+    state: directory
+    mode: '0755'
+  become: yes
+
+- name: Copy ilab_serve.service file systemd user directory
+  ansible.builtin.copy:
+    src: ./ilab-serve.service
+    dest: /root/.config/systemd/user
+
+- name: Reload the systemd manager configuration
+  command: systemctl --user daemon-reload
+
+- name: Start the ilab model serve systemd service
+  command: systemctl --user start ilab-serve.service
+
+- name: Check that the service is running
+  command: systemctl --user status ilab-serve.service
+  register: ilab_service_status
+
+- name: Debug print the status of the service
+  debug:
+    var: ilab_service_status.stdout
+
+- name: Allow the service to start on boot
+  command: sudo loginctl enable-linger
+
+- name: Wait for the service to be available
+  wait_for:
+    host: localhost
+    port: 8000
+    state: started
+    timeout: 1800

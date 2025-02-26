@@ -1,8 +1,8 @@
 ##############################################################################
-# Provider config
+# Outputs
 ##############################################################################
 
-provider "ibm" {
-  ibmcloud_api_key = var.ibmcloud_api_key
-  region           = var.region
+output "model_name" {
+  description = "Name of the model based on value passed to bucket_name or repo"
+  value       = local.l_model_name
 }

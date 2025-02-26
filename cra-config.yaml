@@ -7,11 +7,20 @@
 
 version: "v1"
 CRA_TARGETS:
-  - CRA_TARGET: "examples/advanced" # Target directory for CRA scan. If not provided, the CRA Scan will not be run.
+  - CRA_TARGET: "solutions/rhelai_vpc" # Target directory for CRA scan. If not provided, the CRA Scan will not be run.
     CRA_IGNORE_RULES_FILE: "cra-tf-validate-ignore-rules.json"
     PROFILE_ID: "fe96bd4d-9b37-40f2-b39f-a62760e326a3" # SCC profile ID (currently set to 'IBM Cloud Framework for Financial Services' '1.7.0' profile).
     # SCC_INSTANCE_ID: "" # The SCC instance ID to use to download profile for CRA scan. If not provided, a default global value will be used.
     # SCC_REGION: "" # The IBM Cloud region that the SCC instance is in. If not provided, a default global value will be used.
-    CRA_ENVIRONMENT_VARIABLES:  # An optional map of environment variables for CRA, where the key is the variable name and value is the value. Useful for providing TF_VARs.
-      TF_VAR_prefix: "mock"
-      TF_VAR_region: "us-south"
+    CRA_ENVIRONMENT_VARIABLES: # An optional map of environment variables for CRA, where the key is the variable name and value is the value. Useful for providing TF_VARs.
+      TF_VAR_prefix: "rhelai-vpc"
+      TF_VAR_region: "eu-es"
+      TF_VAR_zone: "eu-es-2"
+      TF_VAR_resource_group: "rhelai-vpc"
+      TF_VAR_image_url: "cos://us-east/my-bucket/my-file.qcow2"
+      TF_VAR_machine_type: "gx3-24x120x1l40s"
+      TF_VAR_ssh_key: "ssh-rsa AAAABBBBCCCC==" # pragma: allowlist secret
+      TF_VAR_ssh_private_key: "CCCCBBBBAAAA" # pragma: allowlist secret
+      TF_VAR_model_cos_bucket_name: "model-bucket-name"
+      TF_VAR_model_cos_region: "eu-es"
+      TF_VAR_model_cos_bucket_crn: "crn:v1:bluemix:public:cloud-object-storage:global:a/aaaaaa:bbbbbbb:bucket:model-bucket-name"
