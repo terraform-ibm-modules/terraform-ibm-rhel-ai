@@ -57,8 +57,8 @@
               {
                 "diagram": {
                   "caption": "RHEL.ai on VSI",
-                  "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-rhel-ai/catalog-prepare/reference-architecture/rhelai-vpc.png",
-                  "type": "image/png"
+                  "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-rhel-ai/catalog-prepare/reference-architecture/rhelai-vpc.svg",
+                  "type": "image/svg+xml"
                 },
                 "description": "RHEL.ai VSI in VPC"
               }
