@@ -105,11 +105,6 @@ variable "model_repo_hugging_face" {
   description = "Provide the model path from hugging face registry only. If you have model is in COS use the COS configuration variables"
   default     = ""
   nullable    = false
-
-  validation {
-    condition     = var.model_repo_hugging_face == null ? true : length(var.model_repo_hugging_face) == 0 ? true : (can(regex("^[a-zA-Z0-9\\-]+\\/[a-zA-Z0-9\\-\\.]+$"), var.model_repo_hugging_face))
-    error_message = "The model_repo_hugging_face has invalid huggingface repo path. ex: `ibm-granite/granite-3.1-8b-instruct`"
-  }
 }
 
 variable "model_repo_token_value" {
