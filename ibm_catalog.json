@@ -43,6 +43,21 @@
           "name": "quickstart",
           "install_type": "fullstack",
           "working_directory": "solutions/rhelai_vpc",
+          "iam_permissions": [
+            {
+              "role_crns": [
+                "crn:v1:bluemix:public:iam::::serviceRole:Manager",
+                "crn:v1:bluemix:public:iam::::role:Administrator"
+              ],
+              "service_name": "is.vpc"
+            },
+            {
+              "role_crns": [
+                "crn:v1:bluemix:public:iam::::serviceRole:Manager"
+              ],
+              "service_name": "cloud-object-storage"
+            }
+          ],
           "architecture": {
             "descriptions": "Deployment of RHEL AI GPU instance to fine-tune LLM models and inference it through APIs",
             "features": [
@@ -57,21 +72,6 @@
               {
                 "title": "RHEL AI image",
                 "description": "Uses custom RHEL AI image (prerequisite)"
-              }
-            ],
-            "iam_permissions": [
-              {
-                "role_crns": [
-                  "crn:v1:bluemix:public:iam::::serviceRole:Manager",
-                  "crn:v1:bluemix:public:iam::::role:Administrator"
-                ],
-                "service_name": "is.vpc"
-              },
-              {
-                "role_crns": [
-                  "crn:v1:bluemix:public:iam::::serviceRole:Manager"
-                ],
-                "service_name": "cloud-object-storage"
               }
             ],
             "diagrams": [
