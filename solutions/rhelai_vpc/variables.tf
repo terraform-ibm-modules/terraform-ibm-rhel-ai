@@ -54,8 +54,7 @@ variable "vpc_id" {
 variable "image_url" {
   type        = string
   description = "A COS url location where RHEL.ai image is downloaded and stored from Red Hat. This will create custom image"
-  default     = ""
-  nullable    = false
+  default     = null
 
   validation {
     condition     = var.image_url == null ? true : length(var.image_url) == 0 ? true : startswith(var.image_url, "cos://")
@@ -66,8 +65,7 @@ variable "image_url" {
 variable "image_id" {
   type        = string
   description = "The RHEL.ai image id to use while creating a GPU VSI instance. This is optional if you are creating custom image using the image_url"
-  default     = ""
-  nullable    = false
+  default     = null
 
   validation {
     condition     = (var.image_id != null && length(var.image_id) > 0) || (var.image_url != null && length(var.image_url) > 0)
