@@ -68,7 +68,7 @@ variable "image_id" {
   default     = null
 
   validation {
-    condition     = (var.image_id != null && length(var.image_id) > 0) || (var.image_url != null && length(var.image_url) > 0)
+    condition     = var.image_id != null || var.image_url != null
     error_message = "You must supply either a image_id provided in cloud resources or image_url of RHEL.ai image. Note - Image url should be a cos url where the image is stored."
   }
 }
@@ -103,25 +103,23 @@ variable "ssh_private_key" {
 variable "model_repo_hugging_face" {
   type        = string
   description = "Provide the model path from hugging face registry only. If you have model is in COS use the COS configuration variables"
-  default     = ""
-  nullable    = false
+  default     = null
 }
 
 variable "model_repo_token_value" {
   description = "The value of authorization token to access the model repository from huggingface registry"
   type        = string
   sensitive   = true
-  default     = ""
+  default     = null
 }
 
 variable "model_cos_bucket_name" {
   description = "Provide the COS bucket name where you model files reside. If you are using model registry then this field should be empty"
   type        = string
-  default     = ""
-  nullable    = false
+  default     = null
 
   validation {
-    condition     = anytrue([(length(var.model_repo_hugging_face) > 0 && length(var.model_cos_bucket_name) == 0), (length(var.model_cos_bucket_name) > 0 && length(var.model_repo_hugging_face) == 0)])
+    condition     = anytrue([(var.model_repo_hugging_face != null && var.model_cos_bucket_name == null), (var.model_cos_bucket_name != null && var.model_repo_hugging_face == null)])
     error_message = "You must supply either model_repo_hugging_face with model_repo_token_value for HF_TOKEN key (or) have model_cos_bucket_name, model_cos_region and model_cos_bucket_crn"
   }
 }
@@ -129,8 +127,7 @@ variable "model_cos_bucket_name" {
 variable "model_cos_region" {
   description = "Provide COS region where the model bucket reside. If you are using model registry then this field should be empty"
   type        = string
-  default     = ""
-  nullable    = false
+  default     = null
 
   validation {
     condition     = length(var.model_cos_bucket_name) > 0 ? length(var.model_cos_region) > 0 : true
@@ -141,11 +138,10 @@ variable "model_cos_region" {
 variable "model_cos_bucket_crn" {
   description = "Provide Bucket instance CRN. If you are using model registry then this field should be empty"
   type        = string
-  default     = ""
-  nullable    = false
+  default     = null
 
   validation {
-    condition     = length(var.model_cos_bucket_name) > 0 ? length(var.model_cos_bucket_crn) > 0 : true
+    condition     = var.model_cos_bucket_name != null ? var.model_cos_bucket_crn != null : true
     error_message = "You must supply model_cos_bucket_crn when you provide model_cos_bucket_name, and model_cos_region"
   }
 }
