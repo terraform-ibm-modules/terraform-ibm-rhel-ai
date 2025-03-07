@@ -14,7 +14,9 @@
         "ibm_created",
         "terraform",
         "target_terraform",
-        "solution"
+        "solution",
+        "ibm_beta",
+        "ai"
       ],
       "keywords": [
         "terraform"
