@@ -2,10 +2,10 @@
   "products": [
     {
       "name": "deploy-arch-ibm-rhel-ai-vsi",
-      "label": "RHEL AI VSI InstructLab",
+      "label": "RHEL AI on IBM Cloud with model inferencing",
       "product_kind": "solution",
-      "short_description": "Deployment of RHEL AI GPU instance to fine-tune LLM models and inference it through APIs.",
-      "long_description": "Deployment of RHEL AI GPU instance to fine-tune LLM models and inference it through APIs.",
+      "short_description": "Deployment of RHEL AI on GPU based VSI instance and run fine tuned models to inference all through automation.",
+      "long_description": "An IBM Cloud automation for Red Hat Enterprise Linux AI, deployed on a GPU based VSI instance to run the fine tuned models downloaded from hugging face repository or cloud object storege (IBM COS). Red Hat Enterprise Linux AI a.k.a RHEL AI is a bootable RedHat Enterprise Linux image optimized foundation model platform to fine-tune, test and run large language models. These images include PyTorch, hardware acceleration libraries (for NVIDIA, Intel, and AMD GPUs), and essential runtime libraries, streamlining the setup of a platform for AI development.",
       "support_details": "This product is in the community registry and support is handled in the source repo. You can open an issue at [https://github.com/terraform-ibm-modules/terraform-ibm-rhel-ai/issues](https://github.com/terraform-ibm-modules/terraform-ibm-rhel-ai/issues). Support is not offered through IBM Cloud Support.",
       "offering_docs_url": "https://github.com/terraform-ibm-modules/terraform-ibm-rhel-ai/blob/catalog-prepare/solutions/rhelai_vpc/README.md",
       "offering_icon_url": "https://globalcatalog.cloud.ibm.com/api/v1/1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc/artifacts/terraform.svg",
@@ -19,24 +19,37 @@
         "ai"
       ],
       "keywords": [
-        "terraform"
+        "terraform",
+        "RHEL AI",
+        "AI",
+        "watsonx",
+        "Instruct Lab",
+        "AI model"
       ],
       "features": [
         {
-          "description": "Will create a VPC with a public gateway, subnets, and a security group",
-          "title": "VPC and network"
+          "description": "Deploys a VPC with an option either to have private network access only with no inbound traffic from public internet to the RHEL AI instance or to have inboud traffic from public internet to RHEL AI instance. ",
+          "title": "Private (or) Public VPC Network Access"
         },
         {
-          "description": "Deploys a Virtual Server Instance (VSI) based on RedHat Enterprise Linux AI image",
-          "title": "VSI Instance"
+          "description": "Deploys RHEL AI VSI instance either by creating a RHEL AI custom image using version 1.4, the latest release of RHEL AI, uploaded in IBM COS or if a custom image with RHEL AI version 1.4 already exists in the region, by using the image ID of that custom image.",
+          "title": "RHEL AI 1.4 (latest) on GPU VSI "
         },
         {
-          "description": "A model is served using instruct lab, either directly from a huggingface registry or Cloud Object Storage bucket",
-          "title": "InstructLab model configuration"
+          "description": "Downloads the AI model either from IBM Cloud COS bucket or from huggingface repository.",
+          "title": "Model downloads from COS or Huggingface repository"
         },
         {
-          "description": "InstructLab web service configuration with apikey and http/s nginx server",
-          "title": "InstructLab web service"
+          "description": "Setup either HTTP or HTTPS to inference the downloaded models that run on RHEL AI instance",
+          "title": "HTTP/S with SSL certificate support"
+        },
+        {
+          "description": "Eanble autorization access to models using API Key",
+          "title": "Serve models with or without API Key"
+        },
+        {
+          "description": "Deploy to existing VPC",
+          "title": "Deploy the resources, create the RHEL AI instance and run the models on an existing VPC"
         }
       ],
       "flavors": [
