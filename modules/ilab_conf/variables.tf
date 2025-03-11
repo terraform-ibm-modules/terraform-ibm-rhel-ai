@@ -33,7 +33,6 @@ variable "https_privatekey" {
 variable "model_name" {
   description = "Model name"
   type        = string
-  default     = ""
 }
 
 variable "model_apikey" {

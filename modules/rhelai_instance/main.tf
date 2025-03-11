@@ -110,6 +110,4 @@ resource "ibm_is_instance" "gpu_vsi_1" {
     create = "60m"
     update = "60m"
   }
-
-  depends_on = [ibm_is_image.custom_image]
 }

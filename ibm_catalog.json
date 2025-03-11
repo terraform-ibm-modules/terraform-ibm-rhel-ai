@@ -1,0 +1,219 @@
+{
+  "products": [
+    {
+      "name": "deploy-arch-ibm-rhel-ai-vsi",
+      "label": "RHEL AI on IBM Cloud with model inferencing",
+      "product_kind": "solution",
+      "short_description": "Deployment of RHEL AI on GPU based VSI instance and run fine tuned models to inference all through automation.",
+      "long_description": "An IBM Cloud automation for Red Hat Enterprise Linux AI, deployed on a GPU based VSI instance to run the fine tuned models downloaded from hugging face repository or cloud object storege (IBM COS). Red Hat Enterprise Linux AI a.k.a RHEL AI is a bootable RedHat Enterprise Linux image optimized foundation model platform to fine-tune, test and run large language models. These images include PyTorch, hardware acceleration libraries (for NVIDIA, Intel, and AMD GPUs), and essential runtime libraries, streamlining the setup of a platform for AI development.",
+      "support_details": "This product is in the community registry and support is handled in the source repo. You can open an issue at [https://github.com/terraform-ibm-modules/terraform-ibm-rhel-ai/issues](https://github.com/terraform-ibm-modules/terraform-ibm-rhel-ai/issues). Support is not offered through IBM Cloud Support.",
+      "offering_docs_url": "https://github.com/terraform-ibm-modules/terraform-ibm-rhel-ai/blob/catalog-prepare/solutions/rhelai_vpc/README.md",
+      "offering_icon_url": "https://globalcatalog.cloud.ibm.com/api/v1/1082e7d2-5e2f-0a11-a3bc-f88a8e1931fc/artifacts/terraform.svg",
+      "provider_name": "IBM",
+      "tags": [
+        "ibm_created",
+        "terraform",
+        "target_terraform",
+        "solution",
+        "ibm_beta",
+        "ai"
+      ],
+      "keywords": [
+        "terraform",
+        "RHEL AI",
+        "AI",
+        "Instruct Lab",
+        "AI model"
+      ],
+      "features": [
+        {
+          "description": "Deploys a VPC with an option either to have private network access only with no inbound traffic from public internet to the RHEL AI instance or to have inboud traffic from public internet to RHEL AI instance. ",
+          "title": "Private (or) Public VPC Network Access"
+        },
+        {
+          "description": "Deploys RHEL AI VSI instance either by creating a RHEL AI custom image using version 1.4, the latest release of RHEL AI, uploaded in IBM COS or if a custom image with RHEL AI version 1.4 already exists in the region, by using the image ID of that custom image.",
+          "title": "RHEL AI 1.4 (latest) on GPU VSI "
+        },
+        {
+          "description": "Downloads the AI model either from IBM Cloud COS bucket or from huggingface repository.",
+          "title": "Model downloads from COS or Huggingface repository"
+        },
+        {
+          "description": "Setup either HTTP or HTTPS to inference the downloaded models that run on RHEL AI instance",
+          "title": "HTTP/S with SSL certificate support"
+        },
+        {
+          "description": "Eanble autorization access to models using API Key",
+          "title": "Serve models with or without API Key"
+        },
+        {
+          "description": "Deploy to existing VPC",
+          "title": "Deploy the resources, create the RHEL AI instance and run the models on an existing VPC"
+        }
+      ],
+      "flavors": [
+        {
+          "label": "Quickstart",
+          "name": "quickstart",
+          "install_type": "fullstack",
+          "working_directory": "solutions/rhelai_vpc",
+          "iam_permissions": [
+            {
+              "role_crns": [
+                "crn:v1:bluemix:public:iam::::serviceRole:Manager",
+                "crn:v1:bluemix:public:iam::::role:Administrator"
+              ],
+              "service_name": "is.vpc"
+            },
+            {
+              "role_crns": [
+                "crn:v1:bluemix:public:iam::::serviceRole:Manager"
+              ],
+              "service_name": "cloud-object-storage"
+            }
+          ],
+          "architecture": {
+            "descriptions": "Deployment of RHEL AI GPU instance to fine-tune LLM models and inference it through APIs",
+            "features": [
+              {
+                "title": "VPC",
+                "description": "VPC and subnet"
+              },
+              {
+                "title": "VSI with GPU",
+                "description": "Virtual Server Instance with NVidia GPU"
+              },
+              {
+                "title": "RHEL AI image",
+                "description": "Uses custom RHEL AI image (prerequisite)"
+              }
+            ],
+            "diagrams": [
+              {
+                "diagram": {
+                  "caption": "RHEL AI on VSI",
+                  "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-rhel-ai/catalog-prepare/reference-architecture/rhelai-vpc.svg",
+                  "type": "image/svg+xml"
+                },
+                "description": "RHEL AI VSI in VPC"
+              }
+            ]
+          },
+          "configuration": [
+            {
+              "key": "ibmcloud_api_key"
+            },
+            {
+              "key": "prefix",
+              "required": true
+            },
+            {
+              "key": "resource_group"
+            },
+            {
+              "key": "existing_resource_group"
+            },
+            {
+              "custom_config": {
+                "config_constraints": {
+                  "generationType": "2"
+                },
+                "grouping": "deployment",
+                "original_grouping": "deployment",
+                "type": "region"
+              },
+              "key": "region",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "key": "zone"
+            },
+            {
+              "key": "vpc_id"
+            },
+            {
+              "key": "image_url"
+            },
+            {
+              "key": "image_id"
+            },
+            {
+              "key": "machine_type",
+              "required": true,
+              "options": [
+                {
+                  "displayname": "gx3-48x240x2l40s",
+                  "value": "gx3-48x240x2l40s"
+                },
+                {
+                  "displayname": "gx3-24x120x1l40s",
+                  "value": "gx3-24x120x1l40s"
+                }
+              ]
+            },
+            {
+              "key": "ssh_key",
+              "required": true
+            },
+            {
+              "key": "ssh_private_key",
+              "required": true,
+              "type": "multiline_secure_value",
+              "display_name": "ssh_private_key",
+              "custom_config": {
+                "grouping": "deployment",
+                "original_grouping": "deployment",
+                "type": "multiline_secure_value"
+              }
+            },
+            {
+              "key": "enable_private_only"
+            },
+            {
+              "key": "model_repo_hugging_face"
+            },
+            {
+              "key": "model_repo_token_value"
+            },
+            {
+              "key": "model_cos_bucket_name"
+            },
+            {
+              "key": "model_cos_region"
+            },
+            {
+              "key": "model_cos_bucket_crn"
+            },
+            {
+              "key": "enable_https"
+            },
+            {
+              "key": "https_certificate",
+              "type": "multiline_secure_value",
+              "display_name": "https_certificate",
+              "custom_config": {
+                "grouping": "deployment",
+                "original_grouping": "deployment",
+                "type": "multiline_secure_value"
+              }
+            },
+            {
+              "key": "https_privatekey",
+              "type": "multiline_secure_value",
+              "display_name": "https_privatekey",
+              "custom_config": {
+                "grouping": "deployment",
+                "original_grouping": "deployment",
+                "type": "multiline_secure_value"
+              }
+            },
+            {
+              "key": "model_apikey"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
