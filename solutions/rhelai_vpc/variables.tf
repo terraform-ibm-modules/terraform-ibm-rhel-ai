@@ -52,7 +52,7 @@ variable "vpc_id" {
   default     = null
 
   validation {
-    condition     = var.use_existing_vpc && var.vpc_id != null
+    condition     = anytrue([(!var.use_existing_vpc), (var.use_existing_vpc && var.vpc_id != null)])
     error_message = "Existing vpc_id variable is required. Failed the validation because use_existing_vpc is selected as true. Which means vpc_id is not provided to deploy into existing VPC."
   }
 }
@@ -69,7 +69,7 @@ variable "subnet_id" {
   default     = null
 
   validation {
-    condition     = var.use_existing_subnet && var.subnet_id != null
+    condition     = anytrue([(!var.use_existing_subnet), (var.use_existing_subnet && var.subnet_id != null)])
     error_message = "Existing subnet_id variable is required. Failed the validation because use_existing_subnet is selected as true. Which means subnet_id is not provided to deploy into existing subnet."
   }
 }
