@@ -111,7 +111,15 @@
               "key": "resource_group"
             },
             {
-              "key": "existing_resource_group"
+              "key": "existing_resource_group",
+              "custom_config": {
+                "type": "resource_group",
+                "grouping": "deployment",
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "identifier": "rg_name"
+                }
+              }
             },
             {
               "custom_config": {
@@ -135,7 +143,15 @@
             },
             {
               "key": "vpc_id",
-              "required": true
+              "required": true,
+              "custom_config": {
+                "type": "vpc",
+                "grouping": "deployment",
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "identifier": "vpc_id"
+                }
+              }
             },
             {
               "key": "use_existing_subnet",
@@ -143,7 +159,17 @@
             },
             {
               "key": "subnet_id",
-              "required": true
+              "required": true,
+              "custom_config": {
+                "type": "platform_resource",
+                "grouping": "deployment",
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "resourceType": "subnet",
+                  "selection": "single_select",
+                  "valueType": "id"
+                }
+              }
             },
             {
               "key": "image_url"
