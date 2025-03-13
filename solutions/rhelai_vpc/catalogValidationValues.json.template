@@ -1,5 +1,7 @@
 {
   "ibmcloud_api_key": $VALIDATION_APIKEY,
+  "use_existing_vpc": false,
+  "use_existing_subnet": false,
   "region": "eu-es",
   "zone": "eu-es-2",
   "prefix": $PREFIX,

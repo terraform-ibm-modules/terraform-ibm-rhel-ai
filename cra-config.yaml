@@ -14,6 +14,8 @@ CRA_TARGETS:
     # SCC_REGION: "" # The IBM Cloud region that the SCC instance is in. If not provided, a default global value will be used.
     CRA_ENVIRONMENT_VARIABLES: # An optional map of environment variables for CRA, where the key is the variable name and value is the value. Useful for providing TF_VARs.
       TF_VAR_prefix: "rhelai-vpc"
+      TF_VAR_use_existing_vpc: false
+      TF_VAR_use_existing_subnet: false
       TF_VAR_region: "eu-es"
       TF_VAR_zone: "eu-es-2"
       TF_VAR_resource_group: "rhelai-vpc"
