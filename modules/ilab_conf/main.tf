@@ -128,6 +128,7 @@ resource "terraform_data" "copy_with_apikey" {
   provisioner "file" {
     content = templatefile(local.config_with_apikey, {
       model_name = var.model_name
+      host_addr  = var.enable_https ? "127.0.0.1" : "0.0.0.0"
       api_key    = var.model_apikey
     })
     destination = local.dst_ilab_config_file
@@ -161,6 +162,7 @@ resource "terraform_data" "copy_without_apikey" {
   provisioner "file" {
     content = templatefile(local.config_without_apikey, {
       model_name = var.model_name
+      host_addr  = var.enable_https ? "127.0.0.1" : "0.0.0.0"
     })
     destination = local.dst_ilab_config_file
   }

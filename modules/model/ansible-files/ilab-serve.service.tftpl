@@ -7,3 +7,4 @@ WantedBy=multi-user.target default.target
 [Service]
 ExecStart= ilab -v model serve --model-path /root/.cache/instructlab/models/${model_name}  --backend vllm --gpus 2 -- --served-model-name rhelai_service_model
 Restart=always
+User=root

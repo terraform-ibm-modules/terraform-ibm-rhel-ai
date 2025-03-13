@@ -43,6 +43,7 @@ variable "zone" {
 variable "has_existing_vpc" {
   type        = bool
   description = "Do you want to deploy in existing VPC? Select true or false"
+  default     = true
 }
 
 variable "vpc_id" {
@@ -59,6 +60,7 @@ variable "vpc_id" {
 variable "has_existing_subnet" {
   type        = bool
   description = "Do you want to deploy in existing subnet? Select true or false"
+  default     = true
 }
 
 variable "subnet_id" {

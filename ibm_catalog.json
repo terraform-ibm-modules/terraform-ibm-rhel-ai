@@ -130,7 +130,20 @@
               "key": "zone"
             },
             {
-              "key": "vpc_id"
+              "key": "has_existing_vpc",
+              "required": true              
+            },
+            {
+              "key": "vpc_id",
+              "required": true
+            },
+            {
+              "key": "has_existing_subnet",
+              "required": true
+            },
+            {
+              "key": "subnet_id",
+              "required": true
             },
             {
               "key": "image_url"

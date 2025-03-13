@@ -7,3 +7,7 @@ WantedBy=multi-user.target default.target
 [Service]
 ExecStart= podman run --net host -v /root/nginx/conf.d:/etc/nginx/conf.d:ro,Z -v /root/nginx/ssl:/etc/nginx/ssl:ro,Z docker.io/library/nginx:latest
 Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target
