@@ -72,6 +72,10 @@
         port: 8443
         state: started
         timeout: 900
+
+    - name: Allow the service to start on boot
+      command: systemctl --user enable https-proxy.service
+
   rescue:
     - name: Handle errors in HTTPS configuration
       debug:

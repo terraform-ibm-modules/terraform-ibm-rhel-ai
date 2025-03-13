@@ -72,12 +72,12 @@
   debug:
     var: ilab_service_status.stdout
 
-- name: Allow the service to start on boot
-  command: sudo loginctl enable-linger
-
 - name: Wait for the service to be available
   wait_for:
     host: localhost
     port: 8000
     state: started
     timeout: 1800
+
+- name: Allow the service to start on boot
+  command: systemctl --user enable ilab-serve.service

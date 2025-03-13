@@ -19,7 +19,7 @@ output "security_group_id" {
 
 output "subnet_id" {
   description = "Subnet id"
-  value       = ibm_is_subnet.rhelai_subnet.id
+  value       = try(ibm_is_subnet.rhelai_subnet[0].id, var.subnet_id)
 }
 
 output "public_gateway_id" {

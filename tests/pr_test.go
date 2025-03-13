@@ -68,7 +68,7 @@ func TestMain(m *testing.M) {
 	rhelaiImageCosUrl = permanentResources["rhelai_image_cos_bucket_url"].(string) + "/" + rhelaiImageName
 	rhelaiModelCosBucketCrn = permanentResources["rhelai_model_cos_bucket_crn"].(string)
 	rhelaiModelCosBucketName = permanentResources["rhelai_model_cos_bucket_name"].(string)
-	rhelaiModelCosRegion = permanentResources["general_test_storage_cos_instance_region"].(string)
+	rhelaiModelCosRegion = permanentResources["rhelai_model_cos_bucket_region"].(string)
 	zoneList = []string{"1", "2", "3"}
 
 	// generate throwaway TLS certs for the test
@@ -122,6 +122,8 @@ func TestRunVpcSolutionPublicSchematic(t *testing.T) {
 
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
+		{Name: "use_existing_vpc", Value: false, DataType: "bool"},
+		{Name: "use_existing_subnet", Value: false, DataType: "bool"},
 		{Name: "region", Value: options.Region, DataType: "string"},
 		{Name: "zone", Value: options.Region + "-" + randomZone, DataType: "string"},
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
@@ -173,6 +175,8 @@ func TestRunVpcSolutionPublicUpgradeSchematic(t *testing.T) {
 
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
+		{Name: "use_existing_vpc", Value: false, DataType: "bool"},
+		{Name: "use_existing_subnet", Value: false, DataType: "bool"},
 		{Name: "region", Value: options.Region, DataType: "string"},
 		{Name: "zone", Value: options.Region + "-" + randomZone, DataType: "string"},
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
@@ -183,9 +187,9 @@ func TestRunVpcSolutionPublicUpgradeSchematic(t *testing.T) {
 		{Name: "ssh_key", Value: publicKey, DataType: "string"},
 		{Name: "ssh_private_key", Value: privateKey, DataType: "string", Secure: true},
 		{Name: "model_apikey", Value: modelKey, DataType: "string", Secure: true},
-		{Name: "model_bucket_name", Value: rhelaiModelCosBucketName, DataType: "string"},
+		{Name: "model_cos_bucket_name", Value: rhelaiModelCosBucketName, DataType: "string"},
 		{Name: "model_cos_region", Value: rhelaiModelCosRegion, DataType: "string"},
-		{Name: "model_bucket_crn", Value: rhelaiModelCosBucketCrn, DataType: "string"},
+		{Name: "model_cos_bucket_crn", Value: rhelaiModelCosBucketCrn, DataType: "string"},
 		{Name: "enable_https", Value: true, DataType: "bool"},
 		{Name: "https_certificate", Value: tlsTestCert, DataType: "string"},
 		{Name: "https_privatekey", Value: tlsTestCertPriv, DataType: "string"},

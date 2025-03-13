@@ -14,7 +14,7 @@ output "region" {
 
 output "zone" {
   description = "The zone all resources were provisioned in"
-  value       = var.zone
+  value       = local.l_zone
 }
 
 

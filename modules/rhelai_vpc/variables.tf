@@ -28,3 +28,8 @@ variable "vpc_id" {
   description = "If there is existing VPC. Then provide the VPC id"
   type        = string
 }
+
+variable "subnet_id" {
+  description = "If there is existing subnet, then provide the subnet id"
+  type        = string
+}

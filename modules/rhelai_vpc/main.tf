@@ -4,7 +4,8 @@
 #
 
 locals {
-  l_vpc_id = try(length(var.vpc_id), 0) > 0 ? var.vpc_id : null
+  l_vpc_id    = try(length(var.vpc_id), 0) > 0 ? var.vpc_id : null
+  l_subnet_id = try(length(var.subnet_id), 0) > 0 ? var.subnet_id : null
 }
 
 ##############################################################################
@@ -25,6 +26,7 @@ resource "ibm_is_public_gateway" "rhelai_publicgateway" {
 }
 
 resource "ibm_is_subnet" "rhelai_subnet" {
+  count                    = local.l_subnet_id == null ? 1 : 0
   name                     = "${var.prefix}-rhelai-subnet"
   resource_group           = var.resource_group_id
   vpc                      = try(ibm_is_vpc.rhelai_vpc[0].id, var.vpc_id)

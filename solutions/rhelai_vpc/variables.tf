@@ -40,10 +40,38 @@ variable "zone" {
   type        = string
 }
 
+variable "use_existing_vpc" {
+  type        = bool
+  description = "Do you want to deploy in existing VPC? Select true or false"
+  default     = true
+}
+
 variable "vpc_id" {
-  description = "An existing VPC ID where the RHEL.ai instance will be deployed. This is optional if you want to create RHEL.ai instance in new VPC"
+  description = "An existing vpc id where the RHEL.ai instance will be deployed. This is optional if you want to create RHEL.ai instance in new VPC"
   type        = string
   default     = null
+
+  validation {
+    condition     = anytrue([(!var.use_existing_vpc), (var.use_existing_vpc && var.vpc_id != null)])
+    error_message = "Existing vpc_id variable is required. Failed the validation because use_existing_vpc is selected as true. Which means vpc_id is not provided to deploy into existing VPC."
+  }
+}
+
+variable "use_existing_subnet" {
+  type        = bool
+  description = "Do you want to deploy in existing subnet? Select true or false"
+  default     = true
+}
+
+variable "subnet_id" {
+  description = "An existing subnet id where the RHEL.ai instance will be deployed. This is optional if you want to create RHEL.ai instance in new subnet"
+  type        = string
+  default     = null
+
+  validation {
+    condition     = anytrue([(!var.use_existing_subnet), (var.use_existing_subnet && var.subnet_id != null)])
+    error_message = "Existing subnet_id variable is required. Failed the validation because use_existing_subnet is selected as true. Which means subnet_id is not provided to deploy into existing subnet."
+  }
 }
 
 ########################################################################################################################
