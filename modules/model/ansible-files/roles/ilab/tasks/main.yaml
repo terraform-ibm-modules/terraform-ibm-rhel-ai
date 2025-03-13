@@ -80,5 +80,5 @@
     timeout: 1800
 
 - name: Allow the service to start on boot
-  command: systemctl --user enable ilab-serve.service 
-  
+  command: systemctl --user enable ilab-serve.service
+

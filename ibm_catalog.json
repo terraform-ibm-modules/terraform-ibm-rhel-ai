@@ -131,7 +131,7 @@
             },
             {
               "key": "has_existing_vpc",
-              "required": true              
+              "required": true
             },
             {
               "key": "vpc_id",
