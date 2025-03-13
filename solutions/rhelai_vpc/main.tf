@@ -6,12 +6,12 @@ locals {
   always_run = timestamp()
 
   model_repo_token_key = "HF_TOKEN"
-  l_zone = var.use_existing_subnet ? data.ibm_is_subnet.existing_subnet[0].zone : var.zone
+  l_zone               = var.use_existing_subnet ? data.ibm_is_subnet.existing_subnet[0].zone : var.zone
 }
 
 data "ibm_is_subnet" "existing_subnet" {
-  count       = var.use_existing_subnet ? 1 : 0 
-  identifier  = var.subnet_id
+  count      = var.use_existing_subnet ? 1 : 0
+  identifier = var.subnet_id
 }
 
 

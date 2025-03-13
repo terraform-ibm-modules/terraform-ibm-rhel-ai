@@ -130,7 +130,7 @@
               "key": "zone"
             },
             {
-              "key": "has_existing_vpc",
+              "key": "use_existing_vpc",
               "required": true
             },
             {
@@ -138,7 +138,7 @@
               "required": true
             },
             {
-              "key": "has_existing_subnet",
+              "key": "use_existing_subnet",
               "required": true
             },
             {
