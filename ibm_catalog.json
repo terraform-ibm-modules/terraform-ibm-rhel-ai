@@ -96,7 +96,7 @@
                   "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-rhel-ai/main/reference-architecture/rhelai-vpc.svg",
                   "type": "image/svg+xml"
                 },
-                "description": "RHEL AI VSI in VPC"
+                "description": "**RHEL AI VSI in VPC** <br/> <br/> <b>Description</b> Create a DA to deploy RHEL.ai VSI instance on IBM Cloud. The RHEL.ai instance should serve a vLLM model using instruct lab. Users will be able to inference the model using a public end point or they can internally inference using the private endpoint. <br/> A single solution inside the DA will use multiple modules to perform IaaC on IBM Cloud. The DA will provision a floating IP depending only on when the user requests a Public endpoint otherwise it will remove the floating IP once the RHEL.ai model is served on the VSI instance."
               }
             ]
           },
