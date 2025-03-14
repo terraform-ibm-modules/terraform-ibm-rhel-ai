@@ -14,6 +14,6 @@
   "model_apikey": "11111-abczyx-00000",
   "model_cos_bucket_name": $RHELAI_MODEL_BUCKET_NAME,
   "model_cos_region": $RHELAI_MODEL_COS_REGION,
-  "model_cos_bucket_crn": $RHELAI_MODEL_COS_CRN,
+  "model_cos_bucket_crn": $RHELAI_MODEL_COS_BUCKET_CRN,
   "enable_https": false
 }
