@@ -33,7 +33,6 @@ const yamlLocation = "../common-dev-assets/common-go-assets/common-permanent-res
 const vpcSolutionDir = "solutions/rhelai_vpc"
 
 // additional constants for test
-const rhelaiImageName = "rhel-ai-nvidia-1.4-1739107849-x86_64-kvm.qcow2"
 const vsiMachineType = "gx3-48x240x2l40s" // smaller that wasn't working = gx3-24x120x1l40s
 
 var sharedInfoSvc *cloudinfo.CloudInfoService
@@ -65,7 +64,7 @@ func TestMain(m *testing.M) {
 	}
 
 	// set up some values used for every test
-	rhelaiImageCosUrl = permanentResources["rhelai_image_cos_bucket_url"].(string) + "/" + rhelaiImageName
+	rhelaiImageCosUrl = permanentResources["rhelai_image_cos_bucket_url"].(string)
 	rhelaiModelCosBucketCrn = permanentResources["rhelai_model_cos_bucket_crn"].(string)
 	rhelaiModelCosBucketName = permanentResources["rhelai_model_cos_bucket_name"].(string)
 	rhelaiModelCosRegion = permanentResources["rhelai_model_cos_bucket_region"].(string)
