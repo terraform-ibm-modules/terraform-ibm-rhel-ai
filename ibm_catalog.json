@@ -92,7 +92,7 @@
             "diagrams": [
               {
                 "diagram": {
-                  "caption": "RHEL AI on VSI",
+                  "caption": "**RHEL AI on VSI**",
                   "url": "https://raw.githubusercontent.com/terraform-ibm-modules/terraform-ibm-rhel-ai/main/reference-architecture/rhelai-vpc.svg",
                   "type": "image/svg+xml"
                 },
