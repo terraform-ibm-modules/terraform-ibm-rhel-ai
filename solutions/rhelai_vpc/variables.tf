@@ -36,52 +36,24 @@ variable "region" {
 }
 
 variable "zone" {
-  description = "The zone where the RHEL.ai instance needs to be deployed"
-  type        = string
-}
-
-variable "use_existing_vpc" {
-  type        = bool
-  description = "Do you want to deploy in existing VPC? Select true or false"
-  default     = true
-}
-
-variable "vpc_id" {
-  description = "An existing vpc id where the RHEL.ai instance will be deployed. This is optional if you want to create RHEL.ai instance in new VPC"
-  type        = string
-  default     = null
-
-  validation {
-    condition     = anytrue([(!var.use_existing_vpc), (var.use_existing_vpc && var.vpc_id != null)])
-    error_message = "Existing vpc_id variable is required. Failed the validation because use_existing_vpc is selected as true. Which means vpc_id is not provided to deploy into existing VPC."
-  }
-}
-
-variable "use_existing_subnet" {
-  type        = bool
-  description = "Do you want to deploy in existing subnet? Select true or false"
-  default     = true
+  description = "The zone where the RHEL AI instance needs to be deployed"
+  type        = number
 }
 
 variable "subnet_id" {
-  description = "An existing subnet id where the RHEL.ai instance will be deployed. This is optional if you want to create RHEL.ai instance in new subnet"
+  description = "An existing subnet id where the RHEL AI instance will be deployed. This is optional if you want to create RHEL AI instance in new subnet and VPC"
   type        = string
   default     = null
-
-  validation {
-    condition     = anytrue([(!var.use_existing_subnet), (var.use_existing_subnet && var.subnet_id != null)])
-    error_message = "Existing subnet_id variable is required. Failed the validation because use_existing_subnet is selected as true. Which means subnet_id is not provided to deploy into existing subnet."
-  }
 }
 
 ########################################################################################################################
-# RHEL.ai VSI instance input variables
+# RHEL AI VSI instance input variables
 ########################################################################################################################
 
 
 variable "image_url" {
   type        = string
-  description = "A COS url location where RHEL.ai image is downloaded and stored from Red Hat. This will create custom image"
+  description = "A COS url location where RHEL AI image is downloaded and stored from Red Hat. This will create custom image"
   default     = null
 
   validation {
@@ -92,12 +64,12 @@ variable "image_url" {
 
 variable "image_id" {
   type        = string
-  description = "The RHEL.ai image id to use while creating a GPU VSI instance. This is optional if you are creating custom image using the image_url"
+  description = "The RHEL AI image id to use while creating a GPU VSI instance. This is optional if you are creating custom image using the image_url"
   default     = null
 
   validation {
     condition     = var.image_id != null || var.image_url != null
-    error_message = "You must supply either a image_id provided in cloud resources or image_url of RHEL.ai image. Note - Image url should be a cos url where the image is stored."
+    error_message = "You must supply either a image_id provided in cloud resources or image_url of RHEL AI image. Note - Image url should be a cos url where the image is stored."
   }
 }
 
@@ -108,7 +80,7 @@ variable "machine_type" {
 
 variable "ssh_key" {
   type        = string
-  description = "A public ssh key is required to the private key that you have generated from. This is used for RHEL.ai VSI instance"
+  description = "A public ssh key is required to the private key that you have generated from. This is used for RHEL AI VSI instance"
 }
 
 variable "enable_private_only" {

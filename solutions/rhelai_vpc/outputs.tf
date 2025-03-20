@@ -58,3 +58,8 @@ output "model_url" {
   description = "The URL can be used to inference the models. For private only VSI instance you need to use the private IP"
   value       = var.enable_private_only ? "" : var.enable_https ? "https://${ibm_is_floating_ip.ip_address.address}:8443/docs" : "http://${ibm_is_floating_ip.ip_address.address}:8000/docs"
 }
+
+output "custom_image_id" {
+  description = "RHEL AI Custom Image ID created VPC image services"
+  value       = module.rhelai_instance.custom_image_id
+}

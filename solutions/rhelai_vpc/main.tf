@@ -6,11 +6,13 @@ locals {
   always_run = timestamp()
 
   model_repo_token_key = "HF_TOKEN"
-  l_zone               = var.use_existing_subnet ? data.ibm_is_subnet.existing_subnet[0].zone : var.zone
+  l_user_zone          = var.zone != null ? "${var.region}-${var.zone}" : null
+  l_zone               = var.subnet_id != null ? data.ibm_is_subnet.existing_subnet[0].zone : local.l_user_zone
+  l_vpc                = var.subnet_id != null ? data.ibm_is_subnet.existing_subnet[0].vpc  : null
 }
 
 data "ibm_is_subnet" "existing_subnet" {
-  count      = var.use_existing_subnet ? 1 : 0
+  count      = var.subnet_id != null ? 1 : 0
   identifier = var.subnet_id
 }
 
@@ -35,7 +37,7 @@ module "rhelai_vpc" {
   prefix            = var.prefix
   resource_group_id = module.resource_group.resource_group_id
   zone              = local.l_zone
-  vpc_id            = var.vpc_id
+  vpc_id            = local.l_vpc
   subnet_id         = var.subnet_id
 }
 

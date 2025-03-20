@@ -128,23 +128,24 @@
               "type": "string"
             },
             {
-              "key": "zone"
+              "key": "zone",
+              "options": [
+                {
+                  "displayname": "zone-1",
+                  "value": 1
+                },
+                {
+                  "displayname": "zone-2",
+                  "value": 2
+                },
+                {
+                  "displayname": "zone-3",
+                  "value": 3
+                }
+              ]
             },
             {
-              "key": "use_existing_vpc",
-              "required": true
-            },
-            {
-              "key": "vpc_id",
-              "required": true
-            },
-            {
-              "key": "use_existing_subnet",
-              "required": true
-            },
-            {
-              "key": "subnet_id",
-              "required": true
+              "key": "subnet_id"              
             },
             {
               "key": "image_url"
