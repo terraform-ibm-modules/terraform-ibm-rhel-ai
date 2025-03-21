@@ -121,10 +121,8 @@ func TestRunVpcSolutionPublicSchematic(t *testing.T) {
 
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
-		{Name: "use_existing_vpc", Value: false, DataType: "bool"},
-		{Name: "use_existing_subnet", Value: false, DataType: "bool"},
 		{Name: "region", Value: options.Region, DataType: "string"},
-		{Name: "zone", Value: options.Region + "-" + randomZone, DataType: "string"},
+		{Name: "zone", Value: randomZone, DataType: "string"},
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
 		{Name: "existing_resource_group", Value: resourceGroup, DataType: "string"},
 		{Name: "image_url", Value: rhelaiImageCosUrl, DataType: "string"},
@@ -149,6 +147,7 @@ func TestRunVpcSolutionPublicSchematic(t *testing.T) {
 // Schematics only. Therefore the tests for that solution will need to remain schematics tests.
 // UPGRADE test for the rhelai_vpc solution, with public option enabled.
 func TestRunVpcSolutionPublicUpgradeSchematic(t *testing.T) {
+	t.Skip("Solution is still in Beta and has not been released, skipping upgrade tests until solution finalized")
 	t.Parallel()
 
 	tarIncludePatterns := append(tarAdditionalIncludePatterns, "solutions/rhelai_vpc/*")
@@ -174,10 +173,8 @@ func TestRunVpcSolutionPublicUpgradeSchematic(t *testing.T) {
 
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
-		{Name: "use_existing_vpc", Value: false, DataType: "bool"},
-		{Name: "use_existing_subnet", Value: false, DataType: "bool"},
 		{Name: "region", Value: options.Region, DataType: "string"},
-		{Name: "zone", Value: options.Region + "-" + randomZone, DataType: "string"},
+		{Name: "zone", Value: randomZone, DataType: "string"},
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
 		{Name: "existing_resource_group", Value: resourceGroup, DataType: "string"},
 		{Name: "image_url", Value: rhelaiImageCosUrl, DataType: "string"},
