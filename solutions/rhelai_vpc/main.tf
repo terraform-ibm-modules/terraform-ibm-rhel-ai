@@ -8,7 +8,7 @@ locals {
   model_repo_token_key = "HF_TOKEN"
   l_user_zone          = var.zone != null ? "${var.region}-${var.zone}" : null
   l_zone               = var.subnet_id != null ? data.ibm_is_subnet.existing_subnet[0].zone : local.l_user_zone
-  l_vpc                = var.subnet_id != null ? data.ibm_is_subnet.existing_subnet[0].vpc  : null
+  l_vpc                = var.subnet_id != null ? data.ibm_is_subnet.existing_subnet[0].vpc : null
 }
 
 data "ibm_is_subnet" "existing_subnet" {
