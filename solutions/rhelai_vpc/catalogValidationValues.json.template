@@ -1,9 +1,7 @@
 {
   "ibmcloud_api_key": $VALIDATION_APIKEY,
-  "use_existing_vpc": false,
-  "use_existing_subnet": false,
   "region": "eu-es",
-  "zone": "eu-es-2",
+  "zone": 2,
   "prefix": $PREFIX,
   "existing_resource_group": "geretain-test-resources",
   "image_url": $RHELAI_IMAGE_COS_URL,
