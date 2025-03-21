@@ -112,7 +112,15 @@
               "key": "resource_group"
             },
             {
-              "key": "existing_resource_group"
+              "key": "existing_resource_group",
+              "custom_config": {
+                "type": "resource_group",
+                "grouping": "deployment",
+                "original_grouping": "deployment",
+                "config_constraints": {
+                  "identifier": "rg_name"
+                }
+              }
             },
             {
               "custom_config": {
