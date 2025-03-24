@@ -109,10 +109,8 @@
               "required": true
             },
             {
-              "key": "resource_group"
-            },
-            {
-              "key": "existing_resource_group",
+              "key": "resource_group",
+              "required": true,
               "custom_config": {
                 "type": "resource_group",
                 "grouping": "deployment",
@@ -121,7 +119,7 @@
                   "identifier": "rg_name"
                 }
               }
-            },
+            },            
             {
               "custom_config": {
                 "config_constraints": {

@@ -9,6 +9,8 @@ locals {
   l_user_zone          = var.zone != null ? "${var.region}-${var.zone}" : null
   l_zone               = var.subnet_id != null ? data.ibm_is_subnet.existing_subnet[0].zone : local.l_user_zone
   l_vpc                = var.subnet_id != null ? data.ibm_is_subnet.existing_subnet[0].vpc : null
+  l_rg                 = var.resource_group == null ? "${var.prefix}-rg-${timestamp()}" : null
+  l_existing_rg        = var.resource_group != null ? var.resource_group : null
 }
 
 data "ibm_is_subnet" "existing_subnet" {
@@ -23,8 +25,8 @@ data "ibm_is_subnet" "existing_subnet" {
 module "resource_group" {
   source                       = "terraform-ibm-modules/resource-group/ibm"
   version                      = "1.1.6"
-  resource_group_name          = var.resource_group
-  existing_resource_group_name = var.existing_resource_group
+  resource_group_name          = local.l_rg
+  existing_resource_group_name = local.l_existing_rg
 }
 
 
