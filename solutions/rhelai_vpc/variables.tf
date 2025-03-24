@@ -13,20 +13,9 @@ variable "prefix" {
   description = "Prefix to append to all resources created by this example"
 }
 
-variable "resource_group" {
-  type        = string
-  description = "The name of a new resource group to provision resources in."
-  default     = null
-
-  validation {
-    condition     = var.resource_group != null || var.existing_resource_group != null
-    error_message = "You must supply either a new resource group name (resource_group) or an existing resource group name (existing_resource_group)."
-  }
-}
-
 variable "existing_resource_group" {
   type        = string
-  description = "The name of a existing resource group to provision resources in. Do not set if you fill resource_group"
+  description = "Select the name of a existing resource group or select NULL to create new resource group."
   default     = null
 }
 
