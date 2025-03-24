@@ -109,7 +109,7 @@
               "required": true
             },
             {
-              "key": "resource_group",
+              "key": "existing_resource_group",
               "required": true,
               "custom_config": {
                 "type": "resource_group",

@@ -9,8 +9,8 @@ locals {
   l_user_zone          = var.zone != null ? "${var.region}-${var.zone}" : null
   l_zone               = var.subnet_id != null ? data.ibm_is_subnet.existing_subnet[0].zone : local.l_user_zone
   l_vpc                = var.subnet_id != null ? data.ibm_is_subnet.existing_subnet[0].vpc : null
-  l_rg                 = var.resource_group == null ? "${var.prefix}-rg" : null
-  l_existing_rg        = var.resource_group != null ? var.resource_group : null
+  l_rg                 = var.existing_resource_group == null ? "${var.prefix}-rg" : null
+  l_existing_rg        = var.existing_resource_group != null ? var.resource_group : null
 }
 
 data "ibm_is_subnet" "existing_subnet" {
