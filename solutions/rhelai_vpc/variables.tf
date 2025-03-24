@@ -15,7 +15,7 @@ variable "prefix" {
 
 variable "existing_resource_group" {
   type        = string
-  description = "The name of a new resource group to provision resources in."
+  description = "Select the name of a existing resource group or select NULL to create new resource group."
   default     = null
 }
 
