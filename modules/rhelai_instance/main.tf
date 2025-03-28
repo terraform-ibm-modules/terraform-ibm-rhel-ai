@@ -102,6 +102,8 @@ resource "ibm_is_instance" "gpu_vsi_1" {
       exit 1
     fi
 
+    pip install hf_transfer
+
     exit 0
 
   EOT

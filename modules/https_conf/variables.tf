@@ -1,5 +1,5 @@
 ########################################################################################################################
-# ilab config variables
+# https config variables
 ########################################################################################################################
 
 variable "ssh_private_key" {
@@ -11,11 +11,6 @@ variable "ssh_private_key" {
 variable "rhelai_ip" {
   description = "Public IP address of RHEL.ai instance"
   type        = string
-}
-
-variable "enable_https" {
-  description = "Enable https"
-  type        = bool
 }
 
 variable "https_certificate" {
@@ -33,10 +28,4 @@ variable "https_privatekey" {
 variable "model_name" {
   description = "Model name"
   type        = string
-}
-
-variable "model_apikey" {
-  description = "API Key to authorize while inferencing the model"
-  type        = string
-  sensitive   = true
 }

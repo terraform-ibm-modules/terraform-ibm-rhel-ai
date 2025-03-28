@@ -1,0 +1,58 @@
+- name: Create a directory for ssl
+  file:
+    path: /root/nginx/ssl
+    state: directory
+    mode: '0755'
+  become: yes
+
+- name: Copy a ssl certificat file into /root/nginx/conf.d
+  ansible.builtin.copy:
+    src: ./certificate.crt
+    dest: /root/nginx/ssl/certificate.crt
+
+- name: Copy a ssl private key file into /root/nginx/ssl
+  ansible.builtin.copy:
+    src: ./private.key
+    dest: /root/nginx/ssl/private.key
+
+- name: Create a directory for conf.d
+  file:
+    path: /root/nginx/conf.d
+    state: directory
+  become: yes
+
+- name: Copy a https-proxy.conf file into conf.d directory
+  ansible.builtin.copy:
+    src: ./https-proxy.conf
+    dest: /root/nginx/conf.d/
+
+- name: Copy a https-proxy.service file into systemd user directory
+  ansible.builtin.copy:
+    src: ./https-proxy.service
+    dest: /root/.config/systemd/user
+
+- name: Reload the systemd manager configuration
+  command: systemctl --user daemon-reload
+
+- name: Start the https-proxy model serve systemd service
+  command: systemctl --user start https-proxy.service
+
+- name: Check that the service is running
+  command: systemctl --user status https-proxy.service
+  register: https_proxy_service_status
+
+- name: Debug print the status of the https-proxy service
+  debug:
+    var: https_proxy_service_status.stdout
+
+- name: Wait for the nginx service to be available
+  wait_for:
+    host: 0.0.0.0
+    port: 8443
+    state: started
+    timeout: 900
+
+- name: Allow the service to start on boot
+  command: systemctl --user enable https-proxy.service
+
+

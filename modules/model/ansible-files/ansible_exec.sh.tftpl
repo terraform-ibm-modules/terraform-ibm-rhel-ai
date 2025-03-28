@@ -3,6 +3,7 @@
 # Set environment variables for model repo
 export MODEL_REPO=${model_repository}
 export ${model_repo_token_key}=${model_repo_token_value}
+export ILAB_ADDITIONAL_ENV="HF_HUB_ENABLE_HF_TRANSFER=0"
 
 # Models in COS buckets
 export BUCKET_NAME=${bucket_name}

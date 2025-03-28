@@ -20,7 +20,9 @@ locals {
   l_cos_region             = var.model_cos_region != null ? var.model_cos_region : ""
   l_crn_service_id         = var.model_bucket_crn != null ? var.model_bucket_crn : ""
 
-  l_model_name = try(length(var.model_bucket_name), 0) > 0 ? var.model_bucket_name : var.model_repo
+  l_model_name    = try(length(var.model_bucket_name), 0) > 0 ? var.model_bucket_name : var.model_repo
+  l_model_port    = 8000
+  l_model_apikey  = var.model_apikey != null &&  var.model_apikey != "" ? "--api-key ${var.model_apikey}" : ""
 }
 
 ##############################################################
@@ -36,7 +38,8 @@ resource "terraform_data" "setup_ansible_host" {
     var.model_repo_token_value,
     var.model_bucket_name,
     var.model_cos_region,
-    var.ibmcloud_api_key
+    var.ibmcloud_api_key,
+    var.model_apikey
   ]
 
 
@@ -78,7 +81,10 @@ resource "terraform_data" "setup_ansible_host" {
   # Copy ilab-service file
   provisioner "file" {
     content = templatefile(local.ansible_ilab_service_file, {
-      model_name = local.l_model_name
+      model_name   = local.l_model_name,
+      model_host   = var.model_host,
+      model_port   = local.l_model_port,
+      model_apikey = local.l_model_apikey 
     })
     destination = local.dst_ilab_service_file
   }

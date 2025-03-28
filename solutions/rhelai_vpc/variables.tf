@@ -75,8 +75,8 @@ variable "ssh_key" {
 variable "enable_private_only" {
   type        = bool
   description = "A flag to determine to have private IP only and no public network accessibility"
-  default     = false
-  nullable    = false
+  default     = true
+  nullable    = true
 }
 
 ########################################################################################################################
@@ -119,7 +119,7 @@ variable "model_cos_region" {
   default     = null
 
   validation {
-    condition     = length(var.model_cos_bucket_name) > 0 ? length(var.model_cos_region) > 0 : true
+    condition     = var.model_cos_bucket_name != null ? var.model_cos_region != null : true
     error_message = "You must supply model_cos_region when you provide model_cos_bucket_name and model_cos_bucket_crn"
   }
 }
@@ -164,5 +164,5 @@ variable "model_apikey" {
   description = "Model API Key setup to authorize while inferencing the model"
   type        = string
   sensitive   = true
-  default     = ""
+  default     = null
 }
