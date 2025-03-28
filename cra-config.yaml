@@ -16,7 +16,6 @@ CRA_TARGETS:
       TF_VAR_prefix: "rhelai-vpc"
       TF_VAR_region: "eu-es"
       TF_VAR_zone: 2
-      TF_VAR_resource_group: "rhelai-vpc"
       TF_VAR_image_url: "cos://us-east/my-bucket/my-file.qcow2"
       TF_VAR_machine_type: "gx3-24x120x1l40s"
       TF_VAR_ssh_key: "ssh-rsa AAAABBBBCCCC==" # pragma: allowlist secret
