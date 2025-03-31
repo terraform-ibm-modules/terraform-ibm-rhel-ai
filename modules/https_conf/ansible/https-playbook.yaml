@@ -1,0 +1,6 @@
+---
+- name: RHEL.ai https-config Ansible playbook
+  hosts: all
+  remote_user: root
+  roles:
+    - proxy

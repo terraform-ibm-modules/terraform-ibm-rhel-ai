@@ -89,22 +89,22 @@ module "model" {
   ibmcloud_api_key       = var.ibmcloud_api_key
   model_bucket_crn       = var.model_cos_bucket_crn
   depends_on             = [ibm_is_floating_ip.ip_address]
+  model_apikey           = var.model_apikey
+  model_host             = var.enable_https ? "127.0.0.1" : "0.0.0.0"
 }
 
 ##############################################################################
-# Install model and serve using ilab
+# Run https proxy using nginx
 ##############################################################################
 
-module "ilab_conf" {
+module "https_conf" {
+  count             = var.enable_https ? 1 : 0
   depends_on        = [module.model]
-  source            = "../../modules/ilab_conf"
+  source            = "../../modules/https_conf"
   ssh_private_key   = var.ssh_private_key
   rhelai_ip         = ibm_is_floating_ip.ip_address.address
-  enable_https      = var.enable_https
   https_certificate = var.https_certificate
   https_privatekey  = var.https_privatekey
-  model_name        = module.model.model_name
-  model_apikey      = var.model_apikey
 }
 
 ##############################################################################
@@ -112,7 +112,7 @@ module "ilab_conf" {
 ##############################################################################
 
 resource "terraform_data" "private_only" {
-  depends_on = [module.ilab_conf]
+  depends_on = [module.https_conf]
   triggers_replace = [
     local.always_run
   ]

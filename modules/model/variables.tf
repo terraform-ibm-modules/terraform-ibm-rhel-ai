@@ -13,6 +13,11 @@ variable "rhelai_ip" {
   type        = string
 }
 
+variable "model_host" {
+  description = "Model host address. Ex - 127.0.0.1"
+  type        = string
+}
+
 ########################################################################################################################
 # variables to get model from registry
 ########################################################################################################################
@@ -57,4 +62,10 @@ variable "ibmcloud_api_key" {
 variable "model_bucket_crn" {
   description = "Provide Bucket instance CRN. If you are using model registry then this field should be empty"
   type        = string
+}
+
+variable "model_apikey" {
+  description = "API Key to authorize while inferencing the model"
+  type        = string
+  sensitive   = true
 }

@@ -1,18 +1,15 @@
 locals {
   src_config_templates_dir    = "${path.module}/config"
   src_ansible_files_dir       = "${path.module}/ansible"
-  config_with_apikey          = "${local.src_config_templates_dir}/config_apikey.yaml.tftpl"
-  config_without_apikey       = "${local.src_config_templates_dir}/config.yaml.tftpl"
   https_proxy_config_file     = "${local.src_config_templates_dir}/https-proxy.conf"
   https_proxy_service_file    = "${local.src_config_templates_dir}/https-proxy.service"
   ansible_https_playbook      = "${local.src_ansible_files_dir}/https-playbook.yaml"
-  ansible_inventory_file      = "${local.src_ansible_files_dir}/ilab-conf-inventory.yaml"
+  ansible_inventory_file      = "${local.src_ansible_files_dir}/https-conf-inventory.yaml"
   ansible_https_tasks_file    = "${local.src_ansible_files_dir}/roles/proxy/tasks/main.yaml"
-  dst_files_dir               = "/root/terraform_ilab_files"
-  dst_ilab_config_file        = "${local.dst_files_dir}/config.yaml"
+  dst_files_dir               = "/root/terraform_https_files"
   dst_https_proxy_conf        = "${local.dst_files_dir}/https-proxy.conf"
   dst_https_service_conf      = "${local.dst_files_dir}/https-proxy.service"
-  dst_ansible_inventory       = "${local.dst_files_dir}/ilab-conf-inventory.yaml"
+  dst_ansible_inventory       = "${local.dst_files_dir}/https-conf-inventory.yaml"
   dst_ansible_https_playbook  = "${local.dst_files_dir}/https-playbook.yaml"
   dst_ansible_https_task_file = "${local.dst_files_dir}/roles/proxy/tasks/main.yaml"
   dst_https_certificate       = "${local.dst_files_dir}/certificate.crt"
@@ -31,10 +28,8 @@ resource "terraform_data" "setup_ansible_host" {
   triggers_replace = [
     var.ssh_private_key,
     var.rhelai_ip,
-    var.enable_https,
     var.https_certificate,
-    var.https_privatekey,
-    var.model_apikey
+    var.https_privatekey
   ]
 
   connection {
@@ -99,91 +94,17 @@ resource "terraform_data" "setup_ansible_host" {
 }
 
 ##############################################################
-# 2. Copy ilab config file.
-#    Check if apikey exists and copy the appropriate file
-##############################################################
-
-resource "terraform_data" "copy_with_apikey" {
-
-  triggers_replace = [
-    var.ssh_private_key,
-    var.rhelai_ip,
-    var.enable_https,
-    var.https_certificate,
-    var.https_privatekey,
-    var.model_apikey
-  ]
-
-  count = var.model_apikey != null && var.model_apikey != "" ? 1 : 0
-
-  connection {
-    type        = "ssh"
-    user        = "root"
-    host        = var.rhelai_ip
-    private_key = var.ssh_private_key
-    timeout     = "5m"
-  }
-
-  # Copy ilab_config file
-  provisioner "file" {
-    content = templatefile(local.config_with_apikey, {
-      model_name = var.model_name
-      host_addr  = var.enable_https ? "127.0.0.1" : "0.0.0.0"
-      api_key    = var.model_apikey
-    })
-    destination = local.dst_ilab_config_file
-  }
-
-  depends_on = [terraform_data.setup_ansible_host]
-}
-
-resource "terraform_data" "copy_without_apikey" {
-
-  triggers_replace = [
-    var.ssh_private_key,
-    var.rhelai_ip,
-    var.enable_https,
-    var.https_certificate,
-    var.https_privatekey,
-    var.model_apikey
-  ]
-
-  count = var.model_apikey == null || var.model_apikey == "" ? 1 : 0
-
-  connection {
-    type        = "ssh"
-    user        = "root"
-    host        = var.rhelai_ip
-    private_key = var.ssh_private_key
-    timeout     = "5m"
-  }
-
-  # Copy ilab_config file
-  provisioner "file" {
-    content = templatefile(local.config_without_apikey, {
-      model_name = var.model_name
-      host_addr  = var.enable_https ? "127.0.0.1" : "0.0.0.0"
-    })
-    destination = local.dst_ilab_config_file
-  }
-
-  depends_on = [terraform_data.setup_ansible_host]
-}
-
-##############################################################
-# 3. Run ansible to setup https or http
+# 2. Run ansible to setup https or http
 ##############################################################
 
 resource "terraform_data" "execute_playbooks" {
   triggers_replace = [
     var.ssh_private_key,
     var.rhelai_ip,
-    var.enable_https,
     var.https_certificate,
     var.https_privatekey,
-    var.model_apikey
   ]
-  depends_on = [terraform_data.copy_with_apikey]
+  depends_on = [terraform_data.setup_ansible_host]
 
   connection {
     type        = "ssh"
@@ -195,7 +116,7 @@ resource "terraform_data" "execute_playbooks" {
 
   provisioner "remote-exec" {
     inline = [
-      "ansible-playbook -i ${local.dst_ansible_inventory} ${local.dst_ansible_https_playbook} --extra-vars=\"enable_https=${var.enable_https}\"",
+      "ansible-playbook -i ${local.dst_ansible_inventory} ${local.dst_ansible_https_playbook}",
     ]
   }
 }
@@ -208,10 +129,8 @@ resource "terraform_data" "clear_ansible_files" {
   triggers_replace = [
     var.ssh_private_key,
     var.rhelai_ip,
-    var.enable_https,
     var.https_certificate,
-    var.https_privatekey,
-    var.model_apikey
+    var.https_privatekey
   ]
 
   depends_on = [terraform_data.execute_playbooks]
