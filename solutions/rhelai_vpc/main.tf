@@ -105,7 +105,6 @@ module "https_conf" {
   rhelai_ip         = ibm_is_floating_ip.ip_address.address
   https_certificate = var.https_certificate
   https_privatekey  = var.https_privatekey
-  model_name        = module.model.model_name
 }
 
 ##############################################################################
