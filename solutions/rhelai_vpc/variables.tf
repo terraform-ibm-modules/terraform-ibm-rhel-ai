@@ -76,7 +76,7 @@ variable "enable_private_only" {
   type        = bool
   description = "A flag to determine to have private IP only and no public network accessibility"
   default     = true
-  nullable    = true
+  nullable    = false
 }
 
 ########################################################################################################################
