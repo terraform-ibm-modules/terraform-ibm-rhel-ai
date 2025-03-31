@@ -24,8 +24,3 @@ variable "https_privatekey" {
   type        = string
   sensitive   = true
 }
-
-variable "model_name" {
-  description = "Model name"
-  type        = string
-}
