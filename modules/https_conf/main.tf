@@ -6,7 +6,7 @@ locals {
   ansible_https_playbook      = "${local.src_ansible_files_dir}/https-playbook.yaml"
   ansible_inventory_file      = "${local.src_ansible_files_dir}/https-conf-inventory.yaml"
   ansible_https_tasks_file    = "${local.src_ansible_files_dir}/roles/proxy/tasks/main.yaml"
-  dst_files_dir               = "/root/terraform_https_files"  
+  dst_files_dir               = "/root/terraform_https_files"
   dst_https_proxy_conf        = "${local.dst_files_dir}/https-proxy.conf"
   dst_https_service_conf      = "${local.dst_files_dir}/https-proxy.service"
   dst_ansible_inventory       = "${local.dst_files_dir}/https-conf-inventory.yaml"
@@ -27,7 +27,7 @@ resource "terraform_data" "setup_ansible_host" {
 
   triggers_replace = [
     var.ssh_private_key,
-    var.rhelai_ip,    
+    var.rhelai_ip,
     var.https_certificate,
     var.https_privatekey
   ]
