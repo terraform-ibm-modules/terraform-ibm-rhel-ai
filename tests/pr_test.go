@@ -78,10 +78,10 @@ func TestMain(m *testing.M) {
 	}
 
 	tarAdditionalIncludePatterns = []string{
-		"modules/ilab_conf/*",
-		"modules/ilab_conf/ansible/*",
-		"modules/ilab_conf/ansible/roles/proxy/tasks/*",
-		"modules/ilab_conf/config/*",
+		"modules/https_conf/*",
+		"modules/https_conf/ansible/*",
+		"modules/https_conf/ansible/roles/proxy/tasks/*",
+		"modules/https_conf/config/*",
 		"modules/model/*",
 		"modules/model/ansible-files/*",
 		"modules/model/ansible-files/roles/ilab/tasks/*",
