@@ -18,6 +18,11 @@ variable "model_host" {
   type        = string
 }
 
+variable "num_gpus" {
+  description = "Number of gpus to assign while running the model"
+  type        = string
+}
+
 ########################################################################################################################
 # variables to get model from registry
 ########################################################################################################################

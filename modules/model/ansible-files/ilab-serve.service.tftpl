@@ -5,6 +5,6 @@ Description=ilab model serve service
 WantedBy=multi-user.target default.target
 
 [Service]
-ExecStart= ilab -v model serve --model-path /root/.cache/instructlab/models/${model_name} -h ${model_host} -p ${model_port}  --backend vllm --gpus 2 -- --served-model-name rhelai_service_model ${model_apikey}
+ExecStart= ilab -v model serve --model-path /root/.cache/instructlab/models/${model_name} -h ${model_host} -p ${model_port}  --backend vllm --gpus ${num_gpus} -- --served-model-name rhelai_service_model ${model_apikey} --disable-custom-all-reduce
 Restart=always
 User=root

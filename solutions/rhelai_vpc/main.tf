@@ -11,6 +11,7 @@ locals {
   l_vpc                = var.subnet_id != null ? data.ibm_is_subnet.existing_subnet[0].vpc : null
   l_rg                 = var.existing_resource_group == null ? "${var.prefix}-rg" : null
   l_existing_rg        = var.existing_resource_group != null ? var.existing_resource_group : null
+  l_num_gpus           = var.machine_type == "gx3-24x120x1l40s" ? "1" : "2"
 }
 
 data "ibm_is_subnet" "existing_subnet" {
@@ -81,9 +82,9 @@ module "model" {
   source                 = "../../modules/model"
   ssh_private_key        = var.ssh_private_key
   rhelai_ip              = ibm_is_floating_ip.ip_address.address
-  model_repo             = var.model_repo_hugging_face
+  model_repo             = var.hugging_face_model_name
   model_repo_token_key   = local.model_repo_token_key
-  model_repo_token_value = var.model_repo_token_value
+  model_repo_token_value = var.hugging_face_access_token
   model_bucket_name      = var.model_cos_bucket_name
   model_cos_region       = var.model_cos_region
   ibmcloud_api_key       = var.ibmcloud_api_key
@@ -91,6 +92,7 @@ module "model" {
   depends_on             = [ibm_is_floating_ip.ip_address]
   model_apikey           = var.model_apikey
   model_host             = var.enable_https ? "127.0.0.1" : "0.0.0.0"
+  num_gpus               = local.l_num_gpus
 }
 
 ##############################################################################
