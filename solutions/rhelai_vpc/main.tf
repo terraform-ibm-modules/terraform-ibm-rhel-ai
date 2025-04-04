@@ -123,6 +123,45 @@ resource "terraform_data" "private_only" {
   count = var.enable_private_only ? 1 : 0
 
   provisioner "local-exec" {
-    command = "terraform destroy -target=ibm_is_floating_ip.ip_address -auto-approve -lock=false"
+    command = <<-EOT
+    #!/bin/bash
+    set +x
+    set -e 
+    
+    # === Step 1: Get IAM access token ===
+    echo "Getting IAM access token..."
+    IAM_TOKEN=$(curl -s -X POST 'https://iam.cloud.ibm.com/identity/token' \
+      -H 'Content-Type: application/x-www-form-urlencoded' \
+      -d 'grant_type=urn:ibm:params:oauth:grant-type:apikey&apikey=${var.ibmcloud_api_key}' | jq -r .access_token)
+
+    if [ -z '$IAM_TOKEN' ] || [ '$IAM_TOKEN' == 'null' ]; then
+      echo "Failed to get access token."
+      exit 1
+    fi
+
+    echo "Access token retrieved."
+
+    # === Step 2: Detach the floating IP ===
+    echo "Detaching floating IP from VSI..."
+
+    RESPONSE=$(curl -s -w '%%{http_code}' -X PATCH \
+      'https://${var.region}.iaas.cloud.ibm.com/v1/floating_ips/${ibm_is_floating_ip.ip_address.id}?version=2022-03-01&generation=2' \
+      -H 'Authorization: Bearer $IAM_TOKEN' \
+      -H 'Content-Type: application/json' \
+      -d '{"target": null}'>/dev/null)
+
+    if [ '$RESPONSE' -eq 200 ]; then
+      echo "Floating IP successfully detached."
+    else
+      echo "Failed to detach floating IP. HTTP status: $RESPONSE"      
+    fi
+
+    echo "Deleting floating IP..."
+    curl -s -X DELETE 'https://${var.region}.iaas.cloud.ibm.com/v1/floating_ips/${ibm_is_floating_ip.ip_address.id}?version=2022-03-01&generation=2' \
+      -H 'Authorization: Bearer $IAM_TOKEN' >/dev/null
+
+    echo "Floating IP deleted."
+  EOT    
+
   }
 }
