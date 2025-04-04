@@ -192,10 +192,10 @@
               "key": "enable_private_only"
             },
             {
-              "key": "model_repo_hugging_face"
+              "key": "hugging_face_model_name"
             },
             {
-              "key": "model_repo_token_value"
+              "key": "hugging_face_access_token"
             },
             {
               "key": "model_cos_bucket_name"
