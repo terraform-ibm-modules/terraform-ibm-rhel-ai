@@ -39,7 +39,8 @@ resource "terraform_data" "setup_ansible_host" {
     var.model_bucket_name,
     var.model_cos_region,
     var.ibmcloud_api_key,
-    var.model_apikey
+    var.model_apikey,
+    var.num_gpus
   ]
 
 
@@ -84,7 +85,8 @@ resource "terraform_data" "setup_ansible_host" {
       model_name   = local.l_model_name,
       model_host   = var.model_host,
       model_port   = local.l_model_port,
-      model_apikey = local.l_model_apikey
+      model_apikey = local.l_model_apikey,
+      num_gpus     = var.num_gpus
     })
     destination = local.dst_ilab_service_file
   }
@@ -139,7 +141,8 @@ resource "terraform_data" "execute_playbooks" {
     var.model_repo_token_value,
     var.model_bucket_name,
     var.model_cos_region,
-    var.ibmcloud_api_key
+    var.ibmcloud_api_key,
+    var.num_gpus
   ]
 
   connection {
@@ -171,7 +174,8 @@ resource "terraform_data" "clear_ansible_files" {
     var.model_bucket_name,
     var.model_cos_region,
     var.ibmcloud_api_key,
-    var.model_bucket_crn
+    var.model_bucket_crn,
+    var.num_gpus
   ]
 
   depends_on = [terraform_data.execute_playbooks]

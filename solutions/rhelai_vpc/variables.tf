@@ -89,13 +89,13 @@ variable "ssh_private_key" {
   sensitive   = true
 }
 
-variable "model_repo_hugging_face" {
+variable "hugging_face_model_name" {
   type        = string
   description = "Provide the model path from hugging face registry only. If you have model is in COS use the COS configuration variables"
   default     = null
 }
 
-variable "model_repo_token_value" {
+variable "hugging_face_access_token" {
   description = "The value of authorization token to access the model repository from huggingface registry"
   type        = string
   sensitive   = true
@@ -108,8 +108,8 @@ variable "model_cos_bucket_name" {
   default     = null
 
   validation {
-    condition     = anytrue([(var.model_repo_hugging_face != null && var.model_cos_bucket_name == null), (var.model_cos_bucket_name != null && var.model_repo_hugging_face == null)])
-    error_message = "You must supply either model_repo_hugging_face with model_repo_token_value for HF_TOKEN key (or) have model_cos_bucket_name, model_cos_region and model_cos_bucket_crn"
+    condition     = anytrue([(var.hugging_face_model_name != null && var.model_cos_bucket_name == null), (var.model_cos_bucket_name != null && var.hugging_face_model_name == null)])
+    error_message = "You must supply either hugging_face_model_name with hugging_face_access_token for HF_TOKEN key (or) have model_cos_bucket_name, model_cos_region and model_cos_bucket_crn"
   }
 }
 
