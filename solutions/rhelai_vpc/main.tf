@@ -25,7 +25,7 @@ data "ibm_is_subnet" "existing_subnet" {
 ########################################################################################################################
 module "resource_group" {
   source                       = "terraform-ibm-modules/resource-group/ibm"
-  version                      = "1.1.6"
+  version                      = "1.2.0"
   resource_group_name          = local.l_rg
   existing_resource_group_name = local.l_existing_rg
 }
