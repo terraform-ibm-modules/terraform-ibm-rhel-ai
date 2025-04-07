@@ -99,7 +99,7 @@ func TestMain(m *testing.M) {
 func TestRunVpcSolutionPublicSchematic(t *testing.T) {
 	t.Parallel()
 
-	tarIncludePatterns := append(tarAdditionalIncludePatterns, "solutions/rhelai_vpc/*")
+	tarIncludePatterns := append(tarAdditionalIncludePatterns, "solutions/rhelai_vpc/*", "solutions/rhelai_vpc/scripts/*")
 
 	publicKey, privateKey := genNewSshKeypair(t)
 
@@ -155,7 +155,7 @@ func TestRunVpcSolutionPublicSchematic(t *testing.T) {
 func TestRunVpcSolutionPrivateSchematic(t *testing.T) {
 	t.Parallel()
 
-	tarIncludePatterns := append(tarAdditionalIncludePatterns, "solutions/rhelai_vpc/*")
+	tarIncludePatterns := append(tarAdditionalIncludePatterns, "solutions/rhelai_vpc/*", "solutions/rhelai_vpc/scripts/*")
 
 	publicKey, privateKey := genNewSshKeypair(t)
 
@@ -218,7 +218,7 @@ func TestRunVpcSolutionPublicUpgradeSchematic(t *testing.T) {
 	t.Skip("Solution is still in Beta and has not been released, skipping upgrade tests until solution finalized")
 	t.Parallel()
 
-	tarIncludePatterns := append(tarAdditionalIncludePatterns, "solutions/rhelai_vpc/*")
+	tarIncludePatterns := append(tarAdditionalIncludePatterns, "solutions/rhelai_vpc/*", "solutions/rhelai_vpc/scripts/*")
 
 	publicKey, privateKey := genNewSshKeypair(t)
 
