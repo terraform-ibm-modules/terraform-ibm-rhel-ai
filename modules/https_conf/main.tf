@@ -27,7 +27,6 @@ resource "terraform_data" "setup_ansible_host" {
 
   triggers_replace = [
     var.ssh_private_key,
-    var.rhelai_ip,
     var.https_certificate,
     var.https_privatekey
   ]
@@ -100,7 +99,6 @@ resource "terraform_data" "setup_ansible_host" {
 resource "terraform_data" "execute_playbooks" {
   triggers_replace = [
     var.ssh_private_key,
-    var.rhelai_ip,
     var.https_certificate,
     var.https_privatekey,
   ]
@@ -128,7 +126,6 @@ resource "terraform_data" "execute_playbooks" {
 resource "terraform_data" "clear_ansible_files" {
   triggers_replace = [
     var.ssh_private_key,
-    var.rhelai_ip,
     var.https_certificate,
     var.https_privatekey
   ]

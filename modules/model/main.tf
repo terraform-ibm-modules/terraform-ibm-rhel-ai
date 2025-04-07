@@ -32,7 +32,6 @@ locals {
 resource "terraform_data" "setup_ansible_host" {
   triggers_replace = [
     var.ssh_private_key,
-    var.rhelai_ip,
     var.model_repo,
     var.model_repo_token_key,
     var.model_repo_token_value,
@@ -135,7 +134,6 @@ resource "terraform_data" "execute_playbooks" {
 
   triggers_replace = [
     var.ssh_private_key,
-    var.rhelai_ip,
     var.model_repo,
     var.model_repo_token_key,
     var.model_repo_token_value,
@@ -167,7 +165,6 @@ resource "terraform_data" "execute_playbooks" {
 resource "terraform_data" "clear_ansible_files" {
   triggers_replace = [
     var.ssh_private_key,
-    var.rhelai_ip,
     var.model_repo,
     var.model_repo_token_key,
     var.model_repo_token_value,

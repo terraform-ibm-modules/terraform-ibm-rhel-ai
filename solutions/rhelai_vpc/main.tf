@@ -123,6 +123,10 @@ resource "terraform_data" "private_only" {
   count = var.enable_private_only ? 1 : 0
 
   provisioner "local-exec" {
-    command = "terraform destroy -target=ibm_is_floating_ip.ip_address -auto-approve -lock=false"
+    command     = "./scripts/remove_float_ip.sh ${ibm_is_floating_ip.ip_address.id} ${var.region}"
+    interpreter = ["bash", "-c"]
+    environment = {
+      IBMCLOUD_API_KEY = var.ibmcloud_api_key
+    }
   }
 }
