@@ -22,6 +22,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/cloudinfo"
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/common"
+	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testhelper"
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testschematic"
 )
 
@@ -115,6 +116,11 @@ func TestRunVpcSolutionPublicSchematic(t *testing.T) {
 		DeleteWorkspaceOnFail:  true,
 		WaitJobCompleteMinutes: 90,
 		CloudInfoService:       sharedInfoSvc,
+		IgnoreDestroys: testhelper.Exemptions{
+			List: []string{
+				"terraform_data.private_only[0]",
+			},
+		},
 	})
 
 	randomZone := zoneList[rand.Intn(len(zoneList))]
@@ -128,6 +134,68 @@ func TestRunVpcSolutionPublicSchematic(t *testing.T) {
 		{Name: "image_url", Value: rhelaiImageCosUrl, DataType: "string"},
 		{Name: "machine_type", Value: vsiMachineType, DataType: "string"},
 		{Name: "enable_private_only", Value: false, DataType: "bool"},
+		{Name: "ssh_key", Value: publicKey, DataType: "string"},
+		{Name: "ssh_private_key", Value: privateKey, DataType: "string", Secure: true},
+		{Name: "model_apikey", Value: modelKey, DataType: "string", Secure: true},
+		{Name: "model_cos_bucket_name", Value: rhelaiModelCosBucketName, DataType: "string"},
+		{Name: "model_cos_region", Value: rhelaiModelCosRegion, DataType: "string"},
+		{Name: "model_cos_bucket_crn", Value: rhelaiModelCosBucketCrn, DataType: "string"},
+		{Name: "enable_https", Value: true, DataType: "bool"},
+		{Name: "https_certificate", Value: tlsTestCert, DataType: "string"},
+		{Name: "https_privatekey", Value: tlsTestCertPriv, DataType: "string"},
+	}
+
+	err := options.RunSchematicTest()
+	assert.Nil(t, err, "This should not have errored")
+}
+
+// DEV NOTE: the full rhelai_vpc solution allows ansible to connect to VSI from IBM Cloud internal and
+// Schematics only. Therefore the tests for that solution will need to remain schematics tests.
+// Consistency test for the rhelai_vpc solution, with public option disabled.
+func TestRunVpcSolutionPrivateSchematic(t *testing.T) {
+	t.Parallel()
+
+	tarIncludePatterns := append(tarAdditionalIncludePatterns, "solutions/rhelai_vpc/*")
+
+	publicKey, privateKey := genNewSshKeypair(t)
+
+	// this is a throwaway random key needed for the test
+	modelKey := uuid.NewString()
+
+	// set up a schematics test
+	// NOTE: due to nature of floating IP in the private scenario, there are some ignore rules
+	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
+		Testing:                t,
+		TarIncludePatterns:     tarIncludePatterns,
+		TemplateFolder:         vpcSolutionDir,
+		Prefix:                 "rai-vpcpubs",
+		Region:                 "eu-es",
+		DeleteWorkspaceOnFail:  true,
+		WaitJobCompleteMinutes: 90,
+		CloudInfoService:       sharedInfoSvc,
+		IgnoreAdds: testhelper.Exemptions{
+			List: []string{
+				"ibm_is_floating_ip.ip_address",
+			},
+		},
+		IgnoreDestroys: testhelper.Exemptions{
+			List: []string{
+				"terraform_data.private_only[0]",
+			},
+		},
+	})
+
+	randomZone := zoneList[rand.Intn(len(zoneList))]
+
+	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
+		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
+		{Name: "region", Value: options.Region, DataType: "string"},
+		{Name: "zone", Value: randomZone, DataType: "string"},
+		{Name: "prefix", Value: options.Prefix, DataType: "string"},
+		{Name: "existing_resource_group", Value: resourceGroup, DataType: "string"},
+		{Name: "image_url", Value: rhelaiImageCosUrl, DataType: "string"},
+		{Name: "machine_type", Value: vsiMachineType, DataType: "string"},
+		{Name: "enable_private_only", Value: true, DataType: "bool"},
 		{Name: "ssh_key", Value: publicKey, DataType: "string"},
 		{Name: "ssh_private_key", Value: privateKey, DataType: "string", Secure: true},
 		{Name: "model_apikey", Value: modelKey, DataType: "string", Secure: true},
@@ -169,6 +237,11 @@ func TestRunVpcSolutionPublicUpgradeSchematic(t *testing.T) {
 		DeleteWorkspaceOnFail:  true,
 		WaitJobCompleteMinutes: 90,
 		CloudInfoService:       sharedInfoSvc,
+		IgnoreDestroys: testhelper.Exemptions{
+			List: []string{
+				"terraform_data.private_only[0]",
+			},
+		},
 	})
 
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
