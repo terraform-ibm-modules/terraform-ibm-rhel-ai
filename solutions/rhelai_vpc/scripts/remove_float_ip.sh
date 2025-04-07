@@ -30,8 +30,8 @@ DETACH_RESPONSE=$(curl -s -w "%{http_code}" -o /dev/null -X PATCH \
 if [ "$DETACH_RESPONSE" == "200" ]; then
     echo "Floating IP successfully detached."
 else
-    echo "Failed to detach floating IP. HTTP status: $DETACH_RESPONSE"   
-    exit 2   
+    echo "Failed to detach floating IP. HTTP status: $DETACH_RESPONSE"
+    exit 2
 fi
 
 echo "Deleting floating IP..."
@@ -41,6 +41,6 @@ DELETE_RESPONSE=$(curl -s -w "%{http_code}" -o /dev/null -X DELETE "https://$REG
 if [ "$DELETE_RESPONSE" == "204" ]; then
     echo "Floating IP deleted."
 else
-    echo "Failed to delete floating IP. HTTP status: $DELETE_RESPONSE"   
-    exit 3   
+    echo "Failed to delete floating IP. HTTP status: $DELETE_RESPONSE"
+    exit 3
 fi
