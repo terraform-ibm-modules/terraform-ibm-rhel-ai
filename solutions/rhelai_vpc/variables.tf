@@ -10,7 +10,7 @@ variable "ibmcloud_api_key" {
 
 variable "prefix" {
   type        = string
-  description = "Prefix to append to all resources created by this example"
+  description = "Prefix to append to all resources created."
 }
 
 variable "existing_resource_group" {
@@ -25,12 +25,12 @@ variable "region" {
 }
 
 variable "zone" {
-  description = "The zone where the RHEL AI instance needs to be deployed"
+  description = "The zone where the RHEL AI instance needs to be deployed."
   type        = number
 }
 
 variable "subnet_id" {
-  description = "An existing subnet id where the RHEL AI instance will be deployed. This is optional if you want to create RHEL AI instance in new subnet and VPC"
+  description = "An existing subnet id where the RHEL AI instance will be deployed. This is optional if you want to create RHEL AI instance in a new subnet and VPC"
   type        = string
   default     = null
 }
@@ -42,7 +42,7 @@ variable "subnet_id" {
 
 variable "image_url" {
   type        = string
-  description = "A COS url location where RHEL AI image is downloaded and stored from Red Hat. This will create custom image"
+  description = "A COS url location where RHEL AI image is downloaded and stored from Red Hat. This will create custom image. The COS url should be of the format cos://<region>/<bucket-name>/<image-object-name>. This is optional if you have existing custom image_id."
   default     = null
 
   validation {
@@ -53,7 +53,7 @@ variable "image_url" {
 
 variable "image_id" {
   type        = string
-  description = "The RHEL AI image id to use while creating a GPU VSI instance. This is optional if you are creating custom image using the image_url"
+  description = "The VPC custom image id of RHEL AI to use while creating a GPU VSI instance. This is optional if you are creating custom image using the image_url"
   default     = null
 
   validation {
@@ -64,7 +64,7 @@ variable "image_id" {
 
 variable "machine_type" {
   type        = string
-  description = "The machine type to be created. Please provide GPU based machine type to run the solution"
+  description = "The machine type to be created. Please provide NVIDIA GPU based machine type to run the solution"
 }
 
 variable "ssh_key" {
@@ -84,19 +84,19 @@ variable "enable_private_only" {
 ########################################################################################################################
 
 variable "ssh_private_key" {
-  description = "SSH Private Key to login and execute model service operations. Use the private key of SSH public key provided to the VSI instance"
+  description = "SSH Private Key to login and update model config and execute service operations. Use the private key of SSH public key provided to the VSI instance"
   type        = string
   sensitive   = true
 }
 
 variable "hugging_face_model_name" {
   type        = string
-  description = "Provide the model path from hugging face registry only. If you have model is in COS use the COS configuration variables"
+  description = "Provide the model path from hugging face registry only. If you have model in COS use the COS configuration variables"
   default     = null
 }
 
 variable "hugging_face_access_token" {
-  description = "The value of authorization token to access the model repository from huggingface registry"
+  description = "The value of hugging face user access token to access the model repository from huggingface registry"
   type        = string
   sensitive   = true
   default     = null
@@ -140,7 +140,7 @@ variable "model_cos_bucket_crn" {
 ########################################################################################################################
 
 variable "enable_https" {
-  description = "Enable https to model service?"
+  description = "Enable https to model service? If yes then a proxy nginx with https certificates will be created. https_cerificate and https_privatekey are required when true"
   type        = bool
   default     = false
   nullable    = false
@@ -161,7 +161,7 @@ variable "https_privatekey" {
 }
 
 variable "model_apikey" {
-  description = "Model API Key setup to authorize while inferencing the model"
+  description = "Model API Key to setup authorization while inferencing the model"
   type        = string
   sensitive   = true
   default     = null
