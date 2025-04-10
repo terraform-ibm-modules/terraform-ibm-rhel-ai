@@ -64,7 +64,7 @@ Make sure that you have an IBM Cloud Pay-As-You-Go or Subscription account:
 
 1. Set up account access (Cloud Identity and Access Management (IAM)):
 
-    a. Create an IBM Cloud [API key](https://cloud.ibm.com/docs/account?topic=account-userapikey&interface=terraform#create_user_key-api-terra). The user who owns this key must have the Administrator role.
+    a. Create an IBM Cloud [API key](https://cloud.ibm.com/docs/account?topic=account-userapikey&interface=ui#create_user_key). The user who owns this key must have the Administrator role.
 
     b. [Set up access groups](https://cloud.ibm.com/docs/account?topic=account-account-getting-started#account-gs-accessgroups).
 
@@ -86,7 +86,7 @@ Make sure that you have an IBM Cloud Pay-As-You-Go or Subscription account:
 
     You need the following permissions for this deployable architecture:
 
-    - Access to view API Keys
+    - Access to view API Keys in All Identity and Access enabled services
 
     - Create resource group or access existing resource group
 
@@ -168,7 +168,7 @@ To deploy a RHEL AI deployable architecture through the IBM Cloud catalog, follo
 
 4. Select the latest product version in the Architecture section.
 
-5. Click Add to project button.
+5. Click "Add to project" button.
 
 6. Create a new project by providing Name, Configuration Name, Region and Resource Group
 
@@ -180,7 +180,7 @@ To deploy a RHEL AI deployable architecture through the IBM Cloud catalog, follo
 
 10. Click on the Optional fields tab and fill in the necessary fields. The fields are optional based on selection of one over the other. Those fields are
 
-    a. For RHEL AI Image you need to provided image_url to COS or image_id if you manually created a RHEL AI custom image in the VPC. The image_url of COS should be of the format 
+    a. RHEL AI Image - provide image_url to COS (or) provide image_id if you manually created a RHEL AI custom image in the VPC. The image_url of COS should be of the format 
     
     `cos://<region>/<bucket-name>/<image-object-name>` 
     
@@ -196,7 +196,7 @@ You can find the complete set of fields under [Inputs](#inputs)
 
 11. After you enter the fields, click Save button to save the project configurations of the Deployable Architecture
 
-12. After you save, click Validate to validate the generated plan. Once the validation is successful you can review the cost breakdown of resources that gets deployed. If the validation is unsuccessful then click on the Validation Failed to see the logs. If there are any empty fields (you may need to revet them back to null) or other issues in your configuration click Edit button to go back to configuration to edit the required and optional fields and save and validate again until its successful.
+12. After you save, click Validate to validate the generated plan. Once the validation is successful you can review the cost breakdown of resources that gets deployed. If the validation is unsuccessful then click on the Validation Failed to see the logs. If there are any empty fields (you may need to revet them back to null) or other issues in your configuration click Edit button to go back to configuration to edit the required and optional fields and save and validate again until its successful. If you still have issue contact the support team.
 
 13. After validating and verifying the cost estimate, you can approve by providing the comments and clicking the button Approve
 
@@ -204,11 +204,11 @@ You can find the complete set of fields under [Inputs](#inputs)
 
 15. Once the deployment is successful, you can check the output of the deployment by clicking on "Changes deployed successfully". You see the summary of resources deployed
 
-16. Click on View Resources button to see resources that are deployed and active
+16. Click on View Resources button to see resources that got deployed and active
 
-17. Change the tab to Outputs to view model details and the RHEL AI VSI details. You see a model_url in the outputs when you selected enable_private field as false. Click on the model_url to see the API documentation to inference the model
+17. Change the tab to Outputs to view model details and the RHEL AI VSI details. You see a model_url in the outputs when you selected enable_private field as false (if enable_private is true then the model_url is empty in outputs). Click on the model_url to see the API documentation to inference the model
 
-18. To undeploy the resources click on the "more options" menu on the top right corner beside Edit button and you see undeploy option. Click the undeploy button to destroy all the resources including the resource group.
+18. To undeploy the resources click on the "more options" (:) menu on the top right corner beside Edit button and you see undeploy option. Click the undeploy button to destroy all the resources including the resource group.
 
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
