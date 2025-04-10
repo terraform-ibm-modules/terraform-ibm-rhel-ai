@@ -81,3 +81,6 @@
 
 - name: Allow the service to start on boot
   command: systemctl --user enable ilab-serve.service
+
+- name: Enable linger even when logged out
+  command: sudo loginctl enable-linger

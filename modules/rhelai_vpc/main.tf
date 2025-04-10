@@ -4,13 +4,19 @@
 #
 
 locals {
-  l_vpc_id    = try(length(var.vpc_id), 0) > 0 ? var.vpc_id : null
-  l_subnet_id = try(length(var.subnet_id), 0) > 0 ? var.subnet_id : null
+  l_vpc_id         = try(length(var.vpc_id), 0) > 0 ? var.vpc_id : null
+  l_subnet_id      = try(length(var.subnet_id), 0) > 0 ? var.subnet_id : null
+  l_public_gateway = var.subnet_id != null ? data.ibm_is_subnet.existing_subnet[0].public_gateway : null
 }
 
 ##############################################################################
 # Create VPC and Subet
 ##############################################################################
+
+data "ibm_is_subnet" "existing_subnet" {
+  count      = var.subnet_id != null ? 1 : 0
+  identifier = var.subnet_id
+}
 
 resource "ibm_is_vpc" "rhelai_vpc" {
   count          = local.l_vpc_id == null ? 1 : 0
@@ -19,6 +25,7 @@ resource "ibm_is_vpc" "rhelai_vpc" {
 }
 
 resource "ibm_is_public_gateway" "rhelai_publicgateway" {
+  count          = local.l_public_gateway == null ? 1 : 0
   name           = "${var.prefix}-rhelai-gateway"
   resource_group = var.resource_group_id
   vpc            = try(ibm_is_vpc.rhelai_vpc[0].id, var.vpc_id)
@@ -31,7 +38,7 @@ resource "ibm_is_subnet" "rhelai_subnet" {
   resource_group           = var.resource_group_id
   vpc                      = try(ibm_is_vpc.rhelai_vpc[0].id, var.vpc_id)
   zone                     = var.zone
-  public_gateway           = ibm_is_public_gateway.rhelai_publicgateway.id
+  public_gateway           = ibm_is_public_gateway.rhelai_publicgateway[0].id
   total_ipv4_address_count = 16
 }
 

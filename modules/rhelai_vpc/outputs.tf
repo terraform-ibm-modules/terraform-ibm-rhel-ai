@@ -24,5 +24,5 @@ output "subnet_id" {
 
 output "public_gateway_id" {
   description = "Public gateway id attached to VPC"
-  value       = ibm_is_public_gateway.rhelai_publicgateway.id
+  value       = local.l_public_gateway != null ? local.l_public_gateway : ibm_is_public_gateway.rhelai_publicgateway[0].id
 }
