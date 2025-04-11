@@ -10,10 +10,21 @@ from ibm_botocore.client import Config
 
 # IBM Cloud COS Credentials
 IBM_CLOUD_API_KEY = "${ibmcloud_api_key}"
-ENDPOINT_URL = "https://s3.direct.${region}.cloud-object-storage.appdomain.cloud"  # Change based on region
-BUCKET_NAME = "${bucket_name}"
+ENDPOINT_URL = "https://s3.${region}.cloud-object-storage.appdomain.cloud"  # Change based on region
+FULL_PATH    = "${bucket_name}"
 LOCAL_DOWNLOAD_PATH = "${dest_dir}"  # Local directory to save files
 RESOURCE_INSTANCE_ID = "${crn_instance_id}"
+
+# Ensure local download directory exists
+os.makedirs(LOCAL_DOWNLOAD_PATH, exist_ok=True)
+
+# Parse bucket and prefix
+parts = FULL_PATH.strip("/").split("/", 1)
+BUCKET_NAME = parts[0]
+FOLDER_PREFIX = parts[1] if len(parts) > 1 else ""
+
+print(f"Bucket name {BUCKET_NAME}")
+print(f"Folder Prefix {FOLDER_PREFIX}")
 
 # Create IBM COS Client
 cos_client = ibm_boto3.client(
@@ -24,15 +35,14 @@ cos_client = ibm_boto3.client(
     endpoint_url=ENDPOINT_URL
 )
 
-# Ensure local download directory exists
-os.makedirs(LOCAL_DOWNLOAD_PATH, exist_ok=True)
-
 # List all objects in the bucket
-objects = cos_client.list_objects_v2(Bucket=BUCKET_NAME).get("Contents", [])
+objects = cos_client.list_objects_v2(Bucket=BUCKET_NAME, Prefix=FOLDER_PREFIX).get("Contents", [])
 
 def download_file(file_name):
     """Function to download a single file from IBM COS."""
-    local_file_path = os.path.join(LOCAL_DOWNLOAD_PATH, file_name)
+
+    # Destination file with now have relative path with file name only
+    local_file_path = os.path.join(LOCAL_DOWNLOAD_PATH, file_name.split("/")[-1])
 
     print(f"⬇️ Downloading {file_name}...")
 
