@@ -42,12 +42,12 @@ variable "subnet_id" {
 
 variable "image_url" {
   type        = string
-  description = "A COS url location where RHEL AI image is downloaded from Red Hat and stored in COS. This will create custom image. The COS url should be of the format cos:\/\/<region>/<bucket-name>/<image-object-name>. This is optional if you have existing custom image_id."
+  description = "A COS url location where RHEL AI image is downloaded from Red Hat and stored in COS. This will create custom image. The COS url should be of the format cos://{region}/{bucket}/{filename}. This is optional if you have existing custom image_id."
   default     = null
 
   validation {
     condition     = var.image_url == null ? true : length(var.image_url) == 0 ? true : startswith(var.image_url, "cos://")
-    error_message = "The image URL must be a COS URL with format `cos://<region>/<bucket>/<filename>`"
+    error_message = "The image URL must be a COS URL with format `cos://region/bucket/filename`"
   }
 }
 
