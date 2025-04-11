@@ -15,7 +15,7 @@ variable "prefix" {
 
 variable "existing_resource_group" {
   type        = string
-  description = "Select the name of a existing resource group or select NULL to create new resource group."
+  description = "Select the name of a existing resource group or select null to create new resource group."
   default     = null
 }
 
@@ -30,7 +30,7 @@ variable "zone" {
 }
 
 variable "subnet_id" {
-  description = "An existing subnet id where the RHEL AI instance will be deployed. This is optional if you want to create RHEL AI instance in a new subnet and VPC"
+  description = "An existing subnet id where the RHEL AI instance will be deployed. This is optional and can be set to null if you want to create RHEL AI instance in a new subnet and VPC"
   type        = string
   default     = null
 }
@@ -42,7 +42,7 @@ variable "subnet_id" {
 
 variable "image_url" {
   type        = string
-  description = "A COS url location where RHEL AI image is downloaded and stored from Red Hat. This will create custom image. The COS url should be of the format cos://<region>/<bucket-name>/<image-object-name>. This is optional if you have existing custom image_id."
+  description = "A COS url location where RHEL AI image is downloaded from Red Hat and stored in COS. This will create custom image. The COS url should be of the format cos:\/\/<region>/<bucket-name>/<image-object-name>. This is optional if you have existing custom image_id."
   default     = null
 
   validation {
@@ -64,12 +64,12 @@ variable "image_id" {
 
 variable "machine_type" {
   type        = string
-  description = "The machine type to be created. Please provide NVIDIA GPU based machine type to run the solution"
+  description = "The machine type to be created. Please select one of the NVIDIA GPU based machine type to run the solution"
 }
 
 variable "ssh_key" {
   type        = string
-  description = "A public ssh key is required to the private key that you have generated from. This is used for RHEL AI VSI instance"
+  description = "A public ssh key is required that you have generated from. This is used for RHEL AI VSI instance"
 }
 
 variable "enable_private_only" {
@@ -84,26 +84,26 @@ variable "enable_private_only" {
 ########################################################################################################################
 
 variable "ssh_private_key" {
-  description = "SSH Private Key to login and update model config and execute service operations. Use the private key of SSH public key provided to the VSI instance"
+  description = "SSH Private Key that was generated to login and update model config and execute service operations. Use the private key of SSH public key provided in ssh_key."
   type        = string
   sensitive   = true
 }
 
 variable "hugging_face_model_name" {
   type        = string
-  description = "Provide the model path from hugging face registry only. If you have model in COS use the COS configuration variables"
+  description = "Provide the model path from hugging face registry only. If you have model in COS use the COS configuration variables model_cos_bucket_name, model_cos_region and model_cos_bucket_crn"
   default     = null
 }
 
 variable "hugging_face_access_token" {
-  description = "The value of hugging face user access token to access the model repository from huggingface registry"
+  description = "The value of hugging face user access token to access the model repository from huggingface registry. If you have model in COS, then this is optional. Use the COS configuration variables model_cos_bucket_name, model_cos_region and model_cos_bucket_crn"
   type        = string
   sensitive   = true
   default     = null
 }
 
 variable "model_cos_bucket_name" {
-  description = "Provide the COS bucket name where you model files reside. If you are using model registry then this field should be empty"
+  description = "Provide the COS bucket name where you model files reside. If you are using hugging_face_model_name and hugging_face_access_token then this field is optional"
   type        = string
   default     = null
 
@@ -114,7 +114,7 @@ variable "model_cos_bucket_name" {
 }
 
 variable "model_cos_region" {
-  description = "Provide COS region where the model bucket reside. If you are using model registry then this field should be empty"
+  description = "Provide COS region where the model bucket reside. If you are using hugging_face_model_name and hugging_face_access_token then this field is optional"
   type        = string
   default     = null
 
@@ -125,7 +125,7 @@ variable "model_cos_region" {
 }
 
 variable "model_cos_bucket_crn" {
-  description = "Provide Bucket instance CRN. If you are using model registry then this field should be empty"
+  description = "Provide Bucket instance CRN. If you are using hugging_face_model_name and hugging_face_access_token then this field is optional"
   type        = string
   default     = null
 
@@ -140,7 +140,7 @@ variable "model_cos_bucket_crn" {
 ########################################################################################################################
 
 variable "enable_https" {
-  description = "Enable https to model service? If yes then a proxy nginx with https certificates will be created. https_cerificate and https_privatekey are required when true"
+  description = "Enable https to your model service? If yes then a proxy nginx with https certificates will be created. https_cerificate and https_privatekey are required when true"
   type        = bool
   default     = false
   nullable    = false
@@ -154,7 +154,7 @@ variable "https_certificate" {
 }
 
 variable "https_privatekey" {
-  description = "SSL privatekey (optional) for https setup. Required if enable_https is true"
+  description = "SSL privatekey for https setup. Required if enable_https is true"
   type        = string
   sensitive   = true
   default     = ""
