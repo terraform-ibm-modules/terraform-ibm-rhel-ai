@@ -39,7 +39,7 @@ cos_client = ibm_boto3.client(
 objects = cos_client.list_objects_v2(Bucket=BUCKET_NAME, Prefix=FOLDER_PREFIX).get("Contents", [])
 
 def download_file(file_name):
-    """Function to download a single file from IBM COS."""      
+    """Function to download a single file from IBM COS."""
 
     # Destination file with now have relative path with file name only
     local_file_path = os.path.join(LOCAL_DOWNLOAD_PATH, file_name.split("/")[-1])
