@@ -1,8 +1,18 @@
 ## Overview
 
-The DA provides RHEL AI instance on IBM Cloud and serves a fine-tuned model as a service with a public end point or a private endpoint. The RHEL AI instance serves a vLLM model using instruct lab.
+The architecture provides a RHEL AI instance on IBM Cloud and serves a fine-tuned model as a service with a public end point or a private endpoint. The RHEL AI instance serves a vLLM model using instruct lab.
 
-The "Quick Start" solution  inside the DA have modules to perform IaaC and run Ansible scripts on IBM Cloud. The DA provisions a floating IP to RHEL AI VSI Instance depending if only the user requests a public endpoint otherwise keeps only the private end point.
+### Objective
+The objective is to provide a "Quick Start" solution  for users to be able to deploy the RHEL AI instance and validate, test the fine-tuned models on IBM Cloud. The architecture is intended for
+
+- Accelerating the validation and testing of fine tuned models on IBM Cloud RHEL AI instance
+- Enable users to bring in their fine tuned model solutions in a secure environment and create demos
+- Provide inferencing of the fine tuned models through vLLM API interface
+
+
+### Details
+
+The Deployable Architecture (DA) have different modules to perform IaaC and run Ansible scripts on IBM Cloud. 
 
 The modules used are -
 
@@ -44,6 +54,37 @@ Download and serve the model in the RHEL AI VSI instance that was provisioned in
 - Enable https by deploying the nginx service
 
 All these modules are used in DA to deploy and serve the model as a service using instruct lab.
+
+## Reference Architecture
+
+### Architecture Diagram
+
+![RHEL AI VPC Architecture Diagram](../../reference-architecture/rhelai-vpc.svg)
+
+### Solution Components
+
+| Category | Solution components | How it is used in the solution |
+| -------- | ------------------- | ------------------------------ |
+| Compute  | NVIDIA GPUs         | The deployable architecture provides only two compute profiles, a gx3-24x120x1l40s with single l40 GPU or gx3-48x240x2l40s with 2 GPUs. Depending on the size of the model select the compute profile |
+|          | RHEL AI Image       | A RHEL AI image with version 1.4 and above |
+| Storage  | Boot Volume         | A 250 GB boot volume storage to run the model |
+|          | Cloud Object Storage | Model files downloaded from IBM Cloud Object storage. This is not provisioned by Deployable Architecture but required when downloading models from IBM COS bucket |
+| Networking | Virtual Private Clouds (VPCs), Subnets, Security Groups (SGs) | VPCs for RHEL AI instance isolation Subnets, SGs for restricted access to model service |
+|            | Public Gateway  | Egress traffic to allow RHEL AI instance to access Hugging Face registry |
+|            | Floating IP     | Access to inference models on port 8000 for http and 8443 for https |
+|            | SSL Connection  | Enable Https using a proxy service |
+| Security   | Access management | IBM Cloud Identity & Access Management |
+
+### Requirements
+
+The following table represents a typical set of requirements for RHEL AI deployment on IBM Cloud
+
+| Aspect | Requirements |
+| ------ | ------------ |
+| Compute | Select one of the two NVIDIA GPU accelerated computes, a l40 GPU or  2l40 GPUs |
+| Networking | Deploy workloads in an secure environment with Security Groups in place |
+| Security | Help ensure that all operation actions run securely. |
+
 
 ## Planning
 
@@ -217,7 +258,7 @@ You can find the complete set of fields under [Inputs](#inputs)
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.9.0 |
-| <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | >= 1.77.0, < 2.0.0 |
+| <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | >= 1.76.3, < 2.0.0 |
 
 ### Modules
 
@@ -241,26 +282,26 @@ You can find the complete set of fields under [Inputs](#inputs)
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_enable_https"></a> [enable\_https](#input\_enable\_https) | Enable https to your model service? If yes then a proxy nginx with https certificates will be created. https\_cerificate and https\_privatekey are required when true | `bool` | `false` | no |
+| <a name="input_enable_https"></a> [enable\_https](#input\_enable\_https) | Enable https to model service? If yes then a proxy nginx with https certificates will be created. https\_cerificate and https\_privatekey are required when true | `bool` | `false` | no |
 | <a name="input_enable_private_only"></a> [enable\_private\_only](#input\_enable\_private\_only) | A flag to determine to have private IP only and no public network accessibility | `bool` | `true` | no |
-| <a name="input_existing_resource_group"></a> [existing\_resource\_group](#input\_existing\_resource\_group) | Select the name of a existing resource group or select null to create new resource group. | `string` | `null` | no |
+| <a name="input_existing_resource_group"></a> [existing\_resource\_group](#input\_existing\_resource\_group) | Select the name of a existing resource group or select NULL to create new resource group. | `string` | `null` | no |
 | <a name="input_https_certificate"></a> [https\_certificate](#input\_https\_certificate) | SSL certificate required for https setup. Required if enable\_https is true | `string` | `""` | no |
-| <a name="input_https_privatekey"></a> [https\_privatekey](#input\_https\_privatekey) | SSL privatekey for https setup. Required if enable\_https is true | `string` | `""` | no |
-| <a name="input_hugging_face_access_token"></a> [hugging\_face\_access\_token](#input\_hugging\_face\_access\_token) | The value of hugging face user access token to access the model repository from huggingface registry. If you have model in COS, then this is optional. Use the COS configuration variables model\_cos\_bucket\_name, model\_cos\_region and model\_cos\_bucket\_crn | `string` | `null` | no |
-| <a name="input_hugging_face_model_name"></a> [hugging\_face\_model\_name](#input\_hugging\_face\_model\_name) | Provide the model path from hugging face registry only. If you have model in COS use the COS configuration variables model\_cos\_bucket\_name, model\_cos\_region and model\_cos\_bucket\_crn | `string` | `null` | no |
+| <a name="input_https_privatekey"></a> [https\_privatekey](#input\_https\_privatekey) | SSL privatekey (optional) for https setup. Required if enable\_https is true | `string` | `""` | no |
+| <a name="input_hugging_face_access_token"></a> [hugging\_face\_access\_token](#input\_hugging\_face\_access\_token) | The value of hugging face user access token to access the model repository from huggingface registry | `string` | `null` | no |
+| <a name="input_hugging_face_model_name"></a> [hugging\_face\_model\_name](#input\_hugging\_face\_model\_name) | Provide the model path from hugging face registry only. If you have model in COS use the COS configuration variables | `string` | `null` | no |
 | <a name="input_ibmcloud_api_key"></a> [ibmcloud\_api\_key](#input\_ibmcloud\_api\_key) | The IBM Cloud platform API key needed to deploy IAM enabled resources. | `string` | n/a | yes |
 | <a name="input_image_id"></a> [image\_id](#input\_image\_id) | The VPC custom image id of RHEL AI to use while creating a GPU VSI instance. This is optional if you are creating custom image using the image\_url | `string` | `null` | no |
-| <a name="input_image_url"></a> [image\_url](#input\_image\_url) | A COS url location where RHEL AI image is downloaded from Red Hat and stored in COS. This will create custom image. The COS url should be of the format cos://{region}/{bucket}/{filename}. This is optional if you have existing custom image\_id. | `string` | `null` | no |
-| <a name="input_machine_type"></a> [machine\_type](#input\_machine\_type) | The machine type to be created. Please select one of the NVIDIA GPU based machine type to run the solution | `string` | n/a | yes |
+| <a name="input_image_url"></a> [image\_url](#input\_image\_url) | A COS url location where RHEL AI image is downloaded and stored from Red Hat. This will create custom image. The COS url should be of the format cos://<region>/<bucket-name>/<image-object-name>. This is optional if you have existing custom image\_id. | `string` | `null` | no |
+| <a name="input_machine_type"></a> [machine\_type](#input\_machine\_type) | The machine type to be created. Please provide NVIDIA GPU based machine type to run the solution | `string` | n/a | yes |
 | <a name="input_model_apikey"></a> [model\_apikey](#input\_model\_apikey) | Model API Key to setup authorization while inferencing the model | `string` | `null` | no |
-| <a name="input_model_cos_bucket_crn"></a> [model\_cos\_bucket\_crn](#input\_model\_cos\_bucket\_crn) | Provide Bucket instance CRN. If you are using hugging\_face\_model\_name and hugging\_face\_access\_token then this field is optional | `string` | `null` | no |
-| <a name="input_model_cos_bucket_name"></a> [model\_cos\_bucket\_name](#input\_model\_cos\_bucket\_name) | Provide the COS bucket name where you model files reside. If you are using hugging\_face\_model\_name and hugging\_face\_access\_token then this field is optional | `string` | `null` | no |
-| <a name="input_model_cos_region"></a> [model\_cos\_region](#input\_model\_cos\_region) | Provide COS region where the model bucket reside. If you are using hugging\_face\_model\_name and hugging\_face\_access\_token then this field is optional | `string` | `null` | no |
+| <a name="input_model_cos_bucket_crn"></a> [model\_cos\_bucket\_crn](#input\_model\_cos\_bucket\_crn) | Provide Bucket instance CRN. If you are using model registry then this field should be empty | `string` | `null` | no |
+| <a name="input_model_cos_bucket_name"></a> [model\_cos\_bucket\_name](#input\_model\_cos\_bucket\_name) | Provide the COS bucket name where you model files reside. If you are using model registry then this field should be empty | `string` | `null` | no |
+| <a name="input_model_cos_region"></a> [model\_cos\_region](#input\_model\_cos\_region) | Provide COS region where the model bucket reside. If you are using model registry then this field should be empty | `string` | `null` | no |
 | <a name="input_prefix"></a> [prefix](#input\_prefix) | Prefix to append to all resources created. | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | The region where resources are created. | `string` | n/a | yes |
-| <a name="input_ssh_key"></a> [ssh\_key](#input\_ssh\_key) | A public ssh key is required that you have generated from. This is used for RHEL AI VSI instance | `string` | n/a | yes |
-| <a name="input_ssh_private_key"></a> [ssh\_private\_key](#input\_ssh\_private\_key) | SSH Private Key that was generated to login and update model config and execute service operations. Use the private key of SSH public key provided in ssh\_key. | `string` | n/a | yes |
-| <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | An existing subnet id where the RHEL AI instance will be deployed. This is optional and can be set to null if you want to create RHEL AI instance in a new subnet and VPC | `string` | `null` | no |
+| <a name="input_ssh_key"></a> [ssh\_key](#input\_ssh\_key) | A public ssh key is required to the private key that you have generated from. This is used for RHEL AI VSI instance | `string` | n/a | yes |
+| <a name="input_ssh_private_key"></a> [ssh\_private\_key](#input\_ssh\_private\_key) | SSH Private Key to login and update model config and execute service operations. Use the private key of SSH public key provided to the VSI instance | `string` | n/a | yes |
+| <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | An existing subnet id where the RHEL AI instance will be deployed. This is optional if you want to create RHEL AI instance in a new subnet and VPC | `string` | `null` | no |
 | <a name="input_zone"></a> [zone](#input\_zone) | The zone where the RHEL AI instance needs to be deployed. | `number` | n/a | yes |
 
 ### Outputs
