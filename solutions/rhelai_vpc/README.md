@@ -1,8 +1,18 @@
 ## Overview
 
-The DA provides RHEL AI instance on IBM Cloud and serves a fine-tuned model as a service with a public end point or a private endpoint. The RHEL AI instance serves a vLLM model using instruct lab.
+The architecture provides a RHEL AI instance on IBM Cloud and serves a fine-tuned model as a service with a public end point or a private endpoint. The RHEL AI instance serves a vLLM model using instruct lab.
 
-The "Quick Start" solution  inside the DA have modules to perform IaaC and run Ansible scripts on IBM Cloud. The DA provisions a floating IP to RHEL AI VSI Instance depending if only the user requests a public endpoint otherwise keeps only the private end point.
+### Objective
+The objective is to provide a "Quick Start" solution  for users to be able to deploy the RHEL AI instance and validate, test the fine-tuned models on IBM Cloud. The architecture is intended for
+
+- Accelerating the validation and testing of fine tuned models on IBM Cloud RHEL AI instance
+- Enable users to bring in their fine tuned model solutions in a secure environment and create demos
+- Provide inferencing of the fine tuned models through vLLM API interface
+
+
+### Details
+
+The Deployable Architecture (DA) have different modules to perform IaaC and run Ansible scripts on IBM Cloud.
 
 The modules used are -
 
@@ -44,6 +54,37 @@ Download and serve the model in the RHEL AI VSI instance that was provisioned in
 - Enable https by deploying the nginx service
 
 All these modules are used in DA to deploy and serve the model as a service using instruct lab.
+
+## Reference Architecture
+
+### Architecture Diagram
+
+![RHEL AI VPC Architecture Diagram](../../reference-architecture/rhelai-vpc.svg)
+
+### Solution Components
+
+| Category | Solution components | How it is used in the solution |
+| -------- | ------------------- | ------------------------------ |
+| Compute  | NVIDIA GPUs         | The deployable architecture provides only two compute profiles, a gx3-24x120x1l40s with single l40 GPU or gx3-48x240x2l40s with 2 GPUs. Depending on the size of the model select the compute profile |
+|          | RHEL AI Image       | A RHEL AI image with version 1.4 and above |
+| Storage  | Boot Volume         | A 250 GB boot volume storage to run the model |
+|          | Cloud Object Storage | Model files downloaded from IBM Cloud Object storage. This is not provisioned by Deployable Architecture but required when downloading models from IBM COS bucket |
+| Networking | Virtual Private Clouds (VPCs), Subnets, Security Groups (SGs) | VPCs for RHEL AI instance isolation Subnets, SGs for restricted access to model service |
+|            | Public Gateway  | Egress traffic to allow RHEL AI instance to access Hugging Face registry |
+|            | Floating IP     | Access to inference models on port 8000 for http and 8443 for https |
+|            | SSL Connection  | Enable Https using a proxy service |
+| Security   | Access management | IBM Cloud Identity & Access Management |
+
+### Requirements
+
+The following table represents a typical set of requirements for RHEL AI deployment on IBM Cloud
+
+| Aspect | Requirements |
+| ------ | ------------ |
+| Compute | Select one of the two NVIDIA GPU accelerated computes, a l40 GPU or  2l40 GPUs |
+| Networking | Deploy workloads in an secure environment with Security Groups in place |
+| Security | Help ensure that all operation actions run securely. |
+
 
 ## Planning
 
