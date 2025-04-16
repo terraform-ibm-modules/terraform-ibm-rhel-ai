@@ -20,13 +20,13 @@ data "ibm_is_subnet" "existing_subnet" {
 
 resource "ibm_is_vpc" "rhelai_vpc" {
   count          = local.l_vpc_id == null ? 1 : 0
-  name           = "${var.prefix}-rhelai-vpc"
+  name           = "${var.prefix}-vpc"
   resource_group = var.resource_group_id
 }
 
 resource "ibm_is_public_gateway" "rhelai_publicgateway" {
   count          = local.l_public_gateway == null ? 1 : 0
-  name           = "${var.prefix}-rhelai-gateway"
+  name           = "${var.prefix}-gateway"
   resource_group = var.resource_group_id
   vpc            = try(ibm_is_vpc.rhelai_vpc[0].id, var.vpc_id)
   zone           = var.zone
@@ -34,7 +34,7 @@ resource "ibm_is_public_gateway" "rhelai_publicgateway" {
 
 resource "ibm_is_subnet" "rhelai_subnet" {
   count                    = local.l_subnet_id == null ? 1 : 0
-  name                     = "${var.prefix}-rhelai-subnet"
+  name                     = "${var.prefix}-subnet"
   resource_group           = var.resource_group_id
   vpc                      = try(ibm_is_vpc.rhelai_vpc[0].id, var.vpc_id)
   zone                     = var.zone

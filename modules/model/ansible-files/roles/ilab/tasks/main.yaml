@@ -61,6 +61,9 @@
 - name: Reload the systemd manager configuration
   command: systemctl --user daemon-reload
 
+- name: Stop the ilab model stop systemd service
+  command: systemctl --user stop ilab-serve.service
+
 - name: Start the ilab model serve systemd service
   command: systemctl --user start ilab-serve.service
 
