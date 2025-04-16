@@ -2,10 +2,10 @@
 
 The Red Hat Enterprise Linux AI (RHEL AI) is a bootable RedHat Enterprise Linux image optimized foundation model platform to develop, test and run large language models. The deployable architecture hosts the RHEL AI with options to meet the user needs. The key features of the architecture pattern are
 
-- Enable to select machine type for the model you would like to host and run the model as a service with Instruct Lab. 
-- Download models either from Hugging Face registry or from IBM Cloud Object Storage bucket. 
-- Select private only VPC infrastructure and not allow public traffic to inference model internally or enable a Public IP to inference models. 
-- Deploy RHEL AI instance and run the models on existing subnet in a VPC. 
+- Enable to select machine type for the model you would like to host and run the model as a service with Instruct Lab.
+- Download models either from Hugging Face registry or from IBM Cloud Object Storage bucket.
+- Select private only VPC infrastructure and not allow public traffic to inference model internally or enable a Public IP to inference models.
+- Deploy RHEL AI instance and run the models on existing subnet in a VPC.
 - Provision a secure SSL transport connection to inference the models
 - Enable authorization using API Key to inference the model
 - Secure the RHEL AI instance using Security Groups
@@ -40,4 +40,3 @@ The following table represents a typical set of requirements for RHEL AI deploym
 | Compute | Select one of the two NVIDIA GPU accelerated computes, a l40 GPU or  2l40 GPUs |
 | Networking | Deploy workloads in an secure environment with Security Groups in place |
 | Security | Help ensure that all operation actions run securely. |
-
