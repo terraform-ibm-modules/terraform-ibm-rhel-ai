@@ -220,7 +220,7 @@ To create self signed certificate, follow the instructions from  [Using OpenSSL 
 **https_privatekey:** SSL privatekey for https setup. Required if enable_https is true
 
 #### model_apikey:
-A model api key to setup authorization while inferencing the model
+A model api key to setup authorization while inferencing the model. Generate your own model api key.
 
 d. After you enter the fields, click "Save" button to save the project configurations of the Deployable Architecture
 
