@@ -123,11 +123,11 @@ b. Select the latest product version in Architecture section and click "Add to p
 
 ### STEP-2: Configure the RHEL AI project
 
-a. Under "Security" tab, provide the IBM Cloud API key created in the planning section under [Set the IAM permissions](#set-the-iam-permissions). If you have the API Key stored in Secrets Manager you can select the API Key from the secrets manager using the key icon <img src="./images/Picture3.png" width="80" height="20">
+    a. Under "Security" tab, provide the IBM Cloud API key created in the planning section under [Set the IAM permissions](#set-the-iam-permissions). If you have the API Key stored in Secrets Manager you can select the API Key from the secrets manager using the key icon <img src="./images/Picture3.png" width="80" height="20">
 
 ![Security-Config-Image](./images/Picture1.png)
 
-b. Click on the "Required" fields tab and fill in the fields. Click on `i` icon for more details about the fields.
+    b. Click on the "Required" fields tab and fill in the fields. Click on `i` icon for more details about the fields.
 
 ![Required-Fields-Image](./images/Picture2.png)
 
@@ -149,7 +149,8 @@ Make sure to fill in all the required field
 
 **ssh_key:** A public SSH Key is required for preparing the RHEL AI instance with model configuration setup while initializing the RHEL AI instance.
 
-#### ssh_private_key: A private SSH Key is required for preparing the RHEL AI instance with model configuration setup while initializing the RHEL AI instance.
+#### ssh_private_key:
+A private SSH Key is required for preparing the RHEL AI instance with model configuration setup while initializing the RHEL AI instance.
 Generate public and private ssh key pair in you local machine or externally.
 
 Your SSH key must be an RSA or ED25519 key type with a key size of either 2048 bits or 4096 bits. If your Mac system generates a key size of 3072 bits (by default), run one of the following commands to make sure that the generated key is a supported size.
@@ -163,7 +164,7 @@ For ED25519 SSH key type, issue:
 `ssh-keygen -t ed25519 -b 2048 -C "user_ID"`
 
 
-c. Click on the Optional fields tab and fill in the necessary fields. Some fields are optional based on selection of one over the other and should have atleast one of them filled.
+    c. Click on the Optional fields tab and fill in the necessary fields. Some fields are optional based on selection of one over the other and should have atleast one of them filled.
 
 ![Optional-Fields-Image](./images/Picture4.png)
 
@@ -210,9 +211,10 @@ To create self signed certificate, follow the instructions from  [Using OpenSSL 
 
 **https_privatekey:** SSL privatekey for https setup. Required if enable_https is true
 
-#### model_apikey: A model api key to setup authorization while inferencing the model
+#### model_apikey:
+A model api key to setup authorization while inferencing the model
 
-d. After you enter the fields, click Save button to save the project configurations of the Deployable Architecture
+    d. After you enter the fields, click Save button to save the project configurations of the Deployable Architecture
 
 Note:
 You can find the complete set of fields under [Inputs](#inputs)
