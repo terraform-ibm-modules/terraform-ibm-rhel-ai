@@ -97,6 +97,10 @@ Make sure that you have an IBM Cloud Pay-As-You-Go or Subscription account:
 
     - Access existing Object Storage services.
 
+Your Access Group should look like this
+
+![AcessGroup_Picture](images/Picture5.png)
+
 ### Access for IBM Cloud projects
 
 You can use IBM Cloud projects as a deployment option. Projects are designed with infrastructure as code and compliance in mind to help ensure that your projects are managed, secure, and always compliant. For more information, see [Learn about IaC deployments with projects](https://cloud.ibm.com/docs/secure-enterprise?topic=secure-enterprise-understanding-projects).
@@ -108,6 +112,10 @@ You need the following access to create a project and create project tooling res
 - The Viewer role on the resource group for the project
 
 For more information, see [Assigning users access to projects](https://cloud.ibm.com/docs/secure-enterprise?topic=secure-enterprise-access-project).
+
+Your User Access Group should look like this
+
+![ProjectAccess_Picture](images/Picture6.png)
 
 ## Deploying RHEL AI on IBM Cloud with a model
 
@@ -139,7 +147,7 @@ Make sure to fill in all the required field
 
 *Example: if the prefix is `rhelai` then the resource group name will be `rhelai-rg`*
 
-**existing_resource_group:** You can select existing resource group if you don't want to create a new resource group. If you don't have existing resource group the select `null` which is the default. The `null` option will create a new resource group with the prefix such as `{prefix}-rg`
+**existing_resource_group:** You can select existing resource group if you don't want to create a new resource group. If you don't have existing resource group then select `null` which is the default. The `null` option will create a new resource group with the prefix such as `{prefix}-rg`
 
 **region:** Select a region where you want to deploy the resources. All the available regions are shown in the dropdown.
 
@@ -221,7 +229,7 @@ You can find the complete set of fields under [Inputs](#inputs)
 
 ### STEP-3: Validate and deploy
 
-a. After you save the configuration, click Validate to validate the generated plan. Once the validation is successful you can review the cost breakdown of resources that gets deployed. If the validation is unsuccessful then click on the Validation Failed to see the logs. If there are any empty fields (you may need to revet them back to null) or if there are other issues in your configuration click "Edit" button to go back to configuration to edit the required and optional fields and save and validate again until its successful. If you still have issue contact the support team.
+a. After you save the configuration, click Validate to validate the generated plan. Once the validation is successful you can review the cost breakdown of resources that gets deployed. If the validation is unsuccessful then click on the Validation Failed to see the logs. If there are any empty fields (you may need to revert them back to null) or if there are other issues in your configuration click "Edit" button to go back to configuration to edit the required and optional fields and save and validate again until its successful. If you still have issue contact the support team.
 
 After validating and verifying the cost estimate, you can approve by providing the comments and clicking the button Approve
 
