@@ -1,6 +1,57 @@
 <!-- Update this title with a descriptive name. Use sentence case. -->
 # IBM RHEL.ai on IBM Cloud VSI solution
 
+## Overview
+
+The architecture provides a RHEL AI instance on IBM Cloud and serves a fine-tuned model as a service with a public end point or a private endpoint. The RHEL AI instance serves a vLLM model using instruct lab.
+
+
+## Details
+
+The Deployable Architecture (DA) have different modules to perform IaaC and run Ansible scripts on IBM Cloud.
+
+The modules used are -
+
+- rhelai_vpc
+- rhelai_instance
+- model
+- https_conf
+
+### rhelai_vpc:
+
+The RHEL AI VPC will create a VPC with a public gateway, subnets, and a security group with proper rules. The module has the following
+
+- VPC and Subnet are created only when user does not provide any existing subnet for to deploy VSI instance
+- The security groups allow IBM Cloud Schematic CIDR IP Ranges for the DA terraform on IBM Cloud to download, configure  and serve models using SSH on port 22
+- The security group also allows port 8443 and 8000 on TCP to access the model service endpoint
+- The security group allows pings with ICMP to all the traffic
+- Public gateway allows VSI instance to download models from hugging face registry
+
+### rhelai_instance:
+
+The RHEL AI Instance will provision a NVIDIA GPU based VSI instance with RHEL AI image. The module has the following
+
+- Creates a custom image on VPC from COS bucket that has RHEL AI image or use a custom image already created in the VPC region
+- user_data will initialize ilab inside the VSI instance
+
+### model
+
+Download and serve the model in the RHEL AI VSI instance that was provisioned in rhelai_instance module. The module has the following
+
+- Download the model from huggingface registry or from COS bucket
+- A ansible script is used to serve the model with necessary configuration files
+- The model name to be served under instruct lab depends on registry path or bucket name
+- API Key to authorize the requests while inferencing the model
+
+### https_config
+
+ Provisioning https nginx server with signed / unsigned certificate
+
+- Enable https by deploying the nginx service
+
+All these modules are used in DA to deploy and serve the model as a service using instruct lab.
+
+
 <!--
 Update status and "latest release" badges:
   1. For the status options, see https://terraform-ibm-modules.github.io/documentation/#/badge-status

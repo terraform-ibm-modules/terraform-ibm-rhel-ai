@@ -9,57 +9,19 @@ The objective is to provide a "Quick Start" solution  for users to be able to de
 - Enable users to bring in their fine tuned model solutions in a secure environment and create demos
 - Provide inferencing of the fine tuned models through vLLM API interface
 
-
-### Details
-
-The Deployable Architecture (DA) have different modules to perform IaaC and run Ansible scripts on IBM Cloud.
-
-The modules used are -
-
-- rhelai_vpc
-- rhelai_instance
-- model
-- https_conf
-
-### rhelai_vpc:
-
-The RHEL AI VPC will create a VPC with a public gateway, subnets, and a security group with proper rules. The module has the following
-
-- VPC and Subnet are created only when user does not provide any existing subnet for to deploy VSI instance
-- The security groups allow IBM Cloud Schematic CIDR IP Ranges for the DA terraform on IBM Cloud to download, configure  and serve models using SSH on port 22
-- The security group also allows port 8443 and 8000 on TCP to access the model service endpoint
-- The security group allows pings with ICMP to all the traffic
-- Public gateway allows VSI instance to download models from hugging face registry
-
-### rhelai_instance:
-
-The RHEL AI Instance will provision a NVIDIA GPU based VSI instance with RHEL AI image. The module has the following
-
-- Creates a custom image on VPC from COS bucket that has RHEL AI image or use a custom image already created in the VPC region
-- user_data will initialize ilab inside the VSI instance
-
-### model
-
-Download and serve the model in the RHEL AI VSI instance that was provisioned in rhelai_instance module. The module has the following
-
-- Download the model from huggingface registry or from COS bucket
-- A ansible script is used to serve the model with necessary configuration files
-- The model name to be served under instruct lab depends on registry path or bucket name
-- API Key to authorize the requests while inferencing the model
-
-### https_config
-
- Provisioning https nginx server with signed / unsigned certificate
-
-- Enable https by deploying the nginx service
-
-All these modules are used in DA to deploy and serve the model as a service using instruct lab.
-
 ## Reference Architecture
 
 ### Architecture Diagram
 
+The diagram describes the resources deployed to run models downloaded from Hugging Face or model files available in IBM Cloud Object Storage. The architecture can be a public network connectivity or a private only.
+
 ![RHEL AI VPC Architecture Diagram](../../reference-architecture/rhelai-vpc.svg)
+
+**Steps that show case the deployment automation**
+
+1. Provision a VSI instance in a VPC using RHEL AI image and NVIDIA accelerated GPU compute
+2. Download the model from Hugging Face or from COS bucket and serve the model using Instruct lab
+3. Optionally enable secure SSL connection if required to inference the model. You have the option to restrict the network connectivity to private only and block all the traffic coming from public network
 
 ### Solution Components
 
@@ -147,13 +109,50 @@ You need the following access to create a project and create project tooling res
 
 For more information, see [Assigning users access to projects](https://cloud.ibm.com/docs/secure-enterprise?topic=secure-enterprise-access-project).
 
-### Create an SSH key
+## Deploying RHEL AI on IBM Cloud with a model
 
-Make sure that you have an SSH key that you can use for authentication. This key is used to log in to RHEL AI virtual server instance that you create.
+You can deploy a deployable architecture from the IBM Cloud catalog. You can choose one of several deployment options, including with IBM Cloud projects. [Learn about IaC deployments with projects](https://cloud.ibm.com/docs/secure-enterprise?topic=secure-enterprise-understanding-projects).
 
-Your SSH key must be an RSA or ED25519 key type with a key size of either 2048 bits or 4096 bits.
+To deploy a RHEL AI deployable architecture through the IBM Cloud catalog, follow these steps:
 
-If your Mac system generates a key size of 3072 bits (by default), run one of the following commands to make sure that the generated key is a supported size.
+### STEP-1: Create RHEL AI Project from IBM Cloud Catalog
+
+a. Go to the IBM Cloud [catalog](https://cloud.ibm.com/catalog#reference_architecture) and search for `RHEL AI on IBM Cloud with model inferencing`. Click the tile for details
+
+b. Select the latest product version in Architecture section and click "Add to project". Create new project by providing Name, Configuration Name, Region and Resource Group. Click Create button after filling the required fields
+
+### STEP-2: Configure the RHEL AI project
+
+a. Under "Security" tab, provide the IBM Cloud API key created in the planning section under [Set the IAM permissions](#set-the-iam-permissions). If you have the API Key stored in Secrets Manager you can select the API Key from the secrets manager using the key icon <img src="./images/Picture3.png" width="80" height="20">
+
+![Security-Config-Image](./images/Picture1.png)
+
+b. Click on the "Required" fields tab and fill in the fields. Click on `i` icon for more details about the fields.
+
+![Required-Fields-Image](./images/Picture2.png)
+
+**Required Field details**
+
+Make sure to fill in all the required field
+
+**prefix:** A prefix makes the resource names unique while provisioning. The resources are named with {prefix}-{resource-name}.
+
+*Example: if the prefix is `rhelai` then the resource group name will be `rhelai-rg`*
+
+**existing_resource_group:** You can select existing resource group if you don't want to create a new resource group. If you don't have existing resource group the select `null` which is the default. The `null` option will create a new resource group with the prefix such as `{prefix}-rg`
+
+**region:** Select a region where you want to deploy the resources. All the available regions are shown in the dropdown.
+
+**zone:** Most of the regions have 3 zones with options zone-1, zone-2, zone-3. Select which zone you want to provision the VSI instance
+
+**machine_type:** Select the profile of the host gpu accelerator you want to use. There are only two options available. `1 x NVIDIA L40S 48 GB` or `2 x NVIDIA L40S 48 GB`
+
+**ssh_key:** A public SSH Key is required for preparing the RHEL AI instance with model configuration setup while initializing the RHEL AI instance.
+
+#### ssh_private_key: A private SSH Key is required for preparing the RHEL AI instance with model configuration setup while initializing the RHEL AI instance.
+Generate public and private ssh key pair in you local machine or externally.
+
+Your SSH key must be an RSA or ED25519 key type with a key size of either 2048 bits or 4096 bits. If your Mac system generates a key size of 3072 bits (by default), run one of the following commands to make sure that the generated key is a supported size.
 
 For RSA SSH key type, issue:
 
@@ -163,94 +162,79 @@ For ED25519 SSH key type, issue:
 
 `ssh-keygen -t ed25519 -b 2048 -C "user_ID"`
 
-### Download RHEL AI and upload to IBM COS bucket
 
-To provision a RHEL AI instance you require the latest IBM Cloud NVIDIA based RHEL AI image in IBM Cloud COS bucket. Download [RHEL AI for NVIDIA on IBM Cloud](https://developers.redhat.com/products/rhel-ai/download) image from Red Hat.
+c. Click on the Optional fields tab and fill in the necessary fields. Some fields are optional based on selection of one over the other and should have atleast one of them filled.
 
+![Optional-Fields-Image](./images/Picture4.png)
 
-*Note: You may need to create [Red Hat account](https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/auth?response_type=code&client_id=rhd-dm&redirect_uri=https%3A%2F%2Fdevelopers.redhat.com%2Fcontent-gateway%2Frest%2Fkeycloak&state=edaacce8-f115-473d-b87a-ba0cec4f197f&login=true&scope=openid+rhdsupportable) to download RHEL AI image.*
+**Optional Field details**
+Click on `i` icon for more details about the fields.
 
-After you download the RHEL AI QCOW image, you need to upload in to the COS bucket. You can find the instructions to create a IBM Cloud COS instance and bucket in [Object Storage docs](https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-secure-content-store)
+**subnet_id:** If you have an existing subnet then enter the subnet id. The DA provisions RHEL AI instance in the given subnet. This field is purely optional and has no constraints.
+
+**image_url:** A COS url location where RHEL AI image is downloaded from Red Hat and stored in COS. A custom image is created by the DA using the COS url. The COS url should be of the format cos://{region}/{bucket}/{filename}. This is optional if you have existing custom image with image_id created. You need to fill the image_id field.
+
+If you want to provision a RHEL AI instance with latest IBM Cloud NVIDIA based RHEL AI image from IBM Cloud COS bucket. Download [RHEL AI for NVIDIA on IBM Cloud](https://developers.redhat.com/products/rhel-ai/download) image from Red Hat.
+
+Note: You may need to create [Red Hat account](https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/auth?response_type=code&client_id=rhd-dm&redirect_uri=https%3A%2F%2Fdevelopers.redhat.com%2Fcontent-gateway%2Frest%2Fkeycloak&state=edaacce8-f115-473d-b87a-ba0cec4f197f&login=true&scope=openid+rhdsupportable) to download RHEL AI image.
+
+After you download the RHEL AI QCOW image, you need to upload in to the COS bucket. You can find the instructions to create a IBM Cloud COS instance and bucket in [Object Storage docs](https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-secure-content-store).
 
 *Note: Uploading the large QCOW image directly into Cloud Object Storage might take too long and also may fail. Use IBM Aspera for large file transfers to your Cloud Object Storage bucket. You can also use [minio client](https://min.io/docs/minio/linux/reference/minio-mc.html) cli tool for fast uploads to COS*
 
+**image_id:** The VPC custom image id of RHEL AI to use while creating a GPU VSI instance. This is only optional if you are creating custom image using the image_url
 
-### Create Hugging Face registry access token
+You must supply either a image_id provided in cloud resources or image_url of RHEL AI image
 
-You may need Hugging Face user access toke when you download models from the Hugging Face registry. On how to create Hugging Face user access token follow the instructions provided in [User access tokens](https://huggingface.co/docs/hub/en/security-tokens)
+**enable_private_only:** A flag to determine to have private IP only and no public network accessibility. The default is selected as `true` which means the VSI instance will be resticted to private only and no traffic from public internet can access. If selected as `false` you can connect to model service using http or https.
 
-### SSL Certificates for HTTPS
+**hugginface_model_name:** Provide the model name from hugging face registry. The model will be downloaded from the Hugging Face registry. This can be optional only if you have model in COS. Use the COS configuration variables model_cos_bucket_name, model_cos_region and model_cos_bucket_crn to download the model.
+
+**hugging_face_access_token:** The value of hugging face user access token to access the model repository from huggingface registry. If you have model in COS, then this is optional. Use the COS configuration variables model_cos_bucket_name, model_cos_region and model_cos_bucket_crn
+
+To create a hugging face user access toke from the Hugging Face registry follow the instructions provided in [User access tokens](https://huggingface.co/docs/hub/en/security-tokens)
+
+**model_cos_bucket_name:** Provide the COS bucket name where you model files reside. If you are using hugging_face_model_name and hugging_face_access_token then this field is optional.
+
+**model_cos_region:** Provide COS region where the model bucket reside. If you are using hugging_face_model_name and hugging_face_access_token then this field is optional
+
+**model_cos_bucket_crn:** Provide COS bucket instance CRN. If you are using hugging_face_model_name and hugging_face_access_token then this field is optional
+
+**enable_https:** Enable secure SLL by hosting https service to your model service. If `true` then a proxy nginx with https certificates will be created. https_cerificate and https_privatekey are required when `true`
 
 If you choose to enable https protocol while accessing the model service running on RHEL AI then you need to have SSL certificates. You can have self signed ssl certificates for dev but for production you need to get a signed certificate with a private key.
 
 To create self signed certificate, follow the instructions from  [Using OpenSSL to generate and format certificates](https://www.ibm.com/docs/en/api-connect/10.0.x_cd?topic=profile-using-openssl-generate-format-certificates). Make sure to save the certificate file and private key file.
 
-## Deploying RHEL AI on IBM Cloud with a model
+**https_certificate:** SSL certificate required for https setup. Required if enable_https is true
 
-You can deploy a deployable architecture from the IBM Cloud catalog. You can choose one of several deployment options, including with IBM Cloud projects. [Learn about IaC deployments with projects](https://cloud.ibm.com/docs/secure-enterprise?topic=secure-enterprise-understanding-projects).
+**https_privatekey:** SSL privatekey for https setup. Required if enable_https is true
 
-### Deploying with IBM Cloud projects
+#### model_apikey: A model api key to setup authorization while inferencing the model
 
-To deploy a RHEL AI deployable architecture through the IBM Cloud catalog, follow these steps:
+d. After you enter the fields, click Save button to save the project configurations of the Deployable Architecture
 
-1. Make sure that you comply with the prerequisites in the [planning](#planning) topic:
-
-- Have an IBM Cloud API key.
-- Verify access roles.
-- Create an SSH key.
-- Download RHEL AI
-- Create Hugging Face registry access token
-- SSL Certificates for HTTPS (Optional)
-
-
-2. Go to the IBM Cloud [catalog](https://cloud.ibm.com/catalog#reference_architecture) and search for `RHEL AI on IBM Cloud with model inferencing`
-
-3. Click the tile for the deployable architecture to open the details.
-
-4. Select the latest product version in the Architecture section.
-
-5. Click "Add to project" button.
-
-6. Create a new project by providing Name, Configuration Name, Region and Resource Group
-
-7. Click Create button after filling the required fields
-
-8. Provide the IBM Cloud API key created in the planning section under [Set the IAM permissions](#set-the-iam-permissions)
-
-9. Click on the Required fields tab and fill in the fields. Click on `i` icon for more details about the fields. You can also find the complete set of fields and their description below under [Inputs](#inputs)
-
-10. Click on the Optional fields tab and fill in the necessary fields. The fields are optional based on selection of one over the other. Those fields are
-
-    a. RHEL AI Image - provide image_url to COS (or) provide image_id if you manually created a RHEL AI custom image in the VPC. The image_url of COS should be of the format
-
-    `cos://<region>/<bucket-name>/<image-object-name>`
-
-    eg: `cos://us-east/rhel-ai-images/rhel-ai-nvidia-1.4-1739107849-x86_64-kvm.qcow2`
-
-    b. Download the model from Hugging Face registry or from COS bucket. You need to give one or the other. For Hugging face registry use the model name and the access token
-
-    example of model name: `ibm-granite/granite-3.2-8b-instruct`
-
-    c. If you select enable_https to true then you need to give the fields https_certificate and https_privatekey
-
+Note:
 You can find the complete set of fields under [Inputs](#inputs)
 
-11. After you enter the fields, click Save button to save the project configurations of the Deployable Architecture
+### STEP-3: Validate and deploy
 
-12. After you save, click Validate to validate the generated plan. Once the validation is successful you can review the cost breakdown of resources that gets deployed. If the validation is unsuccessful then click on the Validation Failed to see the logs. If there are any empty fields (you may need to revet them back to null) or other issues in your configuration click Edit button to go back to configuration to edit the required and optional fields and save and validate again until its successful. If you still have issue contact the support team.
+a. After you save the configuration, click Validate to validate the generated plan. Once the validation is successful you can review the cost breakdown of resources that gets deployed. If the validation is unsuccessful then click on the Validation Failed to see the logs. If there are any empty fields (you may need to revet them back to null) or if there are other issues in your configuration click "Edit" button to go back to configuration to edit the required and optional fields and save and validate again until its successful. If you still have issue contact the support team.
 
-13. After validating and verifying the cost estimate, you can approve by providing the comments and clicking the button Approve
+After validating and verifying the cost estimate, you can approve by providing the comments and clicking the button Approve
 
-14. Once you are ready, you can click Deploy button to provision the resources. You can click view logs to see what resources are getting provisioned. If for some reason deployment fails you can verify the logs and report the errors to support team.
+b. Once you are ready, you can click Deploy button to provision the resources. You can click view logs to see what resources are getting provisioned. If for some reason deployment fails you can verify the logs and report the errors to support team.
 
-15. Once the deployment is successful, you can check the output of the deployment by clicking on "Changes deployed successfully". You see the summary of resources deployed
+c. Once the deployment is successful, you can check the output of the deployment by clicking on "Changes deployed successfully". You see the summary of resources deployed
 
-16. Click on View Resources button to see resources that got deployed and active
+d. Click on View Resources button to see resources that got deployed and active
 
-17. Change the tab to Outputs to view model details and the RHEL AI VSI details. You see a model_url in the outputs when you selected enable_private field as false (if enable_private is true then the model_url is empty in outputs). Click on the model_url to see the API documentation to inference the model
+e. Change the tab to Outputs to view model details and the RHEL AI VSI details. You see a model_url in the outputs when you selected enable_private field as false (if enable_private is true then the model_url is empty in outputs). Click on the model_url to see the API documentation to inference the model
 
-18. To undeploy the resources click on the "more options" (:) menu on the top right corner beside Edit button and you see undeploy option. Click the undeploy button to destroy all the resources including the resource group.
+f. To undeploy the resources click on the "more options" (:) menu on the top right corner beside Edit button and you see undeploy option. Click the undeploy button to destroy all the resources including the resource group.
 
+
+By following the 3 steps - Create Project, Configure RHEL AI Project, Validate and Deploy you have successfully provisioned a RHEL AI instance with a model to inference securely on IBM Cloud through automation.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ### Requirements
