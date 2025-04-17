@@ -113,7 +113,7 @@ You need the following access to create a project and create project tooling res
 
 For more information, see [Assigning users access to projects](https://cloud.ibm.com/docs/secure-enterprise?topic=secure-enterprise-access-project).
 
-Your User Access Group should look like this
+Your User Access Policies should look like this
 
 ![ProjectAccess_Picture](images/Picture6.png)
 
