@@ -2,6 +2,20 @@
 
 The architecture provides a RHEL AI instance on IBM Cloud and serves a fine-tuned model as a service with a public end point or a private endpoint. The RHEL AI instance serves a vLLM model using instruct lab.
 
+This documentation has the following sections that describe the architecture and the deployment of RHEL AI on IBM Cloud to inference the model of your choice.
+
+- [Objective](#objective)
+- [Reference Architecture](#reference-architecture)
+- [Planning](#planning)
+    - [ ] [Confirm IBM Cloud Settings](#confirm-your-ibm-cloud-settings)
+    - [ ] [Set the IAM permissions](#set-the-iam-permissions)
+    - [ ] [Access for IBM Cloud projects](#access-for-ibm-cloud-projects)
+- [Deploying RHEL AI on IBM Cloud with a model](#deploying-rhel-ai-on-ibm-cloud-with-a-model)
+    - [ ] [STEP-1: Create RHEL AI Project from IBM Cloud Catalog](#step-1-create-rhel-ai-project-from-ibm-cloud-catalog)
+    - [ ] [STEP-2: Configure RHEL AI Project](#step-2-configure-the-rhel-ai-project)
+    - [ ] [STEP-3: Validate and Deploy](#step-3-validate-and-deploy)
+- [Terraform Requirements](#requirements)
+
 ### Objective
 The objective is to provide a "Quick Start" solution  for users to be able to deploy the RHEL AI instance and validate, test the fine-tuned models on IBM Cloud. The architecture is intended for
 
@@ -11,9 +25,7 @@ The objective is to provide a "Quick Start" solution  for users to be able to de
 
 ## Reference Architecture
 
-### Architecture Diagram
-
-The diagram describes the resources deployed to run models downloaded from Hugging Face or model files available in IBM Cloud Object Storage. The architecture can be a public network connectivity or a private only.
+The architecture diagram describes the resources deployed to run models downloaded from Hugging Face or model files available in IBM Cloud Object Storage. The architecture can be a public network connectivity or a private only.
 
 ![RHEL AI VPC Architecture Diagram](../../reference-architecture/rhelai-vpc.svg)
 
@@ -37,7 +49,7 @@ The diagram describes the resources deployed to run models downloaded from Huggi
 |            | SSL Connection  | Enable Https using a proxy service |
 | Security   | Access management | IBM Cloud Identity & Access Management |
 
-### Requirements
+### Solution Requirements
 
 The following table represents a typical set of requirements for RHEL AI deployment on IBM Cloud
 
