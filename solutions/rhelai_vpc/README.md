@@ -111,7 +111,7 @@ Make sure that you have an IBM Cloud Pay-As-You-Go or Subscription account:
 
 Your Access Group should look like this
 
-![AcessGroup_Picture](images/Picture5.png)
+![AcessGroup_Picture](../../reference-architecture/images//Picture5.png)
 
 ### Access for IBM Cloud projects
 
@@ -127,7 +127,7 @@ For more information, see [Assigning users access to projects](https://cloud.ibm
 
 Your User Access Policies should look like this
 
-![ProjectAccess_Picture](images/Picture6.png)
+![ProjectAccess_Picture](../../reference-architecture/images//Picture6.png)
 
 ## Deploying RHEL AI on IBM Cloud with a model
 
@@ -143,13 +143,13 @@ b. Select the latest product version in Architecture section and click "Add to p
 
 ### STEP-2: Configure the RHEL AI project
 
-a. Under "Security" tab, provide the IBM Cloud API key created in the planning section under [Set the IAM permissions](#set-the-iam-permissions). If you have the API Key stored in Secrets Manager you can select the API Key from the secrets manager using the key icon <img src="./images/Picture3.png" width="80" height="20">
+a. Under "Security" tab, provide the IBM Cloud API key created in the planning section under [Set the IAM permissions](#set-the-iam-permissions). If you have the API Key stored in Secrets Manager you can select the API Key from the secrets manager using the key icon <img src="../../reference-architecture/images//Picture3.png" width="80" height="20">
 
-![Security-Config-Image](./images/Picture1.png)
+![Security-Config-Image](../../reference-architecture/images//Picture1.png)
 
 b. Click on the "Required" fields tab and fill in the fields. Click on `i` icon for more details about the fields.
 
-![Required-Fields-Image](./images/Picture2.png)
+![Required-Fields-Image](../../reference-architecture/images//Picture2.png)
 
 **Required Field details**
 
@@ -186,7 +186,7 @@ For ED25519 SSH key type, issue:
 
 c. Click on the Optional fields tab and fill in the necessary fields. Some fields are optional based on selection of one over the other and should have atleast one of them filled.
 
-![Optional-Fields-Image](./images/Picture4.png)
+![Optional-Fields-Image](../../reference-architecture/images//Picture4.png)
 
 **Optional Field details**
 Click on `i` icon for more details about the fields.
