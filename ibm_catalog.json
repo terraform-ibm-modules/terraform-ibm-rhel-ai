@@ -164,11 +164,11 @@
               "required": true,
               "options": [
                 {
-                  "displayname": "gx3-48x240x2l40s",
+                  "displayname": "2 x NVIDIA L40S 48 GB",
                   "value": "gx3-48x240x2l40s"
                 },
                 {
-                  "displayname": "gx3-24x120x1l40s",
+                  "displayname": "1 x NVIDIA L40S 48 GB",
                   "value": "gx3-24x120x1l40s"
                 }
               ]
