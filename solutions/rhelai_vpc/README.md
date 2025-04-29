@@ -143,101 +143,98 @@ b. Select the latest product version in Architecture section and click "Add to p
 
 ### STEP-2: Configure the RHEL AI project
 
-a. Under "Security" tab, provide the IBM Cloud API key created in the planning section under [Set the IAM permissions](#set-the-iam-permissions). If you have the API Key stored in Secrets Manager you can select the API Key from the secrets manager using the key icon <img src="../../reference-architecture/images//Picture3.png" width="80" height="20">
+In this section, we will configure the DA.
+
+#### Security Fields tab with Details
+
+Under "Security" tab, provide the IBM Cloud API key created in the planning section under Set the IAM permissions. If you have the API Key stored in Secrets Manager you can select the API Key from the secrets manager using the key icon <img src="../../reference-architecture/images//Picture3.png" width="80" height="20">
 
 ![Security-Config-Image](../../reference-architecture/images//Picture1.png)
 
-b. Click on the "Required" fields tab and fill in the fields. Click on `i` icon for more details about the fields.
+Now, proceed to the **Required fields** tab and fill in any additional relevant information as needed based on your configuration selections.
+
+#### Required Fields tab with Details
 
 ![Required-Fields-Image](../../reference-architecture/images//Picture2.png)
+Click on `i` icon for more details about the fields.
 
-**Required Field details**
+1. **prefix**:
+* This unique identifier helps distinguish resource names during provisioning, formatted as {prefix}-{resource-name}. For instance, with the prefix `rhelai`, the resource group name would be `rhelai-rg`.
 
-Make sure to fill in all the required field
+2. **existing_resource_group** (Optional):
+* If you already have an existing resource group, select it from this dropdown. If not, choose "null" to automatically create a new one using your specified prefix, like "{prefix}-rg".
 
-**prefix:** A prefix makes the resource names unique while provisioning. The resources are named with {prefix}-{resource-name}.
+3. **region**:
+* Choose the desired geographical area for resource deployment from the provided list of regions.
 
-*Example: if the prefix is `rhelai` then the resource group name will be `rhelai-rg`*
+4. **zone**:
+* Select the specific zone within your chosen region where you want to provision the Virtual Server Instance (VSI).
 
-**existing_resource_group:** You can select existing resource group if you don't want to create a new resource group. If you don't have existing resource group then select `null` which is the default. The `null` option will create a new resource group with the prefix such as `{prefix}-rg`
+5. **machine_type**:
+* Opt for the GPU profile suitable for your needs. There are two choices:
+    * 1 x NVIDIA L40S 48 GB <br>
+    * 2 x NVIDIA L40S 48 GB
 
-**region:** Select a region where you want to deploy the resources. All the available regions are shown in the dropdown.
+6. **ssh_key** (Required):
+* You must provide a public SSH key to prepare and configure the RHEL AI instance during initialization. This can be generated using tools like OpenSSH in your local machine or an external key management system.
 
-**zone:** Most of the regions have 3 zones with options zone-1, zone-2, zone-3. Select which zone you want to provision the VSI instance
+7. **ssh_private_key** (Required):
+* Alongside the public SSH key, supply a private key for secure access to the RHEL AI instance during model configuration setup. Generate this key pair locally or externally ensuring it's either RSA or ED2519 with 2048-bit or 4096-bit key size. For Mac users who may default to 3072-bit keys, adjust using these commands: <br>
+    * For RSA keys: `ssh-keygen -t rsa -b 2048 -C "user_ID"` <br>
+    * For ED25519 keys: `ssh-keygen -t ed25519 -b 2048 -C "user_ID"`
 
-**machine_type:** Select the profile of the host gpu accelerator you want to use. There are only two options available. `1 x NVIDIA L40S 48 GB` or `2 x NVIDIA L40S 48 GB`
+Now, proceed to the **Optional fields** tab and fill in any additional relevant information as needed based on your configuration selections.
 
-**ssh_key:** A public SSH Key is required for preparing the RHEL AI instance with model configuration setup while initializing the RHEL AI instance.
-
-#### ssh_private_key:
-A private SSH Key is required for preparing the RHEL AI instance with model configuration setup while initializing the RHEL AI instance.
-Generate public and private ssh key pair in you local machine or externally.
-
-Your SSH key must be an RSA or ED25519 key type with a key size of either 2048 bits or 4096 bits. If your Mac system generates a key size of 3072 bits (by default), run one of the following commands to make sure that the generated key is a supported size.
-
-For RSA SSH key type, issue:
-
-`ssh-keygen -t rsa -b 2048 -C "user_ID"`
-
-For ED25519 SSH key type, issue:
-
-`ssh-keygen -t ed25519 -b 2048 -C "user_ID"`
-
-
-c. Click on the Optional fields tab and fill in the necessary fields. Some fields are optional based on selection of one over the other and should have atleast one of them filled.
+#### Optional Fields tab with Details
 
 ![Optional-Fields-Image](../../reference-architecture/images//Picture4.png)
 
-**Optional Field details**
 Click on `i` icon for more details about the fields.
 
-**subnet_id:** If you have an existing subnet then enter the subnet id. The DA provisions RHEL AI instance in the given subnet. This field is purely optional and has no constraints.
+1. **subnet_id**:
+* If you have an existing subnet, enter its ID to deploy the RHEL AI instance within it. <br>
+* Note: This field is optional and has no constraints; use it only if needed.
 
-**image_url:** A COS url location where RHEL AI image is downloaded from Red Hat and stored in COS. A custom image is created by the DA using the COS url. The COS url should be of the format cos://{region}/{bucket}/{filename}. This is optional if you have existing custom image with image_id created. You need to fill the image_id field.
+2. **image_url** (Optional):
+* Provide a COS URL where your custom RHEL AI image resides, formatted as
+`cos://{region}/{bucket}/{filename}`. Use this if you've created a custom image or want to leverage the latest IBM Cloud NVIDIA-based RHEL AI image from Red Hat's COS bucket. <br>
+* Instructions for obtaining and uploading the image: <br>
+    * Download [RHEL AI for NVIDIA on IBM Cloud](https://developers.redhat.com/products/rhel-ai/download) from Red Hat (you may need to create a [Red Hat account](https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/auth?response_type=code&client_id=rhd-dm&redirect_uri=https%3A%2F%2Fdevelopers.redhat.com%2Fcontent-gateway%2Frest%2Fkeycloak&state=edaacce8-f115-473d-b87a-ba0cec4f197f&login=true&scope=openid+rhdsupportable)). <br>
+* Upload the QCOW image to an existing or newly created IBM Cloud [Object Storage (COS)](https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-secure-content-store) bucket using tools like IBM Aspera or [minio client](https://min.io/docs/minio/linux/reference/minio-mc.html) for faster uploads. <br>
+* Note: You must provide either `image_id` (see below) or `image_url`.
 
-If you want to provision a RHEL AI instance with latest IBM Cloud NVIDIA based RHEL AI image from IBM Cloud COS bucket. Download [RHEL AI for NVIDIA on IBM Cloud](https://developers.redhat.com/products/rhel-ai/download) image from Red Hat.
+3. **image_id** (Optional):
+* The ID of a pre-existing VPC custom image of RHEL AI in your cloud resources to use when creating a GPU VSI instance. Use this field if you've already created and stored a custom image. <br>
+* Note: Provide either `image_id` or `image_url`.
 
-Note: You may need to create [Red Hat account](https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/auth?response_type=code&client_id=rhd-dm&redirect_uri=https%3A%2F%2Fdevelopers.redhat.com%2Fcontent-gateway%2Frest%2Fkeycloak&state=edaacce8-f115-473d-b87a-ba0cec4f197f&login=true&scope=openid+rhdsupportable) to download RHEL AI image.
+4. **enable_private_only** (Default: true):
+* Set to `true` for private IP-only access with no public internet connectivity. If set to `false`, your model service will be accessible using HTTP or HTTPS. <br>
+* Note: Ensures your VSI instance is restricted to a private network if set to `true`.
 
-After you download the RHEL AI QCOW image, you need to upload in to the COS bucket. You can find the instructions to create a IBM Cloud COS instance and bucket in [Object Storage docs](https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-secure-content-store).
+5. **hugginface_model_name** (Optional):
+* Enter the model name from the Hugging Face registry; the model will be downloaded from the repository. Use this field only if you don't have your model in COS. <br>
+* Instructions for obtaining a Hugging Face user access token: Follow the instructions provided in [User access tokens](https://huggingface.co/docs/api_auto/main).
 
-*Note: Uploading the large QCOW image directly into Cloud Object Storage might take too long and also may fail. Use IBM Aspera for large file transfers to your Cloud Object Storage bucket. You can also use [minio client](https://min.io/docs/minio/linux/reference/minio-mc.html) cli tool for fast uploads to COS*
+6. **hugging_face_access_token** (Optional):
+* Provide your Hugging Face [User access tokens](https://huggingface.co/docs/hub/en/security-tokens) to access the model repository from the Hugging Face registry. Use this field only if you've provided `hugginface_model_name`. <br>
+* Note: This field is optional when using `model_cos_bucket_name`, `model_cos_region`, and `model_cos_bucket_crn`.
 
-**image_id:** The VPC custom image id of RHEL AI to use while creating a GPU VSI instance. This is only optional if you are creating custom image using the image_url
+7. **model_cos_bucket_name**, **model_cos_region**, **model_cos_bucket_crn** (Optional):
+* If you have your model stored in IBM Cloud Object Storage, provide the bucket name, region, and instance CRN respectively. Use these fields only when `hugginface_model_name` and `hugging_face_access_token` are not used.
 
-You must supply either a image_id provided in cloud resources or image_url of RHEL AI image
+8. **enable_https** (Optional):
+* Enable secure SSL by hosting an HTTPS service to your model service, creating a proxy nginx with HTTPS certificates. Set this to `true` if you want to access the model service using HTTPS.
+* Instructions for generating self-signed SSL certificates for development: Follow: [Using OpenSSL to generate and format certificates](https://www.ibm.com/docs/en/api-connect/10.0.x_cd?topic=profile-using-openssl-generate-format-certificates).
 
-**enable_private_only:** A flag to determine to have private IP only and no public network accessibility. The default is selected as `true` which means the VSI instance will be resticted to private only and no traffic from public internet can access. If selected as `false` you can connect to model service using http or https.
+9. **https_certificate**, **https_privatekey**: (Required if `enable_https` is true):
+* Provide the SSL certificate and private key required for HTTPS setup. Store the certificate file and private key file securely.
 
-**hugginface_model_name:** Provide the model name from hugging face registry. The model will be downloaded from the Hugging Face registry. This can be optional only if you have model in COS. Use the COS configuration variables model_cos_bucket_name, model_cos_region and model_cos_bucket_crn to download the model.
+10. **model_apikey**:
+* A model API key to set up authorization during model inference. Generate your own model API key independently.
 
-**hugging_face_access_token:** The value of hugging face user access token to access the model repository from huggingface registry. If you have model in COS, then this is optional. Use the COS configuration variables model_cos_bucket_name, model_cos_region and model_cos_bucket_crn
+#### Saving Configurations
 
-To create a hugging face user access toke from the Hugging Face registry follow the instructions provided in [User access tokens](https://huggingface.co/docs/hub/en/security-tokens)
-
-**model_cos_bucket_name:** Provide the COS bucket name where you model files reside. If you are using hugging_face_model_name and hugging_face_access_token then this field is optional.
-
-**model_cos_region:** Provide COS region where the model bucket reside. If you are using hugging_face_model_name and hugging_face_access_token then this field is optional
-
-**model_cos_bucket_crn:** Provide COS bucket instance CRN. If you are using hugging_face_model_name and hugging_face_access_token then this field is optional
-
-**enable_https:** Enable secure SLL by hosting https service to your model service. If `true` then a proxy nginx with https certificates will be created. https_cerificate and https_privatekey are required when `true`
-
-If you choose to enable https protocol while accessing the model service running on RHEL AI then you need to have SSL certificates. You can have self signed ssl certificates for dev but for production you need to get a signed certificate with a private key.
-
-To create self signed certificate, follow the instructions from  [Using OpenSSL to generate and format certificates](https://www.ibm.com/docs/en/api-connect/10.0.x_cd?topic=profile-using-openssl-generate-format-certificates). Make sure to save the certificate file and private key file.
-
-**https_certificate:** SSL certificate required for https setup. Required if enable_https is true
-
-**https_privatekey:** SSL privatekey for https setup. Required if enable_https is true
-
-#### model_apikey:
-A model api key to setup authorization while inferencing the model. Generate your own model api key.
-
-d. After you enter the fields, click "Save" button to save the project configurations of the Deployable Architecture
-
-Note:
-You can find the complete set of fields under [Inputs](#inputs)
+After entering all relevant fields, click "Save" to store the project configurations for your Deployable Architecture. You can find the complete list of fields under [Inputs](#inputs).
 
 ### STEP-3: Validate and deploy
 
