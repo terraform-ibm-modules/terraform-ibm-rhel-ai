@@ -165,7 +165,7 @@ Click on `i` icon for more details about the fields.
 * If you already have an existing resource group, select it from this dropdown. If not, choose "null" to automatically create a new one using your specified prefix, like "{prefix}-rg".
 
 3. **region**:
-* Choose the desired geographical area for resource deployment from the provided list of regions.
+* Choose the desired geographical area for resource deployment from the provided list of regions. Note that not all regions have NVIDIA GPU profiles available to host RHEL AI instance. For more details on GPU and their availability goto [VPC Documentation, GPUs](https://cloud.ibm.com/docs/vpc?topic=vpc-profiles&interface=ui#gpu)
 
 4. **zone**:
 * Select the specific zone within your chosen region where you want to provision the Virtual Server Instance (VSI).
