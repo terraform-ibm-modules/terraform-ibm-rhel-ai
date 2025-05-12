@@ -12,6 +12,8 @@ locals {
   l_rg                 = var.existing_resource_group == null ? "${var.prefix}-rg" : null
   l_existing_rg        = var.existing_resource_group != null ? var.existing_resource_group : null
   l_num_gpus           = var.machine_type == "gx3-24x120x1l40s" ? "1" : "2"
+  l_transport_protocol = var.enable_https ? "https" : "http"
+  l_port               = var.enable_https ? "8443" : "8000"
 }
 
 data "ibm_is_subnet" "existing_subnet" {
@@ -57,7 +59,6 @@ module "rhelai_instance" {
   subnet_id         = module.rhelai_vpc.subnet_id
   security_group_id = module.rhelai_vpc.security_group_id
   image_url         = var.image_url
-  image_id          = var.image_id
   machine_type      = var.machine_type
   ssh_key           = var.ssh_key
   depends_on        = [module.rhelai_vpc]

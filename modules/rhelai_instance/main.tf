@@ -3,6 +3,10 @@
 #   - Below code should be replaced with the code for the root level module
 #
 
+data "ibm_is_image" "rhelai_image" {
+  name = "ibm-redhat-ai-nvidia-1-4-4-amd64-1"
+}
+
 ##############################################################################
 # Create new SSH key
 ##############################################################################
@@ -37,7 +41,7 @@ resource "ibm_is_image" "custom_image" {
 resource "ibm_is_instance" "gpu_vsi_1" {
   name           = "${var.prefix}-vsi"
   resource_group = var.resource_group_id
-  image          = var.image_id != null && var.image_id != "" ? var.image_id : ibm_is_image.custom_image["create"].id
+  image          = var.image_url != null && var.image_url != "" ? ibm_is_image.custom_image["create"].id : data.ibm_is_image.rhelai_image.id
   profile        = var.machine_type
   vpc            = var.vpc_id
   zone           = var.zone

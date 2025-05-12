@@ -45,11 +45,6 @@ variable "image_url" {
   description = "A RHEL AI image url location downloaded and stored from REDHAT"
 }
 
-variable "image_id" {
-  type        = string
-  description = "The RHEL.ai image id to use while creating a GPU VSI instance"
-}
-
 variable "machine_type" {
   type        = string
   description = "The machine type to be created. Please provide GPU based machine type to run the solution"

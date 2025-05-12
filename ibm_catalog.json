@@ -157,9 +157,6 @@
               "key": "image_url"
             },
             {
-              "key": "image_id"
-            },
-            {
               "key": "machine_type",
               "required": true,
               "options": [
