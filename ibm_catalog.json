@@ -74,7 +74,6 @@
             }
           ],
           "architecture": {
-            "descriptions": "Deployment of RHEL AI GPU instance to fine-tune LLM models and inference it through APIs",
             "features": [
               {
                 "title": "VPC",
