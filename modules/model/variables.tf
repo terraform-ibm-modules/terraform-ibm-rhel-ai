@@ -13,6 +13,11 @@ variable "rhelai_ip" {
   type        = string
 }
 
+variable "private_ip" {
+  description = "Private IP address of RHEL.ai instance"
+  type        = string
+}
+
 variable "model_host" {
   description = "Model host address. Ex - 127.0.0.1"
   type        = string

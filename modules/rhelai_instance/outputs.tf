@@ -12,7 +12,7 @@ output "primary_network_interface_id" {
   value       = ibm_is_instance.gpu_vsi_1.primary_network_interface[0].id
 }
 
-output "custom_image_id" {
-  description = "RHEL AI Custom Image ID created VPC image services"
-  value       = var.image_id != null && var.image_id != "" ? var.image_id : ibm_is_image.custom_image["create"].id
+output "primary_ip" {
+  description = "The primary IP address of the VSI instance"
+  value       = ibm_is_instance.gpu_vsi_1.primary_network_interface[0].primary_ip[0].address
 }

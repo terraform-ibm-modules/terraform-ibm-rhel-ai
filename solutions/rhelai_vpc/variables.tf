@@ -51,17 +51,6 @@ variable "image_url" {
   }
 }
 
-variable "image_id" {
-  type        = string
-  description = "The VPC custom image id of RHEL AI to use while creating a GPU VSI instance. This is optional if you are creating custom image using the image_url"
-  default     = null
-
-  validation {
-    condition     = var.image_id != null || var.image_url != null
-    error_message = "You must supply either a image_id provided in cloud resources or image_url of RHEL AI image. Note - Image url should be a cos url where the image is stored."
-  }
-}
-
 variable "machine_type" {
   type        = string
   description = "The machine type to be created. Please select one of the NVIDIA GPU based machine type to run the solution"

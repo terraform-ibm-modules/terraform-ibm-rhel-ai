@@ -197,39 +197,35 @@ Click on `i` icon for more details about the fields.
 
 2. **image_url** (Optional):
 * Provide a COS URL where your custom RHEL AI image resides, formatted as
-`cos://{region}/{bucket}/{filename}`. Use this if you've created a custom image or want to leverage the latest IBM Cloud NVIDIA-based RHEL AI image from Red Hat's COS bucket. <br>
+`cos://{region}/{bucket}/{filename}`. Use this to leverage the latest IBM Cloud NVIDIA-based RHEL AI image from Red Hat. <br>
 * Instructions for obtaining and uploading the image: <br>
     * Download [RHEL AI for NVIDIA on IBM Cloud](https://developers.redhat.com/products/rhel-ai/download) from Red Hat (you may need to create a [Red Hat account](https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/auth?response_type=code&client_id=rhd-dm&redirect_uri=https%3A%2F%2Fdevelopers.redhat.com%2Fcontent-gateway%2Frest%2Fkeycloak&state=edaacce8-f115-473d-b87a-ba0cec4f197f&login=true&scope=openid+rhdsupportable)). <br>
 * Upload the QCOW image to an existing or newly created IBM Cloud [Object Storage (COS)](https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-secure-content-store) bucket using tools like IBM Aspera or [minio client](https://min.io/docs/minio/linux/reference/minio-mc.html) for faster uploads. <br>
-* Note: You must provide either `image_id` (see below) or `image_url`.
 
-3. **image_id** (Optional):
-* The ID of a pre-existing VPC custom image of RHEL AI in your cloud resources to use when creating a GPU VSI instance. Use this field if you've already created and stored a custom image. <br>
-* Note: Provide either `image_id` or `image_url`.
-
-4. **enable_private_only** (Default: true):
+3. **enable_private_only** (Default: true):
 * Set to `true` for private IP-only access with no public internet connectivity. If set to `false`, your model service will be accessible using HTTP or HTTPS. <br>
-* Note: Ensures your VSI instance is restricted to a private network if set to `true`.
+* Note: This field ensures restricting VSI instance to a private network if set to `true`.
+* To connect to this private instance you need to setup a VPN access. For more details on how to setup a VPN access refer to the document [Creating a VPN Server](https://cloud.ibm.com/docs/vpc?topic=vpc-vpn-create-server&interface=ui)
 
-5. **hugginface_model_name** (Optional):
+4. **hugginface_model_name** (Optional):
 * Enter the model name from the Hugging Face registry; the model will be downloaded from the repository. Use this field only if you don't have your model in COS. <br>
 * Instructions for obtaining a Hugging Face user access token: Follow the instructions provided in [User access tokens](https://huggingface.co/docs/api_auto/main).
 
-6. **hugging_face_access_token** (Optional):
+5. **hugging_face_access_token** (Optional):
 * Provide your Hugging Face [User access tokens](https://huggingface.co/docs/hub/en/security-tokens) to access the model repository from the Hugging Face registry. Use this field only if you've provided `hugginface_model_name`. <br>
 * Note: This field is optional when using `model_cos_bucket_name`, `model_cos_region`, and `model_cos_bucket_crn`.
 
-7. **model_cos_bucket_name**, **model_cos_region**, **model_cos_bucket_crn** (Optional):
+6. **model_cos_bucket_name**, **model_cos_region**, **model_cos_bucket_crn** (Optional):
 * If you have your model stored in IBM Cloud Object Storage, provide the bucket name, region, and instance CRN respectively. Use these fields only when `hugginface_model_name` and `hugging_face_access_token` are not used.
 
-8. **enable_https** (Optional):
+7. **enable_https** (Optional):
 * Enable secure SSL by hosting an HTTPS service to your model service, creating a proxy nginx with HTTPS certificates. Set this to `true` if you want to access the model service using HTTPS.
 * Instructions for generating self-signed SSL certificates for development: Follow: [Using OpenSSL to generate and format certificates](https://www.ibm.com/docs/en/api-connect/10.0.x_cd?topic=profile-using-openssl-generate-format-certificates).
 
-9. **https_certificate**, **https_privatekey**: (Required if `enable_https` is true):
+8. **https_certificate**, **https_privatekey**: (Required if `enable_https` is true):
 * Provide the SSL certificate and private key required for HTTPS setup. Store the certificate file and private key file securely.
 
-10. **model_apikey**:
+9. **model_apikey**:
 * A model API key to set up authorization during model inference. Generate your own model API key independently.
 
 #### Saving Configurations
@@ -293,7 +289,6 @@ By following the 3 steps - Create Project, Configure RHEL AI Project, Validate a
 | <a name="input_hugging_face_access_token"></a> [hugging\_face\_access\_token](#input\_hugging\_face\_access\_token) | The value of hugging face user access token to access the model repository from huggingface registry. If you have model in COS, then this is optional. Use the COS configuration variables model\_cos\_bucket\_name, model\_cos\_region and model\_cos\_bucket\_crn | `string` | `null` | no |
 | <a name="input_hugging_face_model_name"></a> [hugging\_face\_model\_name](#input\_hugging\_face\_model\_name) | Provide the model path from hugging face registry only. If you have model in COS use the COS configuration variables model\_cos\_bucket\_name, model\_cos\_region and model\_cos\_bucket\_crn | `string` | `null` | no |
 | <a name="input_ibmcloud_api_key"></a> [ibmcloud\_api\_key](#input\_ibmcloud\_api\_key) | The IBM Cloud platform API key needed to deploy IAM enabled resources. | `string` | n/a | yes |
-| <a name="input_image_id"></a> [image\_id](#input\_image\_id) | The VPC custom image id of RHEL AI to use while creating a GPU VSI instance. This is optional if you are creating custom image using the image\_url | `string` | `null` | no |
 | <a name="input_image_url"></a> [image\_url](#input\_image\_url) | A COS url location where RHEL AI image is downloaded from Red Hat and stored in COS. This will create custom image. The COS url should be of the format cos://{region}/{bucket}/{filename}. This is optional if you have existing custom image\_id. | `string` | `null` | no |
 | <a name="input_machine_type"></a> [machine\_type](#input\_machine\_type) | The machine type to be created. Please select one of the NVIDIA GPU based machine type to run the solution | `string` | n/a | yes |
 | <a name="input_model_apikey"></a> [model\_apikey](#input\_model\_apikey) | Model API Key to setup authorization while inferencing the model | `string` | `null` | no |
@@ -311,7 +306,6 @@ By following the 3 steps - Create Project, Configure RHEL AI Project, Validate a
 
 | Name | Description |
 |------|-------------|
-| <a name="output_custom_image_id"></a> [custom\_image\_id](#output\_custom\_image\_id) | RHEL AI Custom Image ID created VPC image services |
 | <a name="output_floating_ip"></a> [floating\_ip](#output\_floating\_ip) | The primary network attched to RHEL.ai instance |
 | <a name="output_model_url"></a> [model\_url](#output\_model\_url) | The URL can be used to inference the models. For private only VSI instance you need to use the private IP |
 | <a name="output_primary_network_interface_id"></a> [primary\_network\_interface\_id](#output\_primary\_network\_interface\_id) | The primary network attched to RHEL.ai instance |

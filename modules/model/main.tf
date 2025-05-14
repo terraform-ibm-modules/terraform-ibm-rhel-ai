@@ -40,7 +40,8 @@ resource "terraform_data" "setup_ansible_host" {
     var.ibmcloud_api_key,
     var.model_apikey,
     var.num_gpus,
-    var.model_host
+    var.model_host,
+    var.private_ip
   ]
 
 
@@ -142,7 +143,8 @@ resource "terraform_data" "execute_playbooks" {
     var.model_cos_region,
     var.ibmcloud_api_key,
     var.num_gpus,
-    var.model_host
+    var.model_host,
+    var.private_ip
   ]
 
   connection {
@@ -175,7 +177,8 @@ resource "terraform_data" "clear_ansible_files" {
     var.ibmcloud_api_key,
     var.model_bucket_crn,
     var.num_gpus,
-    var.model_host
+    var.model_host,
+    var.private_ip
   ]
 
   depends_on = [terraform_data.execute_playbooks]
