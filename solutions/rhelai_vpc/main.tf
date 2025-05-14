@@ -83,6 +83,7 @@ module "model" {
   source                 = "../../modules/model"
   ssh_private_key        = var.ssh_private_key
   rhelai_ip              = ibm_is_floating_ip.ip_address.address
+  private_ip             = module.rhelai_instance.primary_ip
   model_repo             = var.hugging_face_model_name
   model_repo_token_key   = local.model_repo_token_key
   model_repo_token_value = var.hugging_face_access_token
@@ -106,6 +107,7 @@ module "https_conf" {
   source            = "../../modules/https_conf"
   ssh_private_key   = var.ssh_private_key
   rhelai_ip         = ibm_is_floating_ip.ip_address.address
+  private_ip        = module.rhelai_instance.primary_ip
   https_certificate = var.https_certificate
   https_privatekey  = var.https_privatekey
 }

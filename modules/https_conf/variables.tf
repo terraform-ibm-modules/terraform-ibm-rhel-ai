@@ -13,6 +13,11 @@ variable "rhelai_ip" {
   type        = string
 }
 
+variable "private_ip" {
+  description = "Private IP address of RHEL.ai instance"
+  type        = string
+}
+
 variable "https_certificate" {
   description = "Https certificate"
   type        = string

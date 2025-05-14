@@ -29,7 +29,7 @@ resource "terraform_data" "setup_ansible_host" {
     var.ssh_private_key,
     var.https_certificate,
     var.https_privatekey,
-    var.rhelai_ip
+    var.private_ip
   ]
 
   connection {
@@ -102,7 +102,7 @@ resource "terraform_data" "execute_playbooks" {
     var.ssh_private_key,
     var.https_certificate,
     var.https_privatekey,
-    var.rhelai_ip
+    var.private_ip
   ]
   depends_on = [terraform_data.setup_ansible_host]
 
@@ -130,7 +130,7 @@ resource "terraform_data" "clear_ansible_files" {
     var.ssh_private_key,
     var.https_certificate,
     var.https_privatekey,
-    var.rhelai_ip
+    var.private_ip
   ]
 
   depends_on = [terraform_data.execute_playbooks]
