@@ -185,7 +185,8 @@
               }
             },
             {
-              "key": "enable_private_only"
+              "key": "enable_private_only",
+              "required": true
             },
             {
               "key": "hugging_face_model_name"
@@ -194,13 +195,16 @@
               "key": "hugging_face_access_token"
             },
             {
-              "key": "model_cos_bucket_name"
+              "key": "model_cos_bucket_name",
+              "required": true
             },
             {
-              "key": "model_cos_region"
+              "key": "model_cos_region",
+              "required": true
             },
             {
-              "key": "model_cos_bucket_crn"
+              "key": "model_cos_bucket_crn",
+              "required": true
             },
             {
               "key": "enable_https"
