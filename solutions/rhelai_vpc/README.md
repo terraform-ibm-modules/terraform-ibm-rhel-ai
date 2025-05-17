@@ -153,9 +153,10 @@ Under "Security" tab, provide the IBM Cloud API key created in the planning sect
 
 Now, proceed to the **Required fields** tab and fill in any additional relevant information as needed based on your configuration selections.
 
-#### Required Fields tab with Details
+#### Configuration Fields
 
-![Required-Fields-Image](../../reference-architecture/images//Picture2.png)
+Configuration fields are the required fields.
+
 Click on `i` icon for more details about the fields.
 
 1. **prefix**:
@@ -183,11 +184,19 @@ Click on `i` icon for more details about the fields.
     * For RSA keys: `ssh-keygen -t rsa -b 2048 -C "user_ID"` <br>
     * For ED25519 keys: `ssh-keygen -t ed25519 -b 2048 -C "user_ID"`
 
-Now, proceed to the **Optional fields** tab and fill in any additional relevant information as needed based on your configuration selections.
+8. **enable_private_only** (Default: true):
+* Set to `true` for private IP-only access with no public internet connectivity. If set to `false`, your model service will be accessible using HTTP or HTTPS. <br>
+* Note: This field ensures restricting VSI instance to a private network if set to `true`.
+* To connect to this private instance you need to setup a VPN access. For more details on how to setup a VPN access refer to the document [Creating a VPN Server](https://cloud.ibm.com/docs/vpc?topic=vpc-vpn-create-server&interface=ui)
 
-#### Optional Fields tab with Details
+9. **model_cos_bucket_name**, **model_cos_region**, **model_cos_bucket_crn** :
+* If you have your model stored in IBM Cloud Object Storage, provide the bucket name, region, and instance CRN respectively. If you have the model in hugging face registry then use Advanced fields `hugginface_model_name` and `hugging_face_access_token` and leave the bucket name, region, and instance CRN as null
 
-![Optional-Fields-Image](../../reference-architecture/images//Picture4.png)
+You can save the configuration without filling the advanced fields.
+
+#### Advanced Configuration Fields with Details
+
+To access the advanced fields click the toggle button on the top **Advanced fields** and fill in any additional relevant information as needed based on your configuration selections.
 
 Click on `i` icon for more details about the fields.
 
@@ -202,30 +211,22 @@ Click on `i` icon for more details about the fields.
     * Download [RHEL AI for NVIDIA on IBM Cloud](https://developers.redhat.com/products/rhel-ai/download) from Red Hat (you may need to create a [Red Hat account](https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/auth?response_type=code&client_id=rhd-dm&redirect_uri=https%3A%2F%2Fdevelopers.redhat.com%2Fcontent-gateway%2Frest%2Fkeycloak&state=edaacce8-f115-473d-b87a-ba0cec4f197f&login=true&scope=openid+rhdsupportable)). <br>
 * Upload the QCOW image to an existing or newly created IBM Cloud [Object Storage (COS)](https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-secure-content-store) bucket using tools like IBM Aspera or [minio client](https://min.io/docs/minio/linux/reference/minio-mc.html) for faster uploads. <br>
 
-3. **enable_private_only** (Default: true):
-* Set to `true` for private IP-only access with no public internet connectivity. If set to `false`, your model service will be accessible using HTTP or HTTPS. <br>
-* Note: This field ensures restricting VSI instance to a private network if set to `true`.
-* To connect to this private instance you need to setup a VPN access. For more details on how to setup a VPN access refer to the document [Creating a VPN Server](https://cloud.ibm.com/docs/vpc?topic=vpc-vpn-create-server&interface=ui)
-
-4. **hugginface_model_name** (Optional):
+3. **hugginface_model_name** (Optional):
 * Enter the model name from the Hugging Face registry; the model will be downloaded from the repository. Use this field only if you don't have your model in COS. <br>
 * Instructions for obtaining a Hugging Face user access token: Follow the instructions provided in [User access tokens](https://huggingface.co/docs/api_auto/main).
 
-5. **hugging_face_access_token** (Optional):
+4. **hugging_face_access_token** (Optional):
 * Provide your Hugging Face [User access tokens](https://huggingface.co/docs/hub/en/security-tokens) to access the model repository from the Hugging Face registry. Use this field only if you've provided `hugginface_model_name`. <br>
 * Note: This field is optional when using `model_cos_bucket_name`, `model_cos_region`, and `model_cos_bucket_crn`.
 
-6. **model_cos_bucket_name**, **model_cos_region**, **model_cos_bucket_crn** (Optional):
-* If you have your model stored in IBM Cloud Object Storage, provide the bucket name, region, and instance CRN respectively. Use these fields only when `hugginface_model_name` and `hugging_face_access_token` are not used.
-
-7. **enable_https** (Optional):
+5. **enable_https** (Optional):
 * Enable secure SSL by hosting an HTTPS service to your model service, creating a proxy nginx with HTTPS certificates. Set this to `true` if you want to access the model service using HTTPS.
 * Instructions for generating self-signed SSL certificates for development: Follow: [Using OpenSSL to generate and format certificates](https://www.ibm.com/docs/en/api-connect/10.0.x_cd?topic=profile-using-openssl-generate-format-certificates).
 
-8. **https_certificate**, **https_privatekey**: (Required if `enable_https` is true):
+6. **https_certificate**, **https_privatekey**: (Required if `enable_https` is true):
 * Provide the SSL certificate and private key required for HTTPS setup. Store the certificate file and private key file securely.
 
-9. **model_apikey**:
+7. **model_apikey**:
 * A model API key to set up authorization during model inference. Generate your own model API key independently.
 
 #### Saving Configurations
