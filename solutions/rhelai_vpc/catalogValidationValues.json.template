@@ -5,7 +5,7 @@
   "prefix": $PREFIX,
   "existing_resource_group": "geretain-test-resources",
   "image_url": $RHELAI_IMAGE_COS_URL,
-  "machine_type": "gx3-48x240x2l40s",
+  "machine_type": "gx3-24x120x1l40s",
   "enable_private_only": false,
   "ssh_key": $SSH_PUB_KEY,
   "ssh_private_key": $SSH_PRV_KEY,
