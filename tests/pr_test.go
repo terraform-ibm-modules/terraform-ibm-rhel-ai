@@ -34,7 +34,7 @@ const yamlLocation = "../common-dev-assets/common-go-assets/common-permanent-res
 const vpcSolutionDir = "solutions/rhelai_vpc"
 
 // additional constants for test
-const vsiMachineType = "gx3-48x240x2l40s" // smaller that wasn't working = gx3-24x120x1l40s
+const vsiMachineType = "gx3-24x120x1l40s"
 
 var sharedInfoSvc *cloudinfo.CloudInfoService
 var permanentResources map[string]interface{}
