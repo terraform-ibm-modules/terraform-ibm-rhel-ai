@@ -274,9 +274,9 @@ By following the 3 steps - Create Project, Configure RHEL AI Project, Validate a
 
 | Name | Type |
 |------|------|
-| [ibm_is_floating_ip.ip_address](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/is_floating_ip) | resource |
+| [ibm_is_floating_ip.ip_address](https://registry.terraform.io/providers/IBM-Cloud/ibm/1.79.0/docs/resources/is_floating_ip) | resource |
 | [terraform_data.private_only](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/resources/data) | resource |
-| [ibm_is_subnet.existing_subnet](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/is_subnet) | data source |
+| [ibm_is_subnet.existing_subnet](https://registry.terraform.io/providers/IBM-Cloud/ibm/1.79.0/docs/data-sources/is_subnet) | data source |
 
 ### Inputs
 
