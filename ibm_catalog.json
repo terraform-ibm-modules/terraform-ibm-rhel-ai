@@ -166,6 +166,14 @@
                 {
                   "displayname": "1 x NVIDIA L40S 48 GB",
                   "value": "gx3-24x120x1l40s"
+                },
+                {
+                  "displayname": "8 x AMD MI300X 192 GB",
+                  "value": "gx3d-208x1792x8mi300x"
+                },
+                {
+                  "displayname": "8 x Intel Gaudi3 128 GB",
+                  "value": "gx3d-160x1792x8gaudi3"
                 }
               ]
             },
