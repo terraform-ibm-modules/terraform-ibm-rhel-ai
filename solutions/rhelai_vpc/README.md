@@ -172,10 +172,12 @@ Click on `i` icon for more details about the fields.
 * Select the specific zone within your chosen region where you want to provision the Virtual Server Instance (VSI).
 
 5. **machine_type**:
-* Opt for the GPU profile suitable for your needs. There are two choices:
+* Opt for the GPU profile suitable for your needs. There are 4 choices:
     * 1 x NVIDIA L40S 48 GB <br>
     * 2 x NVIDIA L40S 48 GB
-
+    * 8 x AMD MI300X 192 GB
+    * 8 x Intel Gaudi3 128 GB
+* To deploy AMD and Intel GPU profiles you need to increase your account quota to have atleast 208 vCPUs and an instance storage of 18000GB
 6. **ssh_key** (Required):
 * You must provide a public SSH key to prepare and configure the RHEL AI instance during initialization. This can be generated using tools like OpenSSH in your local machine or an external key management system.
 
