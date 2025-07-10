@@ -7,7 +7,7 @@ locals {
   nvidia_types    = ["gx3-48x240x2l40s", "gx3-24x120x1l40s"]
   amd_types       = ["gx3d-208x1792x8mi300x"]
   intel_types     = ["gx3d-160x1792x8gaudi3"]
-  l_rhel_ai_image = contains(local.nvidia_types, var.machine_type) ? "ibm-redhat-ai-nvidia-1-5-amd64-1" : contains(local.amd_types, var.machine_type) ? "ibm-redhat-ai-amd-1-5-amd64-1" : contains(local.intel_types, var.machine_type) ? "ibm-redhat-ai-intel-1-5-1-amd64-1" : "unknown"
+  l_rhel_ai_image = contains(local.nvidia_types, var.machine_type) ? "ibm-redhat-ai-nvidia-1-5-2-amd64-1" : contains(local.amd_types, var.machine_type) ? "ibm-redhat-ai-amd-1-5-2-amd64-1" : contains(local.intel_types, var.machine_type) ? "ibm-redhat-ai-intel-1-5-1-amd64-1" : "unknown"
 }
 
 data "ibm_is_image" "rhelai_image" {
