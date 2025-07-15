@@ -131,7 +131,6 @@ func TestRunVpcSolutionPublicSchematic(t *testing.T) {
 		{Name: "zone", Value: randomZone, DataType: "string"},
 		{Name: "prefix", Value: options.Prefix, DataType: "string"},
 		{Name: "existing_resource_group", Value: resourceGroup, DataType: "string"},
-		{Name: "image_url", Value: rhelaiImageCosUrl, DataType: "string"},
 		{Name: "machine_type", Value: vsiMachineType, DataType: "string"},
 		{Name: "enable_private_only", Value: false, DataType: "bool"},
 		{Name: "ssh_key", Value: publicKey, DataType: "string"},
