@@ -23,7 +23,7 @@
       "Enter the number of your choice.*\\[0\\].*" : 0
       ".*\\[y/N\\]:": "N"
   register: ilab_config_output
-  timeout: 300
+  timeout: 7200
 
 - name: Debug output from ilab config init
   debug:

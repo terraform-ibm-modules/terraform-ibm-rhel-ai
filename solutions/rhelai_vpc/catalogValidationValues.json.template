@@ -4,7 +4,6 @@
   "zone": 2,
   "prefix": $PREFIX,
   "existing_resource_group": "geretain-test-resources",
-  "image_url": $RHELAI_IMAGE_COS_URL,
   "machine_type": "gx3-24x120x1l40s",
   "enable_private_only": false,
   "ssh_key": $SSH_PUB_KEY,
