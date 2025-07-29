@@ -240,7 +240,8 @@
             {
               "key": "model_apikey"
             }
-          ]
+          ],
+          "terraform_version": "1.10.5"
         }
       ]
     }
