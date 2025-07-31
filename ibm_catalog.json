@@ -12,12 +12,13 @@
       "provider_name": "IBM",
       "tags": [
         "ibm_created",
-        "terraform",
         "target_terraform",
+        "terraform",
         "solution",
         "ibm_beta",
         "watson",
-        "ai"
+        "ai",
+        "converged_infra"
       ],
       "keywords": [
         "terraform",
