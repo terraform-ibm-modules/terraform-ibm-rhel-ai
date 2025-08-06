@@ -260,7 +260,7 @@ By following the 3 steps - Create Project, Configure RHEL AI Project, Validate a
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.9.0 |
-| <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | 1.78.4 |
+| <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | 1.80.2 |
 
 ### Modules
 
@@ -276,9 +276,9 @@ By following the 3 steps - Create Project, Configure RHEL AI Project, Validate a
 
 | Name | Type |
 |------|------|
-| [ibm_is_floating_ip.ip_address](https://registry.terraform.io/providers/IBM-Cloud/ibm/1.78.4/docs/resources/is_floating_ip) | resource |
+| [ibm_is_floating_ip.ip_address](https://registry.terraform.io/providers/IBM-Cloud/ibm/1.80.2/docs/resources/is_floating_ip) | resource |
 | [terraform_data.private_only](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/resources/data) | resource |
-| [ibm_is_subnet.existing_subnet](https://registry.terraform.io/providers/IBM-Cloud/ibm/1.78.4/docs/data-sources/is_subnet) | data source |
+| [ibm_is_subnet.existing_subnet](https://registry.terraform.io/providers/IBM-Cloud/ibm/1.80.2/docs/data-sources/is_subnet) | data source |
 
 ### Inputs
 
