@@ -27,7 +27,7 @@ The objective is to provide a "Quick Start" solution  for users to be able to de
 
 The architecture diagram describes the resources deployed to run models downloaded from Hugging Face or model files available in IBM Cloud Object Storage. The architecture can be a public network connectivity or a private only.
 
-![RHEL AI VPC Architecture Diagram](../../reference-architecture/rhelai-vpc.svg)
+![RHEL AI VPC Architecture Diagram](../../reference-architectures/rhelai-vpc.svg)
 
 **Steps that show case the deployment automation**
 
@@ -111,7 +111,7 @@ Make sure that you have an IBM Cloud Pay-As-You-Go or Subscription account:
 
 Your Access Group should look like this
 
-![AcessGroup_Picture](../../reference-architecture/images//Picture5.png)
+![AcessGroup_Picture](../../reference-architectures/images//Picture5.png)
 
 ### Access for IBM Cloud projects
 
@@ -127,7 +127,7 @@ For more information, see [Assigning users access to projects](https://cloud.ibm
 
 Your User Access Policies should look like this
 
-![ProjectAccess_Picture](../../reference-architecture/images//Picture6.png)
+![ProjectAccess_Picture](../../reference-architectures/images//Picture6.png)
 
 ## Deploying RHEL AI on IBM Cloud with a model
 
@@ -147,9 +147,9 @@ In this section, we will configure the DA.
 
 #### Security Fields tab with Details
 
-Under "Security" tab, provide the IBM Cloud API key created in the planning section under Set the IAM permissions. If you have the API Key stored in Secrets Manager you can select the API Key from the secrets manager using the key icon <img src="../../reference-architecture/images//Picture3.png" width="80" height="20">
+Under "Security" tab, provide the IBM Cloud API key created in the planning section under Set the IAM permissions. If you have the API Key stored in Secrets Manager you can select the API Key from the secrets manager using the key icon <img src="../../reference-architectures/images//Picture3.png" width="80" height="20">
 
-![Security-Config-Image](../../reference-architecture/images//Picture1.png)
+![Security-Config-Image](../../reference-architectures/images//Picture1.png)
 
 Now, proceed to the **Required fields** tab and fill in any additional relevant information as needed based on your configuration selections.
 
