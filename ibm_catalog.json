@@ -242,7 +242,7 @@
               "key": "model_apikey"
             }
           ],
-          "terraform_version": "1.10.5"
+          "terraform_version": "1.12.2"
         }
       ]
     }
