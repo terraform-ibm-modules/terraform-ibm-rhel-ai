@@ -61,6 +61,8 @@
         {
           "label": "Quickstart",
           "name": "quickstart",
+          "short_description": "Ideal for users new to IBM Cloud or RHEL AI who want to get started without configuring underlying infrastructure.",
+          "index": 1,
           "install_type": "fullstack",
           "working_directory": "solutions/rhelai_vpc",
           "iam_permissions": [
