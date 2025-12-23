@@ -15,8 +15,6 @@ import (
 	"testing"
 	"time"
 
-	"math/rand"
-
 	"github.com/google/uuid"
 	"github.com/gruntwork-io/terratest/modules/ssh"
 	"github.com/stretchr/testify/assert"
@@ -123,7 +121,7 @@ func TestRunVpcSolutionPublicSchematic(t *testing.T) {
 		},
 	})
 
-	randomZone := zoneList[rand.Intn(len(zoneList))]
+	randomZone := zoneList[common.CryptoIntn(len(zoneList))]
 
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
@@ -184,7 +182,7 @@ func TestRunVpcSolutionPrivateSchematic(t *testing.T) {
 		},
 	})
 
-	randomZone := zoneList[rand.Intn(len(zoneList))]
+	randomZone := zoneList[common.CryptoIntn(len(zoneList))]
 
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
@@ -223,7 +221,7 @@ func TestRunVpcSolutionPublicUpgradeSchematic(t *testing.T) {
 	// this is a throwaway random key needed for the test
 	modelKey := uuid.NewString()
 
-	randomZone := zoneList[rand.Intn(len(zoneList))]
+	randomZone := zoneList[common.CryptoIntn(len(zoneList))]
 
 	// set up a schematics test
 	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
@@ -277,7 +275,7 @@ func genNewSshKeypair(t *testing.T) (string, string) {
 }
 
 // helper function to create a valid self-signed TLS cert for https server
-// inspriation from this example: https://go.dev/src/crypto/tls/generate_cert.go
+// inspiriation from this example: https://go.dev/src/crypto/tls/generate_cert.go
 // outputs: cert, private key, error
 func genNewTlsCert() (string, string, error) {
 

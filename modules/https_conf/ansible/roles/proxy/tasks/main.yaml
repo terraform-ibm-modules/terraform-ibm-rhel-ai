@@ -5,7 +5,7 @@
     mode: '0755'
   become: yes
 
-- name: Copy a ssl certificat file into /root/nginx/conf.d
+- name: Copy a ssl certificate file into /root/nginx/conf.d
   ansible.builtin.copy:
     src: ./certificate.crt
     dest: /root/nginx/ssl/certificate.crt
