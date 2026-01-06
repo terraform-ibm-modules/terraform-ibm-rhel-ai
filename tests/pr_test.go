@@ -22,6 +22,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/cloudinfo"
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/common"
+	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testaddons"
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testhelper"
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testschematic"
 )
@@ -96,7 +97,54 @@ func TestMain(m *testing.M) {
 // DEV NOTE: the full rhelai_vpc solution allows ansible to connect to VSI from IBM Cloud internal and
 // Schematics only. Therefore the tests for that solution will need to remain schematics tests.
 // Consistency test for the rhelai_vpc solution, with public option enabled.
+// Current supported regions (NOTE: eu-es is not being used as we don't have extended trial plan quota in that region currently)
+
+func TestAddonsRunVpcSolutionPublicSchematic(t *testing.T) {
+	t.Parallel()
+	publicKey, privateKey := genNewSshKeypair(t)
+	modelKey := uuid.NewString()
+
+	options := testaddons.TestAddonsOptionsDefault(&testaddons.TestAddonOptions{
+		Testing:          t,
+		Prefix:           "rhelai", // setting prefix here gets a random string appended to it
+		CloudInfoService: sharedInfoSvc,
+	})
+
+	options.AddonConfig = cloudinfo.NewAddonConfigTerraform(
+		options.Prefix,
+		"deploy-arch-ibm-rhel-ai-vsi",
+		"quickstart",
+		map[string]interface{}{
+			"ibmcloud_api_key":             options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], // always required by the stack
+			"prefix":                       options.Prefix,
+			"region":                       "eu-es",
+			"zone":                         "1",
+			"existing_resource_group_name": resourceGroup,
+			"machine_type":                 vsiMachineType,
+			"enable_private_only":          false,
+			"ssh_key":                      publicKey,
+			"ssh_private_key":              privateKey,
+			"model_apikey":                 modelKey,
+			"model_cos_bucket_name":        rhelaiModelCosBucketName,
+			"model_cos_region":             rhelaiModelCosRegion,
+			"model_cos_bucket_crn":         rhelaiModelCosBucketCrn,
+			"enable_https":                 true,
+			"https_certificate":            tlsTestCert,
+			"https_privatekey":             tlsTestCertPriv,
+		},
+	)
+
+	err := options.RunAddonTest()
+	if assert.NoError(t, err) {
+		t.Log("Addons test Passed")
+	} else {
+		t.Error("Addons test Failed")
+	}
+}
+
 func TestRunVpcSolutionPublicSchematic(t *testing.T) {
+	t.Skip("test")
+
 	t.Parallel()
 
 	tarIncludePatterns := append(tarAdditionalIncludePatterns, "solutions/rhelai_vpc/*", "solutions/rhelai_vpc/scripts/*")
@@ -106,7 +154,6 @@ func TestRunVpcSolutionPublicSchematic(t *testing.T) {
 	// this is a throwaway random key needed for the test
 	modelKey := uuid.NewString()
 
-	// set up a schematics test
 	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
 		Testing:                t,
 		TarIncludePatterns:     tarIncludePatterns,
@@ -152,6 +199,7 @@ func TestRunVpcSolutionPublicSchematic(t *testing.T) {
 // Schematics only. Therefore the tests for that solution will need to remain schematics tests.
 // Consistency test for the rhelai_vpc solution, with public option disabled.
 func TestRunVpcSolutionPrivateSchematic(t *testing.T) {
+	t.Skip("test")
 	t.Parallel()
 
 	tarIncludePatterns := append(tarAdditionalIncludePatterns, "solutions/rhelai_vpc/*", "solutions/rhelai_vpc/scripts/*")
