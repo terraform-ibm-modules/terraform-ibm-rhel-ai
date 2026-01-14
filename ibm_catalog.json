@@ -5,7 +5,7 @@
       "label": "RHEL AI on IBM Cloud with model inferencing",
       "product_kind": "solution",
       "short_description": "Deployment of RHEL AI on GPU based VSI instance and run fine tuned models to inference all through automation.",
-      "long_description": "An IBM Cloud automation for Red Hat Enterprise Linux AI, deployed on a GPU based VSI instance to run the fine tuned models downloaded from hugging face repository or cloud object storege (IBM COS). Red Hat Enterprise Linux AI a.k.a RHEL AI is a bootable RedHat Enterprise Linux image optimized foundation model platform to fine-tune, test and run large language models. These images include PyTorch, hardware acceleration libraries (for NVIDIA, Intel, and AMD GPUs), and essential runtime libraries, streamlining the setup of a platform for AI development. \n\nLeverage [Terraform IBM Modules](https://github.com/terraform-ibm-modules) to shape and scale your solutions. You can integrate Terraform IBM Modules (TIM) to extend functionality and design a solution tailored to your environment and operations needs. These modules offer reusable, customizable elements that follow IBM Cloud's recommended practices. You can access the [source code and documentation](https://github.com/terraform-ibm-modules/terraform-ibm-rhel-ai) and use it to extend your current architecture or create new solutions.",
+      "long_description": "An IBM Cloud automation for Red Hat Enterprise Linux AI, deployed on a GPU based VSI instance to run the fine tuned models downloaded from hugging face repository or cloud object storage (IBM COS). Red Hat Enterprise Linux AI a.k.a RHEL AI is a bootable RedHat Enterprise Linux image optimized foundation model platform to fine-tune, test and run large language models. These images include PyTorch, hardware acceleration libraries (for NVIDIA, Intel, and AMD GPUs), and essential runtime libraries, streamlining the setup of a platform for AI development. \n\nLeverage [Terraform IBM Modules](https://github.com/terraform-ibm-modules) to shape and scale your solutions. You can integrate Terraform IBM Modules (TIM) to extend functionality and design a solution tailored to your environment and operations needs. These modules offer reusable, customizable elements that follow IBM Cloud's recommended practices. You can access the [source code and documentation](https://github.com/terraform-ibm-modules/terraform-ibm-rhel-ai) and use it to extend your current architecture or create new solutions.",
       "support_details": "This product is in the community registry and support is handled in the source repo. You can open an issue at [https://github.com/terraform-ibm-modules/terraform-ibm-rhel-ai/issues](https://github.com/terraform-ibm-modules/terraform-ibm-rhel-ai/issues). Support is not offered through IBM Cloud Support.",
       "offering_docs_url": "https://cloud.ibm.com/docs/ibm-cloud-provider-for-terraform?topic=ibm-cloud-provider-for-terraform-about-tim",
       "release_notes_url": "https://github.com/terraform-ibm-modules/terraform-ibm-rhel-ai/releases",
@@ -30,7 +30,7 @@
       ],
       "features": [
         {
-          "description": "Deploys a VPC with an option either to have private network access only with no inbound traffic from public internet to the RHEL AI instance or to have inboud traffic from public internet to RHEL AI instance. ",
+          "description": "Deploys a VPC with an option either to have private network access only with no inbound traffic from public internet to the RHEL AI instance or to have inbound traffic from public internet to RHEL AI instance. ",
           "title": "Private (or) Public VPC Network Access"
         },
         {
@@ -46,7 +46,7 @@
           "title": "HTTP/S with SSL certificate support"
         },
         {
-          "description": "Eanble autorization access to models using API Key",
+          "description": "Enable authorization access to models using API Key",
           "title": "Serve models with or without API Key"
         },
         {
@@ -62,6 +62,7 @@
         {
           "label": "Quickstart",
           "name": "quickstart",
+          "short_description": "Ideal for users who want to get started without configuring underlying infrastructure.",
           "install_type": "fullstack",
           "working_directory": "solutions/rhelai_vpc",
           "iam_permissions": [
