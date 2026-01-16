@@ -45,12 +45,12 @@ output "rhelai_instance_id" {
 }
 
 output "primary_network_interface_id" {
-  description = "The primary network attched to RHEL.ai instance"
+  description = "The primary network attached to RHEL.ai instance"
   value       = module.rhelai_instance.primary_network_interface_id
 }
 
 output "floating_ip" {
-  description = "The primary network attched to RHEL.ai instance"
+  description = "The primary network attached to RHEL.ai instance"
   value       = var.enable_private_only ? "" : ibm_is_floating_ip.ip_address.address
 }
 
