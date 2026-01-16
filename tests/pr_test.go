@@ -280,7 +280,7 @@ func genNewSshKeypair(t *testing.T) (string, string) {
 }
 
 // helper function to create a valid self-signed TLS cert for https server
-// inspriation from this example: https://go.dev/src/crypto/tls/generate_cert.go
+// inspiration from this example: https://go.dev/src/crypto/tls/generate_cert.go
 // outputs: cert, private key, error
 func genNewTlsCert() (string, string, error) {
 

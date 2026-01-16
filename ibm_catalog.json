@@ -45,7 +45,7 @@
           "title": "HTTP/S with SSL certificate support"
         },
         {
-          "description": "Eanble autorization access to models using API Key",
+          "description": "Enable authorization access to models using API Key",
           "title": "Serve models with or without API Key"
         },
         {
