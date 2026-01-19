@@ -68,6 +68,13 @@ variable "enable_private_only" {
   nullable    = false
 }
 
+variable "install_required_binaries" {
+  type        = bool
+  default     = true
+  description = "When true, run a script to ensure the required CLI binary (`jq`) is available in the runtime (for example Waypoint). If missing the script will attempt to download it to /tmp. Set to false to skip."
+  nullable    = false
+}
+
 ########################################################################################################################
 # Install model variables
 ########################################################################################################################
