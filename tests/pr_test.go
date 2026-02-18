@@ -56,9 +56,12 @@ var zoneList []string
 // TestMain will be run before any parallel tests, used to set up a shared InfoService object to track region usage
 // for multiple tests
 func TestMain(m *testing.M) {
-	sharedInfoSvc, _ = cloudinfo.NewCloudInfoServiceFromEnv("TF_VAR_ibmcloud_api_key", cloudinfo.CloudInfoServiceOptions{})
-
 	var err error
+	sharedInfoSvc, err = cloudinfo.NewCloudInfoServiceFromEnv("TF_VAR_ibmcloud_api_key", cloudinfo.CloudInfoServiceOptions{})
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	permanentResources, err = common.LoadMapFromYaml(yamlLocation)
 	if err != nil {
 		log.Fatal(err)
@@ -277,7 +280,7 @@ func genNewSshKeypair(t *testing.T) (string, string) {
 }
 
 // helper function to create a valid self-signed TLS cert for https server
-// inspriation from this example: https://go.dev/src/crypto/tls/generate_cert.go
+// inspiration from this example: https://go.dev/src/crypto/tls/generate_cert.go
 // outputs: cert, private key, error
 func genNewTlsCert() (string, string, error) {
 
