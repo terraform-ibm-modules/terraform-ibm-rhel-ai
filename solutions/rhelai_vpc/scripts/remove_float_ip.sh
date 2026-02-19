@@ -4,6 +4,8 @@ set -e
 
 FLOAT_ID="$1"
 REGION="$2"
+# The binaries downloaded by the install-binaries script are located in the /tmp directory.
+export PATH=$PATH:${3:-"/tmp"}
 
 # === Step 1: Get IAM access token ===
 echo "Getting IAM access token..."

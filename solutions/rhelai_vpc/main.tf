@@ -14,6 +14,7 @@ locals {
   l_num_gpus           = var.machine_type == "gx3-24x120x1l40s" ? "1" : "2"
   l_transport_protocol = var.enable_https ? "https" : "http"
   l_port               = var.enable_https ? "8443" : "8000"
+  binaries_path        = "/tmp"
 }
 
 data "ibm_is_subnet" "existing_subnet" {
@@ -75,6 +76,15 @@ resource "ibm_is_floating_ip" "ip_address" {
   depends_on     = [module.rhelai_instance]
 }
 
+resource "terraform_data" "install_required_binaries" {
+  count = var.install_required_binaries ? 1 : 0
+
+  provisioner "local-exec" {
+    command     = "${path.module}/scripts/install-binaries.sh ${local.binaries_path}"
+    interpreter = ["/bin/bash", "-c"]
+  }
+}
+
 ##############################################################################
 # Install model and serve using ilab
 ##############################################################################
@@ -117,16 +127,16 @@ module "https_conf" {
 ##############################################################################
 
 resource "terraform_data" "private_only" {
-  depends_on = [module.https_conf]
-  triggers_replace = [
-    local.always_run
-  ]
+  depends_on = [module.https_conf, terraform_data.install_required_binaries]
+  triggers_replace = {
+    always_run = local.always_run
+  }
 
   # Check if the service needs to be private only
   count = var.enable_private_only ? 1 : 0
 
   provisioner "local-exec" {
-    command     = "./scripts/remove_float_ip.sh ${ibm_is_floating_ip.ip_address.id} ${var.region}"
+    command     = "./scripts/remove_float_ip.sh ${ibm_is_floating_ip.ip_address.id} ${var.region} ${local.binaries_path}"
     interpreter = ["bash", "-c"]
     environment = {
       IBMCLOUD_API_KEY = var.ibmcloud_api_key
