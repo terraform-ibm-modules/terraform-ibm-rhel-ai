@@ -2,8 +2,6 @@ module github.com/terraform-ibm-modules/terraform-ibm-rhel-ai
 
 go 1.26.1
 
-toolchain go1.27.0
-
 require (
 	github.com/google/uuid v1.6.0
 	github.com/gruntwork-io/terratest v1.0.1

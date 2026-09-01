@@ -8,7 +8,7 @@ output "rhelai_instance_id" {
 }
 
 output "primary_network_interface_id" {
-  description = "The primary network attched to RHEL.ai instance"
+  description = "The primary network attached to RHEL.ai instance"
   value       = ibm_is_instance.gpu_vsi_1.primary_network_interface[0].id
 }
 

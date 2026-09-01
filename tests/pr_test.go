@@ -15,8 +15,6 @@ import (
 	"testing"
 	"time"
 
-	"math/rand"
-
 	"github.com/google/uuid"
 	"github.com/gruntwork-io/terratest/modules/ssh"
 	"github.com/stretchr/testify/assert"
@@ -123,7 +121,7 @@ func TestRunVpcSolutionPublicSchematic(t *testing.T) {
 		},
 	})
 
-	randomZone := zoneList[rand.Intn(len(zoneList))]
+	randomZone := zoneList[cryptoRandIntn(len(zoneList))]
 
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
@@ -184,7 +182,7 @@ func TestRunVpcSolutionPrivateSchematic(t *testing.T) {
 		},
 	})
 
-	randomZone := zoneList[rand.Intn(len(zoneList))]
+	randomZone := zoneList[cryptoRandIntn(len(zoneList))]
 
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
@@ -223,7 +221,7 @@ func TestRunVpcSolutionPublicUpgradeSchematic(t *testing.T) {
 	// this is a throwaway random key needed for the test
 	modelKey := uuid.NewString()
 
-	randomZone := zoneList[rand.Intn(len(zoneList))]
+	randomZone := zoneList[cryptoRandIntn(len(zoneList))]
 
 	// set up a schematics test
 	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
@@ -267,6 +265,15 @@ func TestRunVpcSolutionPublicUpgradeSchematic(t *testing.T) {
 	}
 }
 
+// cryptoRandIntn returns a cryptographically random non-negative integer in [0, n).
+func cryptoRandIntn(n int) int {
+	nBig, err := crypto_rand.Int(crypto_rand.Reader, big.NewInt(int64(n)))
+	if err != nil {
+		panic(err)
+	}
+	return int(nBig.Int64())
+}
+
 // helper function to generate an SSH key pair for testing
 func genNewSshKeypair(t *testing.T) (string, string) {
 	rsaKeyPair, _ := ssh.GenerateRSAKeyPairE(t, 4096)
@@ -277,7 +284,7 @@ func genNewSshKeypair(t *testing.T) (string, string) {
 }
 
 // helper function to create a valid self-signed TLS cert for https server
-// inspriation from this example: https://go.dev/src/crypto/tls/generate_cert.go
+// inspiration from this example: https://go.dev/src/crypto/tls/generate_cert.go
 // outputs: cert, private key, error
 func genNewTlsCert() (string, string, error) {
 

@@ -111,7 +111,7 @@ Make sure that you have an IBM Cloud Pay-As-You-Go or Subscription account:
 
 Your Access Group should look like this
 
-![AcessGroup_Picture](../../reference-architectures/images//Picture5.png)
+![AccessGroup_Picture](../../reference-architectures/images//Picture5.png)
 
 ### Access for IBM Cloud projects
 
@@ -284,7 +284,7 @@ By following the 3 steps - Create Project, Configure RHEL AI Project, Validate a
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_enable_https"></a> [enable\_https](#input\_enable\_https) | Enable https to your model service? If yes then a proxy nginx with https certificates will be created. https\_cerificate and https\_privatekey are required when true | `bool` | `false` | no |
+| <a name="input_enable_https"></a> [enable\_https](#input\_enable\_https) | Enable https to your model service? If yes then a proxy nginx with https certificates will be created. https\_certificate and https\_privatekey are required when true | `bool` | `false` | no |
 | <a name="input_enable_private_only"></a> [enable\_private\_only](#input\_enable\_private\_only) | A flag to determine to have private IP only and no public network accessibility | `bool` | `true` | no |
 | <a name="input_existing_resource_group"></a> [existing\_resource\_group](#input\_existing\_resource\_group) | Select the name of a existing resource group or select null to create new resource group. | `string` | `null` | no |
 | <a name="input_https_certificate"></a> [https\_certificate](#input\_https\_certificate) | SSL certificate required for https setup. Required if enable\_https is true | `string` | `""` | no |
@@ -309,9 +309,9 @@ By following the 3 steps - Create Project, Configure RHEL AI Project, Validate a
 
 | Name | Description |
 |------|-------------|
-| <a name="output_floating_ip"></a> [floating\_ip](#output\_floating\_ip) | The primary network attched to RHEL.ai instance |
+| <a name="output_floating_ip"></a> [floating\_ip](#output\_floating\_ip) | The primary network attached to RHEL.ai instance |
 | <a name="output_model_url"></a> [model\_url](#output\_model\_url) | The URL can be used to inference the models. For private only VSI instance you need to use the private IP |
-| <a name="output_primary_network_interface_id"></a> [primary\_network\_interface\_id](#output\_primary\_network\_interface\_id) | The primary network attched to RHEL.ai instance |
+| <a name="output_primary_network_interface_id"></a> [primary\_network\_interface\_id](#output\_primary\_network\_interface\_id) | The primary network attached to RHEL.ai instance |
 | <a name="output_public_gateway_id"></a> [public\_gateway\_id](#output\_public\_gateway\_id) | Public gateway id attached to VPC |
 | <a name="output_region"></a> [region](#output\_region) | The region all resources were provisioned in |
 | <a name="output_resource_group_id"></a> [resource\_group\_id](#output\_resource\_group\_id) | The ID of the resource group created or used |

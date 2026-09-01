@@ -129,7 +129,7 @@ variable "model_cos_bucket_crn" {
 ########################################################################################################################
 
 variable "enable_https" {
-  description = "Enable https to your model service? If yes then a proxy nginx with https certificates will be created. https_cerificate and https_privatekey are required when true"
+  description = "Enable https to your model service? If yes then a proxy nginx with https certificates will be created. https_certificate and https_privatekey are required when true"
   type        = bool
   default     = false
   nullable    = false
