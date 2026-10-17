@@ -258,32 +258,32 @@ By following the 3 steps - Create Project, Configure RHEL AI Project, Validate a
 ### Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.9.0 |
-| <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | 1.78.4 |
+| <a name="requirement_ibm"></a> [ibm](#requirement\_ibm) | 2.8.0 |
 
 ### Modules
 
 | Name | Source | Version |
-|------|--------|---------|
+| ---- | ------ | ------- |
 | <a name="module_https_conf"></a> [https\_conf](#module\_https\_conf) | ../../modules/https_conf | n/a |
 | <a name="module_model"></a> [model](#module\_model) | ../../modules/model | n/a |
-| <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group) | terraform-ibm-modules/resource-group/ibm | 1.2.0 |
+| <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group) | terraform-ibm-modules/resource-group/ibm | 1.6.1 |
 | <a name="module_rhelai_instance"></a> [rhelai\_instance](#module\_rhelai\_instance) | ../../modules/rhelai_instance | n/a |
 | <a name="module_rhelai_vpc"></a> [rhelai\_vpc](#module\_rhelai\_vpc) | ../../modules/rhelai_vpc | n/a |
 
 ### Resources
 
 | Name | Type |
-|------|------|
-| [ibm_is_floating_ip.ip_address](https://registry.terraform.io/providers/IBM-Cloud/ibm/1.78.4/docs/resources/is_floating_ip) | resource |
+| ---- | ---- |
+| [ibm_is_floating_ip.ip_address](https://registry.terraform.io/providers/IBM-Cloud/ibm/2.8.0/docs/resources/is_floating_ip) | resource |
 | [terraform_data.private_only](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/resources/data) | resource |
-| [ibm_is_subnet.existing_subnet](https://registry.terraform.io/providers/IBM-Cloud/ibm/1.78.4/docs/data-sources/is_subnet) | data source |
+| [ibm_is_subnet.existing_subnet](https://registry.terraform.io/providers/IBM-Cloud/ibm/2.8.0/docs/data-sources/is_subnet) | data source |
 
 ### Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_enable_https"></a> [enable\_https](#input\_enable\_https) | Enable https to your model service? If yes then a proxy nginx with https certificates will be created. https\_cerificate and https\_privatekey are required when true | `bool` | `false` | no |
 | <a name="input_enable_private_only"></a> [enable\_private\_only](#input\_enable\_private\_only) | A flag to determine to have private IP only and no public network accessibility | `bool` | `true` | no |
 | <a name="input_existing_resource_group"></a> [existing\_resource\_group](#input\_existing\_resource\_group) | Select the name of a existing resource group or select null to create new resource group. | `string` | `null` | no |
@@ -308,7 +308,7 @@ By following the 3 steps - Create Project, Configure RHEL AI Project, Validate a
 ### Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | <a name="output_floating_ip"></a> [floating\_ip](#output\_floating\_ip) | The primary network attched to RHEL.ai instance |
 | <a name="output_model_url"></a> [model\_url](#output\_model\_url) | The URL can be used to inference the models. For private only VSI instance you need to use the private IP |
 | <a name="output_primary_network_interface_id"></a> [primary\_network\_interface\_id](#output\_primary\_network\_interface\_id) | The primary network attched to RHEL.ai instance |
