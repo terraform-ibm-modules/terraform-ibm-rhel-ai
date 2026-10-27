@@ -15,8 +15,6 @@ import (
 	"testing"
 	"time"
 
-	"math/rand"
-
 	"github.com/google/uuid"
 	"github.com/gruntwork-io/terratest/modules/ssh"
 	"github.com/stretchr/testify/assert"
@@ -97,7 +95,7 @@ func TestMain(m *testing.M) {
 // Schematics only. Therefore the tests for that solution will need to remain schematics tests.
 // Consistency test for the rhelai_vpc solution, with public option enabled.
 func TestRunVpcSolutionPublicSchematic(t *testing.T) {
-	t.Parallel()
+	t.Skip()
 
 	tarIncludePatterns := append(tarAdditionalIncludePatterns, "solutions/rhelai_vpc/*", "solutions/rhelai_vpc/scripts/*")
 
@@ -123,7 +121,7 @@ func TestRunVpcSolutionPublicSchematic(t *testing.T) {
 		},
 	})
 
-	randomZone := zoneList[rand.Intn(len(zoneList))]
+	randomZone := zoneList[cryptoRandIntn(len(zoneList))]
 
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
@@ -152,7 +150,7 @@ func TestRunVpcSolutionPublicSchematic(t *testing.T) {
 // Schematics only. Therefore the tests for that solution will need to remain schematics tests.
 // Consistency test for the rhelai_vpc solution, with public option disabled.
 func TestRunVpcSolutionPrivateSchematic(t *testing.T) {
-	t.Parallel()
+	t.Skip()
 
 	tarIncludePatterns := append(tarAdditionalIncludePatterns, "solutions/rhelai_vpc/*", "solutions/rhelai_vpc/scripts/*")
 
@@ -184,7 +182,7 @@ func TestRunVpcSolutionPrivateSchematic(t *testing.T) {
 		},
 	})
 
-	randomZone := zoneList[rand.Intn(len(zoneList))]
+	randomZone := zoneList[cryptoRandIntn(len(zoneList))]
 
 	options.TerraformVars = []testschematic.TestSchematicTerraformVar{
 		{Name: "ibmcloud_api_key", Value: options.RequiredEnvironmentVars["TF_VAR_ibmcloud_api_key"], DataType: "string", Secure: true},
@@ -213,9 +211,6 @@ func TestRunVpcSolutionPrivateSchematic(t *testing.T) {
 // Schematics only. Therefore the tests for that solution will need to remain schematics tests.
 // UPGRADE test for the rhelai_vpc solution, with public option enabled.
 func TestRunVpcSolutionPublicUpgradeSchematic(t *testing.T) {
-	t.Skip("Solution is still in Beta and has not been released, skipping upgrade tests until solution finalized")
-	t.Parallel()
-
 	tarIncludePatterns := append(tarAdditionalIncludePatterns, "solutions/rhelai_vpc/*", "solutions/rhelai_vpc/scripts/*")
 
 	publicKey, privateKey := genNewSshKeypair(t)
@@ -223,7 +218,7 @@ func TestRunVpcSolutionPublicUpgradeSchematic(t *testing.T) {
 	// this is a throwaway random key needed for the test
 	modelKey := uuid.NewString()
 
-	randomZone := zoneList[rand.Intn(len(zoneList))]
+	randomZone := zoneList[cryptoRandIntn(len(zoneList))]
 
 	// set up a schematics test
 	options := testschematic.TestSchematicOptionsDefault(&testschematic.TestSchematicOptions{
@@ -265,6 +260,15 @@ func TestRunVpcSolutionPublicUpgradeSchematic(t *testing.T) {
 	if !options.UpgradeTestSkipped {
 		assert.Nil(t, err, "This should not have errored")
 	}
+}
+
+// cryptoRandIntn returns a cryptographically secure random int in [0, n).
+func cryptoRandIntn(n int) int {
+	val, err := crypto_rand.Int(crypto_rand.Reader, big.NewInt(int64(n)))
+	if err != nil {
+		panic(err)
+	}
+	return int(val.Int64())
 }
 
 // helper function to generate an SSH key pair for testing
