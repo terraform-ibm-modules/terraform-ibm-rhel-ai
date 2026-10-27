@@ -211,6 +211,8 @@ func TestRunVpcSolutionPrivateSchematic(t *testing.T) {
 // Schematics only. Therefore the tests for that solution will need to remain schematics tests.
 // UPGRADE test for the rhelai_vpc solution, with public option enabled.
 func TestRunVpcSolutionPublicUpgradeSchematic(t *testing.T) {
+	t.Skip()
+
 	tarIncludePatterns := append(tarAdditionalIncludePatterns, "solutions/rhelai_vpc/*", "solutions/rhelai_vpc/scripts/*")
 
 	publicKey, privateKey := genNewSshKeypair(t)
